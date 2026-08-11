@@ -51,6 +51,13 @@ export const SKILL_KINDS = [
   "media",
   "forms",
   "data",
+  "feedback",
+  "search",
+  "loading",
+  "lists",
+  "drag",
+  "onboarding",
+  "mobile",
   "patterns",
 ] as const;
 export type SkillKind = (typeof SKILL_KINDS)[number];
@@ -80,6 +87,13 @@ export const KIND_LABEL: Record<SkillKind, string> = {
   media: "Media",
   forms: "Forms",
   data: "Data",
+  feedback: "Feedback",
+  search: "Search",
+  loading: "Loading",
+  lists: "Lists",
+  drag: "Drag",
+  onboarding: "Onboarding",
+  mobile: "Mobile",
   patterns: "Patterns",
 };
 
@@ -99,6 +113,13 @@ export const KIND_BLURB: Record<SkillKind, string> = {
   media: "Media inspection and playback patterns with honest loading and touch behaviour.",
   forms: "Tactile controls that preserve labels, focus, validation and precision.",
   data: "Lightweight data interactions with stable textual interpretations.",
+  feedback: "Messages, status and recovery surfaces chosen by consequence and context.",
+  search: "Keyboard-first finding and command interactions that preserve focus.",
+  loading: "Loading and progress feedback that communicates time without noise.",
+  lists: "Product lists and rows with disclosure, focus and mobile actions.",
+  drag: "Reordering systems where pointer movement always has an accessible alternative.",
+  onboarding: "Teaching surfaces that respect attention, skip paths and product context.",
+  mobile: "Touch-first patterns with explicit controls and gesture etiquette.",
   patterns: "System-level guidance: density, restraint, reduced motion, composition.",
 };
 

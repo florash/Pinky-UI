@@ -1,10 +1,10 @@
 "use client";
 
-import { allEffects, allExperiences, allProductSystems, components, layouts } from "@pinky/registry";
+import { allEffects, allExperiences, allProductSystems, allWorkflowSystems, components, layouts } from "@pinky/registry";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-type DiscoveryFamily = "Components" | "Layouts" | "Cursor" | "Motion" | "Text" | "Scroll" | "Navigation" | "Heroes" | "Backgrounds" | "Transitions" | "Spatial" | "Media" | "Forms" | "Data";
+type DiscoveryFamily = "Components" | "Layouts" | "Cursor" | "Motion" | "Text" | "Scroll" | "Navigation" | "Heroes" | "Backgrounds" | "Transitions" | "Spatial" | "Media" | "Forms" | "Data" | "Feedback" | "Search" | "Loading" | "Lists" | "Drag" | "Onboarding" | "Mobile";
 type DiscoveryItem = { slug: string; name: string; description: string; family: DiscoveryFamily; href: string; tags: string[] };
 
 const title = (value: string) => `${value.charAt(0).toUpperCase()}${value.slice(1)}` as DiscoveryFamily;
@@ -14,8 +14,9 @@ const ITEMS: DiscoveryItem[] = [
   ...allEffects.map((item) => ({ slug: item.slug, name: item.name, description: item.description, family: title(item.family), href: `/effects#${item.slug}`, tags: [item.family] })),
   ...allExperiences.map((item) => ({ slug: item.slug, name: item.name, description: item.description, family: title(item.family), href: item.demoPath, tags: item.tags })),
   ...allProductSystems.map((item) => ({ slug: item.slug, name: item.name, description: item.description, family: title(item.family), href: item.demoPath, tags: item.tags })),
+  ...allWorkflowSystems.map((item) => ({ slug: item.slug, name: item.name, description: item.description, family: title(item.family), href: item.demoPath, tags: item.tags })),
 ];
-const FAMILIES = ["Components", "Layouts", "Cursor", "Motion", "Text", "Scroll", "Navigation", "Heroes", "Backgrounds", "Transitions", "Spatial", "Media", "Forms", "Data"] as const;
+const FAMILIES = ["Components", "Layouts", "Cursor", "Motion", "Text", "Scroll", "Navigation", "Heroes", "Backgrounds", "Transitions", "Spatial", "Media", "Forms", "Data", "Feedback", "Search", "Loading", "Lists", "Drag", "Onboarding", "Mobile"] as const;
 
 export function DiscoveryBrowser() {
   const [query, setQuery] = useState(""); const [family, setFamily] = useState<DiscoveryFamily | "All">("All");

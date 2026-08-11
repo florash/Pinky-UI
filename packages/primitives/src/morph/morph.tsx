@@ -113,9 +113,13 @@ export function Morph({
     }
     if (!hadOpened.current) return;
     hadOpened.current = false;
+    if (!motionEnabled) {
+      triggerRef.current?.focus();
+      return;
+    }
     const frame = requestAnimationFrame(() => triggerRef.current?.focus());
     return () => cancelAnimationFrame(frame);
-  }, [open]);
+  }, [motionEnabled, open]);
 
   const trapTab = useCallback((event: ReactKeyboardEvent<HTMLDivElement>) => {
     if (event.key !== "Tab") return;

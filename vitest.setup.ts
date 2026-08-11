@@ -38,6 +38,10 @@ vi.stubGlobal(
   },
 );
 
+// Motion may restore scroll position while a modal surface mounts; jsdom does
+// not implement the browser method, so keep the test signal quiet.
+vi.stubGlobal("scrollTo", vi.fn());
+
 afterEach(() => {
   cleanup();
   setReducedMotion(false);

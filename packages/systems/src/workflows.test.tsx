@@ -1,0 +1,64 @@
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { useState } from "react";
+import { describe, expect, it, vi } from "vitest";
+
+import { setReducedMotion } from "../../../vitest.setup";
+import { ActionUndoBar, AsyncButton, BottomSheet, CommandPalette, LongPressAction, ReorderableList, Stepper, ToastProvider, useToast } from "@pinky/systems";
+import { moveItem } from "./lists";
+
+function ToastTrigger() { const { toast } = useToast(); return <button type="button" onClick={() => toast({ title: "File saved", action: { label: "Open file", onClick: vi.fn() } })}>Notify</button>; }
+
+describe("Workflow systems", () => {
+  it("announces a toast, supports its action, and dismisses it", async () => {
+    const user = userEvent.setup(); const action = vi.fn();
+    function Trigger() { const { toast } = useToast(); return <button type="button" onClick={() => toast({ title: "File saved", action: { label: "Open file", onClick: action } })}>Notify</button>; }
+    render(<ToastProvider><Trigger /></ToastProvider>);
+    await user.click(screen.getByRole("button", { name: "Notify" }));
+    expect(screen.getByRole("status", { name: /file saved/i })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Open file" })); expect(action).toHaveBeenCalledTimes(1);
+    await user.click(screen.getByRole("button", { name: "Dismiss" })); await waitFor(() => expect(screen.queryByRole("status", { name: /file saved/i })).not.toBeInTheDocument());
+  });
+
+  it("pauses toast expiry while focused", () => {
+    vi.useFakeTimers();
+    render(<ToastProvider><ToastTrigger /></ToastProvider>);
+    fireEvent.click(screen.getByRole("button", { name: "Notify" })); const toast = screen.getByRole("status", { name: /file saved/i });
+    fireEvent.mouseEnter(toast); act(() => { vi.advanceTimersByTime(6000); }); expect(toast).toBeInTheDocument();
+    fireEvent.mouseLeave(toast); act(() => { vi.advanceTimersByTime(6000); }); vi.useRealTimers(); expect(toast).toHaveStyle({ opacity: "0" });
+  });
+
+  it("filters and activates command palette items with keyboard and closes on Escape", async () => {
+    const select = vi.fn(); const setOpen = vi.fn();
+    render(<CommandPalette open onOpenChange={setOpen} items={[{ id: "new", label: "New document", group: "Create", onSelect: select }, { id: "invite", label: "Invite collaborator", group: "Team", onSelect: vi.fn() }]} />);
+    const input = screen.getByRole("combobox"); fireEvent.change(input, { target: { value: "new" } }); expect(screen.getByRole("option", { name: /new document/i })).toBeInTheDocument(); fireEvent.keyDown(input, { key: "Enter" }); expect(select).toHaveBeenCalledTimes(1); expect(setOpen).toHaveBeenCalledWith(false);
+    cleanup(); render(<CommandPalette open onOpenChange={setOpen} items={[]} />); fireEvent.keyDown(screen.getByRole("combobox"), { key: "Escape" }); expect(setOpen).toHaveBeenCalledWith(false);
+  });
+
+  it("moves AsyncButton through loading and success", async () => {
+    const action = vi.fn(async () => undefined);
+    function AsyncHarness() { const [state, setState] = useState<"idle" | "loading" | "success" | "error">("idle"); return <AsyncButton state={state} onAction={async () => { setState("loading"); await action(); setState("success"); }}>Save</AsyncButton>; }
+    render(<AsyncHarness />); const button = screen.getByRole("button", { name: "Save" }); fireEvent.click(button); expect(action).toHaveBeenCalledTimes(1); await waitFor(() => expect(button).toHaveTextContent("Done"));
+  });
+
+  it("provides controlled keyboard reorder and a stable move utility", async () => {
+    expect(moveItem(["a", "b", "c"], 0, 2)).toEqual(["b", "c", "a"]);
+    const reordered = vi.fn(); const items = [{ id: "a", label: "Alpha" }, { id: "b", label: "Beta" }];
+    render(<ReorderableList items={items} onReorder={reordered} />); const handle = screen.getByRole("button", { name: "Move Alpha" }); fireEvent.keyDown(handle, { key: "ArrowDown" }); expect(reordered).toHaveBeenCalledWith([items[1], items[0]]);
+  });
+
+  it("exposes step semantics and bottom sheet Escape focus restoration", async () => {
+    render(<><button type="button">Open filters</button><Stepper steps={[{ id: "one", label: "Plan" }, { id: "two", label: "Build" }]} active={1} /><BottomSheet title="Filters"><p>Filter content</p></BottomSheet></>);
+    expect(screen.getByRole("list", { name: "Steps" })).toBeInTheDocument(); expect(screen.getByRole("listitem", { current: "step" })).toHaveTextContent("Build"); fireEvent.click(screen.getByRole("button", { name: "Open filters" }));
+    // The standalone sheet is closed; opening is covered by the controlled path below.
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    function SheetHarness() { const [open, setOpen] = useState(false); return <><button type="button" onClick={() => setOpen(true)}>Show sheet</button><BottomSheet open={open} onOpenChange={setOpen} title="Filters"><p>Filter content</p></BottomSheet></>; }
+    render(<SheetHarness />); const trigger = screen.getByRole("button", { name: "Show sheet" }); trigger.focus(); fireEvent.click(trigger); expect(screen.getByRole("dialog", { name: "Filters" })).toBeInTheDocument(); fireEvent.keyDown(document, { key: "Escape" }); await waitFor(() => expect(trigger).toHaveFocus());
+  });
+
+  it("requires the long-press threshold and cancels early release", () => {
+    vi.useFakeTimers(); const action = vi.fn(); render(<LongPressAction duration={500} onLongPress={action}>Select item</LongPressAction>); const button = screen.getByRole("button", { name: "Select item" }); fireEvent.pointerDown(button); act(() => vi.advanceTimersByTime(300)); fireEvent.pointerUp(button); expect(action).not.toHaveBeenCalled(); fireEvent.pointerDown(button); act(() => vi.advanceTimersByTime(500)); expect(action).toHaveBeenCalledTimes(1); fireEvent.pointerUp(button); vi.useRealTimers();
+  });
+
+  it("keeps feedback state usable when reduced motion is enabled", () => { setReducedMotion(true); render(<ActionUndoBar message="Item deleted" onUndo={vi.fn()} />); expect(screen.getByRole("status")).toHaveTextContent("Item deleted"); });
+});

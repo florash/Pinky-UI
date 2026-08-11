@@ -8,6 +8,7 @@ export * from "./layouts";
 export * from "./effects";
 export * from "./experiences";
 export * from "./systems";
+export * from "./workflows";
 export { components, primitives, layouts };
 
 export function getComponent(slug: string): RegistryEntry | undefined {

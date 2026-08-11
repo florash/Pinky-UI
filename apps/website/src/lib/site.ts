@@ -13,7 +13,7 @@ export const NAV_LINKS = [
   {
     href: "/explore",
     label: "Explore",
-    matchPrefixes: ["/layouts", "/experiences", "/navigation", "/heroes", "/backgrounds", "/transitions", "/spatial", "/media", "/forms", "/data"],
+    matchPrefixes: ["/layouts", "/experiences", "/navigation", "/heroes", "/backgrounds", "/transitions", "/spatial", "/media", "/forms", "/data", "/workflows"],
   },
   {
     href: "/effects",
