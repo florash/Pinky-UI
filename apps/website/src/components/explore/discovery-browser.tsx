@@ -10,7 +10,7 @@ type DiscoveryItem = { slug: string; name: string; description: string; family: 
 const title = (value: string) => `${value.charAt(0).toUpperCase()}${value.slice(1)}` as DiscoveryFamily;
 const ITEMS: DiscoveryItem[] = [
   ...components.map((item) => ({ slug: item.slug, name: item.name, description: item.description, family: "Components" as const, href: `/components/${item.slug}`, tags: item.tags })),
-  ...layouts.map((item) => ({ slug: item.slug, name: item.name, description: item.description, family: "Layouts" as const, href: `/layouts/${item.slug}`, tags: item.tags })),
+  ...layouts.map((item) => ({ slug: item.slug, name: item.name, description: item.description, family: item.family === "spatial" ? "Spatial" as const : "Layouts" as const, href: `/layouts/${item.slug}`, tags: [item.family, ...item.tags] })),
   ...allEffects.map((item) => ({ slug: item.slug, name: item.name, description: item.description, family: title(item.family), href: `/effects#${item.slug}`, tags: [item.family] })),
   ...allExperiences.map((item) => ({ slug: item.slug, name: item.name, description: item.description, family: title(item.family), href: item.demoPath, tags: item.tags })),
   ...allProductSystems.map((item) => ({ slug: item.slug, name: item.name, description: item.description, family: title(item.family), href: item.demoPath, tags: item.tags })),

@@ -11,6 +11,8 @@ import {
 } from "@pinky/layouts";
 import type { ReactNode } from "react";
 
+import { MODERN_LAYOUT_PREVIEWS } from "./modern-layout-previews";
+
 /**
  * Live demos for every layout, defined once and rendered by the gallery, the
  * detail pages and the homepage section.
@@ -26,6 +28,7 @@ export const LAYOUT_PREVIEWS: Record<string, ReactNode> = {
   "draggable-card-stack": <DraggableCardStackDemo />,
   "expandable-bento": <ExpandableBentoDemo />,
   "card-fan": <CardFanDemo />,
+  ...MODERN_LAYOUT_PREVIEWS,
 };
 
 export function LayoutPreview({ slug }: { slug: string }) {
