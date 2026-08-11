@@ -21,6 +21,7 @@ export default defineConfig({
       "@pinky/effects/internal": path.join(root, "packages/effects/src/internal"),
       "@pinky/effects": path.join(root, "packages/effects/src/index.ts"),
       "@pinky/experiences": path.join(root, "packages/experiences/src/index.ts"),
+      "@pinky/systems": path.join(root, "packages/systems/src/index.ts"),
     },
   },
   test: {

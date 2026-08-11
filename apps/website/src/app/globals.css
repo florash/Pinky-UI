@@ -7,6 +7,7 @@
 @source "../../../../packages/registry/src";
 @source "../../../../packages/effects/src";
 @source "../../../../packages/experiences/src";
+@source "../../../../packages/systems/src";
 
 @theme {
   /* ---- Palette ------------------------------------------------------- */

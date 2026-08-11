@@ -98,14 +98,23 @@ export function Morph({
     const panel = panelRef.current;
     if (!panel) return;
 
-    // Captured now: the trigger stays mounted while the panel is open, and
-    // reading the ref during cleanup would be reading it after the fact.
-    const trigger = triggerRef.current;
-
     const first = panel.querySelector<HTMLElement>(FOCUSABLE);
     (first ?? panel).focus();
+  }, [open]);
 
-    return () => trigger?.focus();
+  // Restore only after React has committed the closed state and made the
+  // trigger visible again. Focusing it from the open effect's cleanup works in
+  // jsdom but real browsers correctly reject focus on `display:none` content.
+  const hadOpened = useRef(false);
+  useEffect(() => {
+    if (open) {
+      hadOpened.current = true;
+      return;
+    }
+    if (!hadOpened.current) return;
+    hadOpened.current = false;
+    const frame = requestAnimationFrame(() => triggerRef.current?.focus());
+    return () => cancelAnimationFrame(frame);
   }, [open]);
 
   const trapTab = useCallback((event: ReactKeyboardEvent<HTMLDivElement>) => {
@@ -177,7 +186,7 @@ export function Morph({
               {...layout}
               transition={transition}
               style={{ maxWidth, width: "100%" }}
-              className={expandedClassName}
+              className={`relative z-10 ${expandedClassName ?? ""}`}
             >
               {expanded}
             </motion.div>

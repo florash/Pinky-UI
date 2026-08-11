@@ -10,11 +10,15 @@ export const SITE = {
 
 export const NAV_LINKS = [
   { href: "/components", label: "Components", matchPrefixes: [] },
-  { href: "/layouts", label: "Layouts", matchPrefixes: [] },
+  {
+    href: "/explore",
+    label: "Explore",
+    matchPrefixes: ["/layouts", "/experiences", "/navigation", "/heroes", "/backgrounds", "/transitions", "/spatial", "/media", "/forms", "/data"],
+  },
   {
     href: "/effects",
     label: "Effects",
-    matchPrefixes: ["/experiences", "/navigation", "/heroes", "/backgrounds", "/transitions", "/spatial"],
+    matchPrefixes: [],
   },
   { href: "/skills", label: "Skills", matchPrefixes: [] },
   { href: "/docs", label: "Docs", matchPrefixes: [] },

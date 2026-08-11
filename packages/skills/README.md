@@ -30,4 +30,5 @@ Name the file after the component slug: `jelly-card.md`.
 Interaction effects live in `cursor/`, `motion/`, `text` and `scroll/`.
 Experience-level guidance lives in `navigation/`, `heroes/`, `backgrounds/`,
 `transitions/` and `spatial/`. Each folder is shown directly by the website
-Skills catalog; system-level restraint guidance remains in `patterns/`.
+Skills catalog. Product interaction guidance lives in `media/`, `forms/` and
+`data/`; system-level restraint guidance remains in `patterns/`.

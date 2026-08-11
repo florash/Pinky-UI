@@ -48,6 +48,9 @@ export const SKILL_KINDS = [
   "backgrounds",
   "transitions",
   "spatial",
+  "media",
+  "forms",
+  "data",
   "patterns",
 ] as const;
 export type SkillKind = (typeof SKILL_KINDS)[number];
@@ -74,6 +77,9 @@ export const KIND_LABEL: Record<SkillKind, string> = {
   backgrounds: "Backgrounds",
   transitions: "Transitions",
   spatial: "Spatial",
+  media: "Media",
+  forms: "Forms",
+  data: "Data",
   patterns: "Patterns",
 };
 
@@ -90,6 +96,9 @@ export const KIND_BLURB: Record<SkillKind, string> = {
   backgrounds: "Ambient surfaces that stay quiet, legible and inexpensive.",
   transitions: "State and route handoffs that preserve focus and navigation semantics.",
   spatial: "Depth patterns that flatten gracefully and keep reading order stable.",
+  media: "Media inspection and playback patterns with honest loading and touch behaviour.",
+  forms: "Tactile controls that preserve labels, focus, validation and precision.",
+  data: "Lightweight data interactions with stable textual interpretations.",
   patterns: "System-level guidance: density, restraint, reduced motion, composition.",
 };
 

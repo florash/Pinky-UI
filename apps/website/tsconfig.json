@@ -32,7 +32,9 @@
       "@pinky/effects": ["../../packages/effects/src/index.ts"],
       "@pinky/effects/*": ["../../packages/effects/src/*"],
       "@pinky/experiences": ["../../packages/experiences/src/index.ts"],
-      "@pinky/experiences/*": ["../../packages/experiences/src/*"]
+      "@pinky/experiences/*": ["../../packages/experiences/src/*"],
+      "@pinky/systems": ["../../packages/systems/src/index.ts"],
+      "@pinky/systems/*": ["../../packages/systems/src/*"]
     }
   },
   "include": [
