@@ -1,0 +1,18 @@
+{
+  "name": "@pinky/primitives",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Composable interaction primitives for Pinky UI.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*"
+  },
+  "peerDependencies": {
+    "motion": ">=12",
+    "react": ">=19"
+  },
+  "sideEffects": false
+}

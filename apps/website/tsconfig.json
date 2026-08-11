@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "verbatimModuleSyntax": true,
+    "plugins": [{ "name": "next" }],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@pinky/primitives": ["../../packages/primitives/src/index.ts"],
+      "@pinky/primitives/*": ["../../packages/primitives/src/*"],
+      "@pinky/components": ["../../packages/components/src/index.ts"],
+      "@pinky/components/*": ["../../packages/components/src/*"],
+      "@pinky/layouts": ["../../packages/layouts/src/index.ts"],
+      "@pinky/layouts/*": ["../../packages/layouts/src/*"],
+      "@pinky/registry": ["../../packages/registry/src/index.ts"],
+      "@pinky/registry/*": ["../../packages/registry/src/*"],
+      "@pinky/effects": ["../../packages/effects/src/index.ts"],
+      "@pinky/effects/*": ["../../packages/effects/src/*"],
+      "@pinky/experiences": ["../../packages/experiences/src/index.ts"],
+      "@pinky/experiences/*": ["../../packages/experiences/src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "../../packages/**/*.ts",
+    "../../packages/**/*.tsx"
+  ],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,61 @@
+{
+  "name": "pinky-ui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Soft, fluid and interactive React components and motion primitives for modern interfaces.",
+  "license": "MIT",
+  "author": "florash",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/florash/Pinky-UI.git"
+  },
+  "bugs": {
+    "url": "https://github.com/florash/Pinky-UI/issues"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "ui",
+    "components",
+    "animation",
+    "motion",
+    "tailwind",
+    "interactive",
+    "jelly",
+    "magnetic"
+  ],
+  "scripts": {
+    "dev": "next dev apps/website",
+    "build": "next build apps/website",
+    "start": "next start apps/website",
+    "lint": "eslint apps packages examples",
+    "typecheck": "tsc -p apps/website/tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "motion": "^12.23.12",
+    "next": "^15.5.4",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@next/eslint-plugin-next": "^15.5.23",
+    "@tailwindcss/postcss": "^4.1.13",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.3",
+    "@types/node": "^22.15.3",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^6.0.5",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "jsdom": "^30.0.1",
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.67.0",
+    "vitest": "^3.2.7"
+  }
+}

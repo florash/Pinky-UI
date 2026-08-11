@@ -1,0 +1,197 @@
+@import "tailwindcss";
+
+/* The website compiles the packages from source, so Tailwind has to scan them. */
+@source "../../../../packages/components/src";
+@source "../../../../packages/primitives/src";
+@source "../../../../packages/layouts/src";
+@source "../../../../packages/registry/src";
+@source "../../../../packages/effects/src";
+@source "../../../../packages/experiences/src";
+
+@theme {
+  /* ---- Palette ------------------------------------------------------- */
+  --color-milk: #fcfbf8;
+  --color-white: #ffffff;
+
+  --color-blush-50: #fff7fa;
+  --color-blush-100: #fcebf2;
+  --color-blush-200: #f8dce7;
+  --color-blush-300: #f4c7d7;
+
+  --color-cloud-50: #f4fafe;
+  --color-cloud-100: #eaf6fd;
+  --color-cloud-200: #dceffd;
+  --color-cloud-300: #c8e4f7;
+
+  --color-ink-900: #252933;
+  --color-ink-700: #505865;
+  --color-ink-500: #7b8492;
+
+  --color-line: rgba(70, 90, 115, 0.1);
+  --color-line-strong: rgba(70, 90, 115, 0.18);
+
+  /* Code tokens: deepened blush and milk blue, dark enough to read on white. */
+  --color-code-tag: #3c6a8f;
+  --color-code-string: #a4557a;
+  --color-code-punct: #8a93a1;
+
+  /* ---- Shape --------------------------------------------------------- */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+  --radius-2xl: 36px;
+  --radius-pill: 999px;
+
+  /* ---- Elevation ----------------------------------------------------- */
+  --shadow-soft: 0 1px 2px rgba(40, 50, 70, 0.04), 0 12px 40px rgba(70, 90, 120, 0.08);
+  --shadow-lift: 0 2px 4px rgba(40, 50, 70, 0.05), 0 24px 70px rgba(70, 90, 120, 0.12);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+
+  /* ---- Type ---------------------------------------------------------- */
+  --font-display: var(--font-montserrat), "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist), "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --text-display: clamp(2.75rem, 7vw, 5.5rem);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.035em;
+  --text-section: clamp(2rem, 4vw, 3.25rem);
+  --text-section--line-height: 1.06;
+  --text-section--letter-spacing: -0.03em;
+
+  /* ---- Motion -------------------------------------------------------- */
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/*
+ * Themes are environments, not separate design systems: they retint the page
+ * atmosphere and the accent, and nothing else.
+ */
+:root,
+[data-theme="milk"] {
+  --pinky-page: var(--color-milk);
+  --pinky-accent: var(--color-blush-300);
+  --pinky-accent-soft: var(--color-blush-100);
+  --pinky-halo-a: rgba(244, 199, 215, 0.5);
+  --pinky-halo-b: rgba(200, 228, 247, 0.45);
+}
+
+[data-theme="blush"] {
+  --pinky-page: var(--color-blush-50);
+  --pinky-accent: var(--color-blush-300);
+  --pinky-accent-soft: var(--color-blush-100);
+  --pinky-halo-a: rgba(244, 199, 215, 0.72);
+  --pinky-halo-b: rgba(200, 228, 247, 0.3);
+}
+
+[data-theme="cloud"] {
+  --pinky-page: var(--color-cloud-50);
+  --pinky-accent: var(--color-cloud-300);
+  --pinky-accent-soft: var(--color-cloud-100);
+  --pinky-halo-a: rgba(244, 199, 215, 0.28);
+  --pinky-halo-b: rgba(200, 228, 247, 0.75);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--pinky-page);
+    color: var(--color-ink-900);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 600ms var(--ease-soft);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  ::selection {
+    background: var(--color-blush-200);
+    color: var(--color-ink-900);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink-900);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    /*
+     * A blunt safety net. Components already branch on the media query and
+     * render a static, fully usable state; this catches anything that slips
+     * through, including third-party markup.
+     */
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@utility surface-card {
+  background: color-mix(in oklab, var(--color-white) 92%, var(--pinky-page));
+  border: 1px solid var(--color-line);
+  box-shadow: var(--shadow-soft), var(--shadow-inset);
+}
+
+@utility text-balance-tight {
+  text-wrap: balance;
+}
+
+/*
+ * The liquid tile's blob. Written as plain CSS because the shape is a slash-
+ * separated border-radius, which does not survive Tailwind's arbitrary-value
+ * syntax cleanly.
+ */
+.liquid-blob {
+  border-radius: 42% 58% 63% 37% / 51% 39% 61% 49%;
+  transition:
+    border-radius 900ms var(--ease-soft),
+    transform 900ms var(--ease-soft);
+}
+
+.group:hover .liquid-blob {
+  border-radius: 64% 36% 47% 53% / 38% 45% 55% 62%;
+  transform: rotate(8deg) scale(1.04);
+}
+
+/* A second, slower body underneath, so the shape reads as volume not outline. */
+.liquid-blob--trail {
+  border-radius: 58% 42% 39% 61% / 43% 57% 43% 57%;
+  transition:
+    border-radius 1300ms var(--ease-soft),
+    transform 1300ms var(--ease-soft);
+}
+
+.group:hover .liquid-blob--trail {
+  border-radius: 38% 62% 57% 43% / 62% 38% 62% 38%;
+  transform: rotate(-10deg) scale(1.1);
+}
+
+/* Ambient page lighting used by the hero and section headers. */
+@utility halo {
+  position: absolute;
+  border-radius: var(--radius-pill);
+  filter: blur(60px);
+  pointer-events: none;
+}

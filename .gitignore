@@ -1,0 +1,16 @@
+node_modules/
+.next/
+out/
+dist/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+.DS_Store
+.env*
+!.env.example
+npm-debug.log*
+.vercel
+
+# macOS AppleDouble files (exFAT volumes)
+._*
