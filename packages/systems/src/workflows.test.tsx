@@ -35,6 +35,46 @@ describe("Workflow systems", () => {
     cleanup(); render(<CommandPalette open onOpenChange={setOpen} items={[]} />); fireEvent.keyDown(screen.getByRole("combobox"), { key: "Escape" }); expect(setOpen).toHaveBeenCalledWith(false);
   });
 
+  it("waits for the exit before restoring focus and unmounting", async () => {
+    const user = userEvent.setup();
+    function Harness() { const [open, setOpen] = useState(false); return <><button type="button" onClick={() => setOpen(true)}>Open commands</button><CommandPalette open={open} onOpenChange={setOpen} items={[{ id: "new", label: "New document", onSelect: vi.fn() }]} /></>; }
+
+    render(<Harness />);
+    const trigger = screen.getByRole("button", { name: "Open commands" });
+    await user.click(trigger);
+    const input = screen.getByRole("combobox");
+    expect(input).toHaveFocus();
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(trigger).not.toHaveFocus();
+    const exitingOverlay = screen.queryByRole("presentation");
+    if (exitingOverlay) expect(exitingOverlay).toHaveClass("pointer-events-none");
+    expect(screen.getByRole("dialog", { name: "Command palette" })).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole("dialog", { name: "Command palette" })).not.toBeInTheDocument());
+    expect(trigger).toHaveFocus();
+  });
+
+  it("closes from outside click and survives a rapid reopen", async () => {
+    const user = userEvent.setup();
+    function Harness() { const [open, setOpen] = useState(false); return <><button type="button" onClick={() => setOpen(true)}>Open commands</button><CommandPalette open={open} onOpenChange={setOpen} items={[{ id: "new", label: "New document", onSelect: vi.fn() }]} /></>; }
+
+    render(<Harness />);
+    const trigger = screen.getByRole("button", { name: "Open commands" });
+    await user.click(trigger);
+    fireEvent.mouseDown(screen.getByRole("presentation"));
+    expect(trigger).not.toHaveFocus();
+    await waitFor(() => expect(screen.queryByRole("dialog", { name: "Command palette" })).not.toBeInTheDocument());
+    expect(trigger).toHaveFocus();
+
+    await user.click(trigger);
+    const input = screen.getByRole("combobox");
+    expect(input).toHaveFocus();
+    await user.keyboard("{Escape}");
+    await user.click(trigger);
+    expect(screen.getByRole("combobox")).toHaveFocus();
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(trigger).toHaveFocus());
+  });
+
   it("moves AsyncButton through loading and success", async () => {
     const action = vi.fn(async () => undefined);
     function AsyncHarness() { const [state, setState] = useState<"idle" | "loading" | "success" | "error">("idle"); return <AsyncButton state={state} onAction={async () => { setState("loading"); await action(); setState("success"); }}>Save</AsyncButton>; }
