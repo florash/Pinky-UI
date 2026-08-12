@@ -1,19 +1,25 @@
 "use client";
 
 import {
+  AsymmetricEditorialGrid,
   BrokenOffsetGrid,
   CinematicHorizontalGallery,
   Curved3DGrid,
   CylinderGallery,
   DepthScrollGallery,
   EditorialMosaic,
+  ElasticColumns,
+  FocusRail,
   FloatingColumns,
   GalleryListMorph,
   HelixGallery,
   InfiniteSpatialCanvas,
+  LayeredCollection,
   LayeredEditorial,
   PerspectiveBento,
+  ProgressiveMosaic,
   SpatialCardTunnel,
+  SplitNarrative,
   SplitScreenGallery,
   StackSpatial,
 } from "@pinky/layouts";
@@ -56,6 +62,22 @@ const COLLECTION_ITEMS = [
   { id: "four", label: "Long table", meta: "04 / 04", content: <PhotoTile index={3} title="Long table" /> },
 ];
 
+const EXPANSION_ITEMS = [
+  { id: "arrival", label: "Arrival", meta: "01 / threshold", content: <PhotoTile index={0} title="Arrival" /> },
+  { id: "commons", label: "Commons", meta: "02 / gathering", content: <PhotoTile index={1} title="Commons" /> },
+  { id: "quiet", label: "Quiet", meta: "03 / focus", content: <PhotoTile index={2} title="Quiet" /> },
+  { id: "trace", label: "Trace", meta: "04 / residue", content: <PhotoTile index={3} title="Trace" /> },
+];
+
+function NarrativePlane({ label, tone = "light" }: { label: string; tone?: "light" | "dark" }) {
+  return (
+    <div className={`flex h-full min-h-36 flex-col justify-between rounded-xl p-4 ${tone === "dark" ? "bg-white/10 text-milk" : "bg-white/65 text-ink-900"}`}>
+      <span className="font-mono text-[0.6rem] tracking-[0.14em] uppercase opacity-70">{label}</span>
+      <span className="max-w-[12rem] text-lg font-semibold leading-tight">A surface that gives the story room.</span>
+    </div>
+  );
+}
+
 function SplitMedia({ index, alt }: { index: number; alt: string }) {
   return <Photo index={index} alt={alt} className="h-64 w-full object-cover sm:h-80" />;
 }
@@ -65,6 +87,20 @@ function SmallSpatialCard({ index, title }: { index: number; title: string }) {
 }
 
 export const MODERN_LAYOUT_PREVIEWS: Record<string, ReactNode> = {
+  "asymmetric-editorial-grid": <AsymmetricEditorialGrid items={[
+    { ...EXPANSION_ITEMS[0]!, featured: true },
+    EXPANSION_ITEMS[1]!,
+    EXPANSION_ITEMS[2]!,
+    { ...EXPANSION_ITEMS[3]!, span: 2 },
+  ]} columns={3} className="w-full max-w-3xl" />,
+  "focus-rail": <FocusRail items={EXPANSION_ITEMS.map((item) => ({ ...item, content: <PhotoTile index={Number(item.id === "arrival" ? 0 : item.id === "commons" ? 1 : item.id === "quiet" ? 2 : 3)} title={item.label} /> }))} className="w-full max-w-3xl" />,
+  "split-narrative": <SplitNarrative items={[
+    { id: "chapter-one", kicker: "Chapter one", title: "A clear beginning", description: "The primary plane leads, then makes space for a quiet companion surface.", balance: "primary", primary: <NarrativePlane label="Primary / arrival" tone="dark" />, secondary: <NarrativePlane label="Secondary / note" /> },
+    { id: "chapter-two", kicker: "Chapter two", title: "The detail comes forward", description: "The relationship changes with the chapter, not with a new page.", balance: "secondary", primary: <NarrativePlane label="Primary / trace" tone="dark" />, secondary: <NarrativePlane label="Secondary / field" /> },
+  ]} className="w-full max-w-3xl" />,
+  "layered-collection": <LayeredCollection items={EXPANSION_ITEMS} className="w-full max-w-3xl" />,
+  "elastic-columns": <ElasticColumns columns={EXPANSION_ITEMS.slice(0, 3).map((item) => ({ id: item.id, label: item.label, meta: item.meta, content: <PhotoTile index={Number(item.id === "arrival" ? 0 : item.id === "commons" ? 1 : 2)} title={item.label} /> }))} className="w-full max-w-3xl" />,
+  "progressive-mosaic": <ProgressiveMosaic items={EXPANSION_ITEMS.map((item, index) => ({ ...item, span: index === 3 ? 2 as const : 1 as const }))} columns={3} className="w-full max-w-3xl" />,
   "editorial-mosaic": <EditorialMosaic items={EDITORIAL_ITEMS} columns={3} className="w-full max-w-3xl" />,
   "split-screen-gallery": <SplitScreenGallery items={[
     { id: "split-1", label: "The room as instrument", meta: "Material / rhythm", primary: <SplitMedia index={0} alt="Curved concrete architecture" />, secondary: <SplitMedia index={1} alt="Sunlit shared studio" /> },

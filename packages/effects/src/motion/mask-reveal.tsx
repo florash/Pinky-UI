@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { useMotionEnabled } from "@pinky/primitives";
-import { useRef, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 
 import { useInView } from "../internal/in-view";
 
@@ -19,6 +19,7 @@ export type MaskRevealProps = {
   once?: boolean;
   className?: string;
   disabled?: boolean;
+  trigger?: "view" | "hover" | "focus";
 };
 
 /** Reveals media or editorial content through a restrained clipping mask. */
@@ -33,17 +34,20 @@ export function MaskReveal({
   once = true,
   className,
   disabled = false,
+  trigger = "view",
 }: MaskRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const [interacting, setInteracting] = useState(false);
   const motionEnabled = useMotionEnabled();
   const visible = useInView(ref, { amount, margin, once });
-  const animate = !motionEnabled || disabled || visible;
+  const active = trigger === "view" ? visible : interacting;
+  const target = trigger === "view" ? (active ? { clipPath: "inset(0% 0% 0% 0%)", scale: 1 } : undefined) : active ? { clipPath: "inset(0% 0% 0% 0%)", scale: 1 } : { clipPath: maskFor(direction), scale };
 
   return (
-    <div ref={ref} className={className} style={{ overflow: "hidden" }}>
+    <div ref={ref} className={className} style={{ overflow: "hidden" }} onPointerEnter={() => trigger !== "view" && setInteracting(true)} onPointerLeave={() => trigger !== "view" && setInteracting(false)} onFocusCapture={() => trigger !== "view" && setInteracting(true)} onBlurCapture={() => trigger !== "view" && setInteracting(false)}>
       <motion.div
         initial={motionEnabled && !disabled ? { clipPath: maskFor(direction), scale } : false}
-        animate={animate ? { clipPath: "inset(0% 0% 0% 0%)", scale: 1 } : undefined}
+        animate={motionEnabled && !disabled ? target : { clipPath: "inset(0% 0% 0% 0%)", scale: 1 }}
         transition={{ duration: motionEnabled && !disabled ? duration : 0, delay: motionEnabled && !disabled ? delay : 0, ease: [0.22, 1, 0.36, 1] }}
       >
         {children}

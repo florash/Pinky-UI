@@ -1,7 +1,9 @@
 "use client";
 
 import {
+  BorderTravel,
   BlurReveal,
+  ContentSwapMotion,
   CharacterStagger,
   CursorBlob,
   CursorProvider,
@@ -9,6 +11,8 @@ import {
   CursorTarget,
   CursorText,
   CursorTrail,
+  DepthShift,
+  EdgeHighlight,
   HoverImagePreview,
   HoverImagePreviewItem,
   HorizontalStory,
@@ -28,6 +32,7 @@ import {
   SplitTextReveal,
   StaggerReveal,
   StickyStory,
+  SurfaceCompression,
   TextScramble,
   WordStagger,
 } from "@pinky/effects";
@@ -268,6 +273,43 @@ export function EffectsShowcase() {
           <div className="mt-6 overflow-hidden rounded-[28px]"><Surface index={1} className="h-72 w-full" /></div>
         </section>
 
+        <section id="surface-effects" className="mx-auto max-w-[76rem] px-5 pt-28 sm:px-8">
+          <SectionLabel eyebrow="02A · Surfaces" title="The edge, face and depth can answer together." />
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <EdgeHighlight className="rounded-2xl bg-white p-4 ring-1 ring-line">
+              <button type="button" className="block w-full rounded-xl bg-cloud-50 p-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">
+                <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">Edge Highlight</p>
+                <p className="mt-3 text-sm text-ink-700">Move close to one side.</p>
+              </button>
+            </EdgeHighlight>
+            <SurfaceCompression className="rounded-2xl bg-white p-4 ring-1 ring-line">
+              <button type="button" className="block w-full rounded-xl bg-ink-900 p-5 text-left text-sm text-milk focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25">
+                <span className="font-mono text-[0.625rem] tracking-[0.14em] text-milk/60 uppercase">Surface Compression</span>
+                <span className="mt-3 block">Press with pointer or keyboard.</span>
+              </button>
+            </SurfaceCompression>
+            <DepthShift className="min-h-36 rounded-2xl bg-cloud-100 p-4" background={<span className="absolute inset-4 rounded-xl bg-blush-200/60" />} secondary={<span className="absolute inset-6 rounded-xl border border-white/80 bg-white/60" />}>
+              <button type="button" className="relative block w-full rounded-xl bg-white p-5 text-left shadow-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">
+                <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">Depth Shift</p>
+                <p className="mt-3 text-sm">Move across the planes.</p>
+              </button>
+            </DepthShift>
+            <BorderTravel className="rounded-2xl bg-white p-4 ring-1 ring-line">
+              <button type="button" className="block w-full rounded-xl bg-cloud-50 p-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">
+                <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">Border Travel</p>
+                <p className="mt-3 text-sm text-ink-700">One short segment, one edge.</p>
+              </button>
+            </BorderTravel>
+            <MaskReveal trigger="hover" direction="right" className="rounded-2xl bg-blush-50 p-4 ring-1 ring-line">
+              <button type="button" className="block w-full rounded-xl bg-white/70 p-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">
+                <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">Mask Reveal</p>
+                <p className="mt-3 text-sm text-ink-700">Focus or hover to reveal.</p>
+              </button>
+            </MaskReveal>
+            <EffectContentSwap />
+          </div>
+        </section>
+
         <section id="text" className="mx-auto max-w-[76rem] px-5 pt-32 sm:px-8">
           <SectionLabel eyebrow="03 · Text" title="Typography can move without losing its voice." />
           <div
@@ -340,6 +382,20 @@ function SectionLabel({ eyebrow, title }: { eyebrow: string; title: string }) {
     <div className="max-w-2xl">
       <p className="font-mono text-[0.6875rem] tracking-[0.18em] text-ink-500 uppercase">{eyebrow}</p>
       <h2 className="mt-4 text-section text-balance-tight">{title}</h2>
+    </div>
+  );
+}
+
+function EffectContentSwap() {
+  const [value, setValue] = useState(0);
+  const names = ["Arrival", "Material", "Release"];
+  return (
+    <div className="rounded-2xl bg-white p-4 ring-1 ring-line">
+      <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">Content Swap Motion</p>
+      <ContentSwapMotion value={value} className="mt-3 min-h-16 rounded-xl bg-cloud-50 p-4">
+        <p className="text-sm font-medium">{names[value]}</p>
+      </ContentSwapMotion>
+      <button type="button" onClick={() => setValue((current) => (current + 1) % names.length)} className="mt-3 rounded-pill border border-line px-3 py-1.5 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">Swap content</button>
     </div>
   );
 }

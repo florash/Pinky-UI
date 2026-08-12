@@ -1,8 +1,12 @@
 "use client";
 
 import {
+  BorderTravel,
   BlurReveal,
+  ContentSwapMotion,
   CursorSpotlight,
+  DepthShift,
+  EdgeHighlight,
   HoverImagePreview,
   HoverImagePreviewItem,
   HoverTextReveal,
@@ -11,6 +15,7 @@ import {
   MaskReveal,
   SpringReveal,
   SplitTextReveal,
+  SurfaceCompression,
   StaggerReveal,
   TextScramble,
 } from "@pinky/effects";
@@ -124,10 +129,35 @@ const EFFECT_PREVIEWS: Record<string, ReactNode> = {
     </SpringReveal>
   ),
   "mask-reveal": (
-    <MaskReveal direction="up" once={false}>
-      <span className={chip}>A directional clip</span>
+    <MaskReveal direction="up" once={false} trigger="hover">
+      <button type="button" className={chip + " focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20"}>A directional clip</button>
     </MaskReveal>
   ),
+  "edge-highlight": (
+    <EdgeHighlight className="rounded-xl bg-white p-4 ring-1 ring-line">
+      <button type="button" className="w-full rounded-lg bg-cloud-50 px-3 py-4 text-left text-sm text-ink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">
+        Move toward an edge
+      </button>
+    </EdgeHighlight>
+  ),
+  "surface-compression": (
+    <SurfaceCompression className="rounded-xl">
+      <button type="button" className="w-full rounded-xl bg-ink-900 px-4 py-3 text-sm text-milk focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">
+        Press the surface
+      </button>
+    </SurfaceCompression>
+  ),
+  "depth-shift": (
+    <DepthShift className="min-h-28 rounded-xl bg-cloud-100 p-4" background={<span className="absolute inset-3 rounded-xl bg-blush-200/60" />} secondary={<span className="absolute inset-5 rounded-xl border border-white/80 bg-white/60" />}>
+      <button type="button" className="relative block w-full rounded-xl bg-white p-4 text-left text-sm font-medium shadow-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">Move across the planes</button>
+    </DepthShift>
+  ),
+  "border-travel": (
+    <BorderTravel className="rounded-xl bg-white p-4 ring-1 ring-line">
+      <button type="button" className="block w-full rounded-lg bg-cloud-50 px-3 py-4 text-left text-sm text-ink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">A short segment follows you</button>
+    </BorderTravel>
+  ),
+  "content-swap-motion": <ContentSwapPreview />,
   "stagger-reveal": (
     <StaggerReveal className="flex flex-col gap-2">
       <span className={chip}>One considered step</span>
@@ -592,6 +622,24 @@ function LongPressPreview() {
         Hold or activate this task
       </LongPressAction>
       <span aria-live="polite" className="mt-2 block text-xs text-ink-500">{selected ? "Selected" : "Idle"}</span>
+    </div>
+  );
+}
+
+function ContentSwapPreview() {
+  const [chapter, setChapter] = useState(0);
+  const chapters = ["Arrival", "Material", "Release"];
+  return (
+    <div className="w-full space-y-2">
+      <ContentSwapMotion value={chapter} direction={chapter === 0 ? "forward" : "backward"} className="min-h-16 rounded-xl bg-cloud-50 p-3">
+        <div>
+          <p className="font-mono text-[0.6rem] tracking-[0.14em] text-ink-500 uppercase">Chapter {chapter + 1}</p>
+          <p className="mt-1 text-sm font-medium">{chapters[chapter]}</p>
+        </div>
+      </ContentSwapMotion>
+      <button type="button" onClick={() => setChapter((value) => (value + 1) % chapters.length)} className="rounded-pill border border-line bg-white px-3 py-1.5 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">
+        Swap content
+      </button>
     </div>
   );
 }

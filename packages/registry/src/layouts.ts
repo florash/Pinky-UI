@@ -426,6 +426,164 @@ const editorialLayouts: LayoutEntry[] = [
   }),
 ];
 
+/**
+ * The expansion layouts are public registry entries, not Skills. They are
+ * intentionally documented here until a future content pass has a reason to
+ * give them long-form recipes.
+ */
+const expansionLayout = ({ component, ...entry }: Omit<LayoutEntry, "importPath"> & { component: string }): LayoutEntry => ({
+  ...entry,
+  status: "ready",
+  importPath: `import { ${component} } from "@pinky/layouts";`,
+});
+
+const expansionLayouts: LayoutEntry[] = [
+  expansionLayout({
+    component: "AsymmetricEditorialGrid",
+    slug: "asymmetric-editorial-grid",
+    name: "Asymmetric Editorial Grid",
+    description: "An authored editorial rhythm where featured work earns space and supporting pieces keep the composition breathing.",
+    family: "editorial",
+    status: "ready",
+    tags: ["asymmetry", "hierarchy", "whitespace"],
+    builtOn: ["CSS Grid", "Motion", "focus response"],
+    usage: `<AsymmetricEditorialGrid items={projects} columns={3} />`,
+    props: [
+      { name: "items", type: "AsymmetricEditorialGridItem[]", description: "Ordered content with optional featured and span intent." },
+      { name: "columns", type: "2 | 3 | 4", defaultValue: "3", description: "Desktop column count; compact layouts cap at two." },
+      { name: "gap", type: "number", defaultValue: "16", description: "Space between editorial planes, in px." },
+    ],
+    itemRange: "4–16 items; reserve featured treatment for one or two pieces.",
+    mobile: "The lead item spans the compact grid while supporting items keep a two-column rhythm; the composition does not become a single-width feed.",
+    accessibility: ["Items stay in input order even when spans create whitespace.", "Hover and focus share the same local emphasis.", "Labels remain visible without pointer interaction."],
+    performance: ["Placement is CSS Grid with no measurement pass.", "A single active id drives emphasis rather than pointer-frame React renders."],
+    reducedMotion: "The hierarchy and whitespace remain; lift and neighbour emphasis resolve to a still grid.",
+    whenToUse: ["Editorial indexes, portfolios and campaign landings.", "Small collections where one piece needs a clear lead."],
+    whenNotToUse: ["Dense comparison tables or unbounded feeds.", "Collections where every item must have equal visual weight."],
+    related: ["editorial-mosaic", "broken-offset-grid", "masonry-gallery"],
+  }),
+  expansionLayout({
+    component: "FocusRail",
+    slug: "focus-rail",
+    name: "Focus Rail",
+    description: "A continuous secondary rail that promotes one collection item into a readable primary surface.",
+    family: "collections",
+    status: "ready",
+    tags: ["rail", "focus", "selection", "primary-secondary"],
+    builtOn: ["native buttons", "AnimatePresence", "Motion"],
+    usage: `<FocusRail items={chapters} defaultActiveId={chapters[0].id} />`,
+    props: [
+      { name: "items", type: "FocusRailItem[]", description: "Labeled primary surfaces with optional metadata." },
+      { name: "activeId", type: "string", description: "Controlled active item id." },
+      { name: "onActiveIdChange", type: "(id: string) => void", description: "Called when hover, focus or selection changes the primary surface." },
+    ],
+    itemRange: "3–8 items; a continuous rail should stay scannable.",
+    mobile: "The rail becomes a horizontally scrollable, touch-sized selector above the primary surface.",
+    accessibility: ["Rail entries are native buttons with pressed and current state.", "Arrow, Home and End keys move through the rail.", "The primary surface has a polite live region and does not require hover."],
+    performance: ["Only the selected surface is animated.", "The rail uses ordinary flow and does not create a scroll trap."],
+    reducedMotion: "Selection updates the primary surface immediately while the continuous rail and labels remain intact.",
+    whenToUse: ["Chapter indexes, project collections and focused archives.", "A small set where one item deserves more reading room."],
+    whenNotToUse: ["Utility navigation or large database filters.", "Independent items that do not share a primary reading context."],
+    related: ["split-narrative", "gallery-list-morph", "sticky-story"],
+  }),
+  expansionLayout({
+    component: "SplitNarrative",
+    slug: "split-narrative",
+    name: "Split Narrative",
+    description: "Two coordinated story planes redistribute their proportions as the active chapter changes.",
+    family: "editorial",
+    status: "ready",
+    tags: ["narrative", "split", "reflow", "story"],
+    builtOn: ["CSS Grid", "AnimatePresence", "native buttons"],
+    usage: `<SplitNarrative items={chapters} defaultActiveId={chapters[0].id} />`,
+    props: [
+      { name: "items", type: "SplitNarrativeItem[]", description: "Story chapters with primary and secondary content planes." },
+      { name: "activeId", type: "string", description: "Controlled chapter id." },
+      { name: "balance", type: '"primary" | "secondary"', defaultValue: '"primary"', description: "Per-chapter hint for which plane should receive more space." },
+    ],
+    itemRange: "2–7 chapters; each chapter needs a clear relationship between its two planes.",
+    mobile: "The active chapter becomes a readable stacked story with primary content first; no squeezed half-width panels remain.",
+    accessibility: ["Chapter controls are buttons with current and pressed state.", "Arrow, Home and End keys navigate chapters.", "Both content planes remain in the DOM and their hierarchy is announced in normal order."],
+    performance: ["Proportions transition through one grid template rather than per-card transforms.", "Only the active chapter content gets a keyed handoff."],
+    reducedMotion: "The active chapter and its final proportion render immediately with no crossfade or reflow animation.",
+    whenToUse: ["Case studies, product stories and paired before/after narratives."],
+    whenNotToUse: ["Unrelated card grids or long-form prose that should remain one column."],
+    related: ["split-screen-gallery", "focus-rail", "sticky-story"],
+  }),
+  expansionLayout({
+    component: "LayeredCollection",
+    slug: "layered-collection",
+    name: "Layered Collection",
+    description: "A multi-surface collection with exposed edges and a readable front plane, not a compressed card deck.",
+    family: "collections",
+    status: "ready",
+    tags: ["layers", "collection", "selection", "surfaces"],
+    builtOn: ["CSS Grid", "Motion", "native buttons"],
+    usage: `<LayeredCollection items={surfaces} defaultActiveId={surfaces[0].id} />`,
+    props: [
+      { name: "items", type: "LayeredCollectionItem[]", description: "Small surfaces with labels, metadata and content." },
+      { name: "overlap", type: "number", defaultValue: "22", description: "Desktop overlap intent in px; compact layouts remove it." },
+      { name: "activeId", type: "string", description: "Controlled front-plane id." },
+    ],
+    itemRange: "3–7 surfaces; the exposed edges should still identify every item.",
+    mobile: "Surfaces return to a readable vertical composition with touch-sized selection and no horizontal pile.",
+    accessibility: ["Every plane is a native button with an explicit selected state.", "Arrow, Home and End keys change the front plane.", "Labels and metadata are visible without depth perception."],
+    performance: ["Overlap is ordinary grid flow with bounded transforms.", "No cloned deck or swipe-only interaction is introduced."],
+    reducedMotion: "The same multi-surface order remains visible; selection changes z-order without travel.",
+    whenToUse: ["Small material collections, references and related surfaces.", "A composition where adjacency matters as much as the selected item."],
+    whenNotToUse: ["Review queues that need one-card-at-a-time dismissal.", "Large catalogs or content that needs strict side-by-side comparison."],
+    related: ["card-fan", "layered-editorial", "stack-grid"],
+  }),
+  expansionLayout({
+    component: "ElasticColumns",
+    slug: "elastic-columns",
+    name: "Elastic Columns",
+    description: "Columns reallocate real grid width around the selected content while their neighbours remain present.",
+    family: "grids",
+    status: "ready",
+    tags: ["columns", "selection", "reallocation", "responsive"],
+    builtOn: ["CSS Grid", "Motion", "native buttons"],
+    usage: `<ElasticColumns columns={sections} defaultActiveId={sections[0].id} />`,
+    props: [
+      { name: "columns", type: "ElasticColumn[]", description: "Ordered columns with labels, metadata and content." },
+      { name: "activeId", type: "string", description: "Controlled expanded column id." },
+      { name: "onActiveIdChange", type: "(id: string) => void", description: "Called when a column is hovered, focused or selected." },
+    ],
+    itemRange: "3–5 columns; more columns make the width change hard to read.",
+    mobile: "The active column shows its content in full and inactive columns become compact disclosure rows.",
+    accessibility: ["Headers are native buttons with aria-expanded on compact layouts.", "Arrow, Home and End keys change the selected column.", "Content is not made available only through pointer width changes."],
+    performance: ["The parent grid changes one template string; columns do not scale individually.", "Inactive compact content is hidden rather than rendered into a squeezed panel."],
+    reducedMotion: "The selected column receives its final width immediately and compact disclosure remains fully usable.",
+    whenToUse: ["Feature comparisons, chapter groups and short sets of related panels."],
+    whenNotToUse: ["Strictly equal comparison tables or more than five independent columns."],
+    related: ["focus-rail", "expandable-bento", "floating-columns"],
+  }),
+  expansionLayout({
+    component: "ProgressiveMosaic",
+    slug: "progressive-mosaic",
+    name: "Progressive Mosaic",
+    description: "A stable collection composition that gives the focused tile more room and reorganises its neighbours without becoming an expansion panel.",
+    family: "collections",
+    status: "ready",
+    tags: ["mosaic", "re-prioritisation", "focus", "dense-flow"],
+    builtOn: ["CSS Grid dense flow", "Motion layout", "native buttons"],
+    usage: `<ProgressiveMosaic items={studies} columns={3} defaultActiveId={studies[0].id} />`,
+    props: [
+      { name: "items", type: "ProgressiveMosaicItem[]", description: "Stable keyed tiles with optional authored span intent." },
+      { name: "columns", type: "2 | 3 | 4", defaultValue: "3", description: "Desktop column count; mobile uses two." },
+      { name: "activeId", type: "string", description: "Controlled tile receiving the larger composition role." },
+    ],
+    itemRange: "4–14 tiles; keep the collection curated enough for neighbours to matter.",
+    mobile: "The active tile spans the compact two-column rhythm while neighbours remain available and touch-sized.",
+    accessibility: ["Tiles are native buttons with pressed state and stable DOM order.", "Arrow, Home and End keys move focus through the collection.", "The active role is communicated by state, never by size alone."],
+    performance: ["Motion layout interpolates bounded grid changes; no measurement loop is created.", "The composition uses one active id and dense flow to avoid empty slots."],
+    reducedMotion: "The final prioritised grid is shown immediately with all labels and controls intact.",
+    whenToUse: ["Curated research, reference walls and content where interest should gently reweight the composition."],
+    whenNotToUse: ["Data-heavy dashboards or interactions that need a persistent detail panel."],
+    related: ["editorial-mosaic", "expandable-bento", "asymmetric-editorial-grid"],
+  }),
+];
+
 const spatialLayouts: LayoutEntry[] = [
   modernLayout({
     component: "PerspectiveBento", slug: "perspective-bento", name: "Perspective Bento", family: "spatial",
@@ -485,7 +643,7 @@ const spatialLayouts: LayoutEntry[] = [
   }),
 ];
 
-export const layouts: LayoutEntry[] = [...foundationalLayouts, ...editorialLayouts, ...spatialLayouts];
+export const layouts: LayoutEntry[] = [...foundationalLayouts, ...editorialLayouts, ...expansionLayouts, ...spatialLayouts];
 
 export function getLayout(slug: string): LayoutEntry | undefined {
   return layouts.find((entry) => entry.slug === slug);

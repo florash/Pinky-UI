@@ -6,3 +6,6 @@ export { BrokenOffsetGrid, type BrokenOffsetGridItem, type BrokenOffsetGridProps
 export { LayeredEditorial, type LayeredEditorialProps } from "./layered-editorial";
 export { PerspectiveBento, type PerspectiveBentoItem, type PerspectiveBentoProps } from "./perspective-bento";
 export { FloatingColumns, type FloatingColumn, type FloatingColumnsProps } from "./floating-columns";
+export { AsymmetricEditorialGrid, type AsymmetricEditorialGridItem, type AsymmetricEditorialGridProps } from "./asymmetric-editorial-grid";
+export { FocusRail, type FocusRailItem, type FocusRailProps } from "./focus-rail";
+export { SplitNarrative, type SplitNarrativeItem, type SplitNarrativeProps } from "./split-narrative";

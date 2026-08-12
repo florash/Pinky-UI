@@ -5,4 +5,5 @@ export { ExpandableBento, type ExpandableBentoProps, type BentoItem } from "./gr
 export { DraggableCardStack, type DraggableCardStackProps } from "./stacks/draggable-card-stack";
 export { CardFan, type CardFanProps } from "./stacks/card-fan";
 export * from "./editorial";
+export * from "./collections";
 export * from "./spatial";

@@ -54,6 +54,11 @@ export const motionEffects: EffectRegistryEntry[] = [
   entry("motion", "stagger-reveal", "Stagger Reveal", "A parent-driven sequence for child content."),
   entry("motion", "image-reveal", "Image Reveal", "A media-specific mask, scale and focus entrance."),
   entry("motion", "liquid-loader", "Liquid Loader", "A small accessible loading/progress indicator."),
+  entry("motion", "edge-highlight", "Edge Highlight", "A local hairline responds to the side nearest the pointer."),
+  entry("motion", "surface-compression", "Surface Compression", "A tactile press compresses elevation and inset depth."),
+  entry("motion", "depth-shift", "Depth Shift", "A small group of planes separates as one surface responds to proximity."),
+  entry("motion", "border-travel", "Border Travel", "One restrained border segment travels along the nearest edge."),
+  entry("motion", "content-swap-motion", "Content Swap Motion", "Keyed content changes hand off with directional clipping and travel."),
   // `shared-morph` used to be listed here. It never had an implementation or an
   // export — it was guidance for the existing `Morph` primitive. It now lives
   // where guidance belongs, as `packages/skills/patterns/shared-morph.md`, so

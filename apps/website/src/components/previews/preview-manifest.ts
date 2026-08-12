@@ -35,6 +35,12 @@ export const LAYOUT_PREVIEW_SLUGS = [
   "spatial-card-tunnel",
   "stack-spatial",
   "infinite-spatial-canvas",
+  "asymmetric-editorial-grid",
+  "focus-rail",
+  "split-narrative",
+  "layered-collection",
+  "elastic-columns",
+  "progressive-mosaic",
 ] as const;
 
 export const EXPLORE_PREVIEW_SLUGS = [
@@ -49,6 +55,11 @@ export const EXPLORE_PREVIEW_SLUGS = [
   "stagger-reveal",
   "image-reveal",
   "liquid-loader",
+  "edge-highlight",
+  "surface-compression",
+  "depth-shift",
+  "border-travel",
+  "content-swap-motion",
   "split-text-reveal",
   "word-stagger",
   "character-stagger",

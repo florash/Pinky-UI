@@ -4,3 +4,8 @@ export { MaskReveal, type MaskRevealDirection, type MaskRevealProps } from "./ma
 export { StaggerReveal, type StaggerRevealProps } from "./stagger-reveal";
 export { ImageReveal, type ImageRevealProps } from "./image-reveal";
 export { LiquidLoader, type LiquidLoaderProps } from "./liquid-loader";
+export { EdgeHighlight, type EdgeHighlightProps } from "./edge-highlight";
+export { SurfaceCompression, type SurfaceCompressionProps } from "./surface-compression";
+export { DepthShift, type DepthShiftProps } from "./depth-shift";
+export { BorderTravel, type BorderTravelProps } from "./border-travel";
+export { ContentSwapMotion, type ContentSwapMotionProps } from "./content-swap-motion";
