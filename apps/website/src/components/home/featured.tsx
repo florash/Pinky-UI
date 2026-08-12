@@ -3,6 +3,7 @@ import { components } from "@pinky/registry";
 import Link from "next/link";
 
 import { ComponentPreview } from "@/components/previews/component-previews";
+import { hasComponentPreview } from "@/components/previews/preview-manifest";
 import { ArrowRight } from "@/components/site/icons";
 import { Container, Section, SectionHeading } from "@/components/site/layout";
 
@@ -26,9 +27,12 @@ const FEATURED = [
 
 export function Featured() {
   const ready = FEATURED.map((slug) => components.find((entry) => entry.slug === slug)).filter(
-    (entry) => entry !== undefined,
+    (entry): entry is NonNullable<typeof entry> =>
+      Boolean(entry && entry.status === "ready" && hasComponentPreview(entry.slug)),
   );
-  const rest = components.filter((entry) => !FEATURED.includes(entry.slug));
+  const rest = components.filter(
+    (entry) => !FEATURED.includes(entry.slug) && entry.status === "ready" && hasComponentPreview(entry.slug),
+  );
 
   return (
     <Section id="components">

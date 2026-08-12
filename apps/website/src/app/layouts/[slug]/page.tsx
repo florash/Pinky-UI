@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { LayoutPreview } from "@/components/previews/layout-previews";
+import { hasLayoutPreview } from "@/components/previews/preview-manifest";
 import { Markdown } from "@/components/skills/markdown";
 import { CodeBlock } from "@/components/site/code-block";
 import { Container, Halo } from "@/components/site/layout";
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function LayoutDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const entry = getLayout(slug);
-  if (!entry) notFound();
+  if (!entry || entry.status !== "ready" || !hasLayoutPreview(entry.slug)) notFound();
 
   const skill = entry.skill ? await getSkill("layouts", entry.skill) : null;
   const related = entry.related.map(getLayout).filter((item) => item !== undefined);

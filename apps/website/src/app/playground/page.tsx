@@ -26,9 +26,8 @@ export default function PlaygroundPage() {
         <Playground className="mt-14" />
 
         <p className="mt-10 max-w-xl rounded-lg px-5 py-4 text-sm leading-relaxed text-ink-500 ring-1 ring-line/60 ring-dashed">
-          Four components are configurable so far. Controls are named for the feeling they produce
-          rather than for stiffness and damping — the physics is the implementation, not the
-          interface.
+          Tune four core components. Controls are named for the feeling they produce rather than
+          for stiffness and damping — the physics is the implementation, not the interface.
         </p>
       </Container>
     </div>

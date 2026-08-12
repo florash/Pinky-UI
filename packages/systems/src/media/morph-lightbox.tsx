@@ -1,7 +1,7 @@
 "use client";
 
 import { Morph } from "@pinky/primitives";
-import { useState, type ReactNode } from "react";
+import { isValidElement, useState, type ReactNode } from "react";
 
 import { cn } from "../internal/cn";
 
@@ -29,6 +29,7 @@ export function MorphLightbox({ items, label = "Media gallery", className, itemC
         <Morph
           key={item.id}
           label={item.label}
+          triggerLabel={readTriggerLabel(item.thumbnail, item.label)}
           maxWidth={1040}
           disabled={disabled}
           className={cn("overflow-hidden rounded-[22px] bg-white text-left shadow-soft", itemClassName)}
@@ -40,6 +41,19 @@ export function MorphLightbox({ items, label = "Media gallery", className, itemC
       ))}
     </div>
   );
+}
+
+function readTriggerLabel(node: ReactNode, fallback: string): string {
+  if (typeof node === "string" || typeof node === "number") return String(node).trim() || fallback;
+  if (Array.isArray(node)) {
+    const text = node.map((child) => readTriggerLabel(child, "")).join(" ").trim();
+    return text || fallback;
+  }
+  if (isValidElement(node)) {
+    const props = node.props as { children?: ReactNode };
+    return readTriggerLabel(props.children, fallback);
+  }
+  return fallback;
 }
 
 function LightboxView({ items, initialIndex }: { items: MorphLightboxItem[]; initialIndex: number }) {

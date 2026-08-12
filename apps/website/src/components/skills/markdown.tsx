@@ -12,7 +12,7 @@ import { CodeBlock } from "@/components/site/code-block";
  * renders nodes, never HTML strings, so nothing can inject markup.
  */
 export function Markdown({ source, className }: { source: string; className?: string }) {
-  return <div className={cn("flex flex-col", className)}>{renderBlocks(source)}</div>;
+  return <div className={cn("skill-markdown flex flex-col text-[0.9375rem]", className)}>{renderBlocks(source)}</div>;
 }
 
 function renderBlocks(source: string): ReactNode[] {
@@ -40,7 +40,21 @@ function renderBlocks(source: string): ReactNode[] {
       }
       index += 1;
       out.push(
-        <CodeBlock key={key++} code={code.join("\n")} label={language} className="my-3" />,
+        <CodeBlock key={key++} code={code.join("\n")} label={language} className="my-4" />,
+      );
+      continue;
+    }
+
+    if (line.startsWith("> ")) {
+      const quote: string[] = [];
+      while (index < lines.length && (lines[index] ?? "").startsWith("> ")) {
+        quote.push((lines[index] ?? "").slice(2).trim());
+        index += 1;
+      }
+      out.push(
+        <blockquote key={key++} className="my-4 rounded-r-xl border-l-2 border-blush-200 bg-blush-50/60 px-4 py-3 text-sm leading-relaxed text-ink-700">
+          {inline(quote.join(" "))}
+        </blockquote>,
       );
       continue;
     }
@@ -60,12 +74,12 @@ function renderBlocks(source: string): ReactNode[] {
         level === 2 ? (
           <h2
             key={key++}
-            className="mt-10 mb-3 font-display text-lg font-semibold tracking-tight first:mt-0"
+            className="mt-12 mb-3 scroll-mt-28 font-display text-xl font-semibold tracking-tight first:mt-0"
           >
             {inline(text)}
           </h2>
         ) : (
-          <h3 key={key++} className="mt-6 mb-2 font-display text-base font-semibold tracking-tight">
+          <h3 key={key++} className="mt-7 mb-2 scroll-mt-28 font-display text-base font-semibold tracking-tight">
             {inline(text)}
           </h3>
         ),
@@ -93,7 +107,7 @@ function renderBlocks(source: string): ReactNode[] {
         index += 1;
       }
 
-      const listClass = "my-2 flex flex-col gap-2 text-sm leading-relaxed text-ink-700";
+      const listClass = "my-3 flex flex-col gap-2.5 text-sm leading-relaxed text-ink-700";
       out.push(
         ordered ? (
           <ol key={key++} className={cn(listClass, "list-decimal pl-5")}>
@@ -125,7 +139,7 @@ function renderBlocks(source: string): ReactNode[] {
     }
 
     out.push(
-      <p key={key++} className="my-2 text-sm leading-relaxed text-ink-700">
+      <p key={key++} className="my-2 leading-relaxed text-ink-700">
         {inline(paragraph.join(" "))}
       </p>,
     );

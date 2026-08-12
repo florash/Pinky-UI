@@ -28,8 +28,8 @@ export function OpenSourceCta() {
             Built in the open, one interaction at a time.
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-ink-700">
-            Four components and six primitives are implemented today. The roadmap, the code and the
-            motion decisions are all public.
+            The catalogue, the code and the motion decisions are all public, so every interaction
+            can be inspected before it becomes part of your interface.
           </p>
 
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">

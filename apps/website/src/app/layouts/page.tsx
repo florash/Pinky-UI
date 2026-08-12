@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { LayoutGallery } from "@/components/gallery/layout-gallery";
 import { Container, Halo } from "@/components/site/layout";
+import { resolveLayoutFamily, type PublicLayoutFamily } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Layouts",
@@ -9,7 +10,15 @@ export const metadata: Metadata = {
     "Galleries, grids, stacks and carousels where the arrangement itself is the interaction.",
 };
 
-export default function LayoutsPage() {
+type LayoutsPageProps = {
+  searchParams: Promise<{ family?: string | string[] }>;
+};
+
+export default async function LayoutsPage({ searchParams }: LayoutsPageProps) {
+  const params = await searchParams;
+  const requestedFamily = typeof params.family === "string" ? params.family : "all";
+  const initialFamily = resolveLayoutFamily(requestedFamily) as PublicLayoutFamily | "all";
+
   return (
     <div className="relative overflow-hidden pt-16 pb-20 sm:pt-20">
       <Halo className="-top-40 left-[-10rem] size-[30rem]" />
@@ -25,7 +34,7 @@ export default function LayoutsPage() {
           is live — drag the stack, focus a photo, unpack the pile.
         </p>
 
-        <LayoutGallery />
+        <LayoutGallery initialFamily={initialFamily} />
       </Container>
     </div>
   );

@@ -64,7 +64,10 @@ export const listSystems = [
   item("lists", "row-spotlight", "Row Spotlight", "RowSpotlight", "A hover and focus state that connects related values without hiding information.", ["table", "focus", "comparison"], `<RowSpotlight><span>Plan · $24 · Active</span></RowSpotlight>`),
 ];
 export const dragSystems = [
-  item("drag", "drag-reorder-grid", "Drag Reorder Grid", "DragReorderGrid", "A controlled dashboard grid with pointer drag and keyboard alternatives.", ["grid", "drag", "dashboard"], `<DragReorderGrid items={widgets} onReorder={setWidgets} />`, ["Motion layout", "keyboard movement"]),
+  defaults({ family: "drag", slug: "drag-reorder-grid", name: "Drag Reorder Grid", component: "DragReorderGrid", description: "A controlled dashboard grid reordered by keyboard, with native HTML5 mouse dragging as a desktop accelerator.", tags: ["grid", "drag", "dashboard", "keyboard"], usage: `<DragReorderGrid items={widgets} onReorder={setWidgets} />`, builtOn: ["Motion layout", "native HTML5 drag-and-drop", "keyboard movement"],
+    accessibility: ["Every item exposes a labelled handle that moves it with the arrow keys.", "Moves are announced through a live region."],
+    // Native HTML5 drag-and-drop does not fire on touch. Do not claim touch drag here.
+    whenNotToUse: ["Touch-first surfaces — there is no touch drag path; use Reorderable List or Sortable Chips instead."] }),
   item("drag", "drop-indicator", "Drop Indicator", "DropIndicator", "A destination marker that distinguishes insertion from inside-container drops.", ["drop", "insertion", "destination"], `<DropIndicator position="between" active={isOver} />`),
   item("drag", "drag-ghost", "Drag Ghost", "DragGhost", "A restrained preview surface intended to be mounted by a drag integration.", ["drag", "preview", "ghost"], `<DragGhost active={dragging}>{snapshot}</DragGhost>`, ["transform", "drag integration"]),
   item("drag", "sortable-chips", "Sortable Chips", "SortableChips", "A compact tag collection with reorder, remove and add hooks.", ["chips", "tags", "reorder"], `<SortableChips items={tags} onReorder={setTags} onRemove={removeTag} />`),
@@ -78,8 +81,8 @@ export const onboardingSystems = [
 export const mobileSystems = [
   item("mobile", "bottom-sheet", "Bottom Sheet", "BottomSheet", "A snap-point sheet with drag, backdrop, Escape and focus restoration.", ["sheet", "mobile", "touch"], `<BottomSheet open={open} onOpenChange={setOpen}>Filters</BottomSheet>`, ["Motion drag", "focus restoration"]),
   item("mobile", "swipeable-tabs", "Swipeable Tabs", "SwipeableTabs", "Fluid Tabs companion with touch swiping and desktop keyboard controls.", ["tabs", "swipe", "mobile"], `<SwipeableTabs tabs={tabs} index={index} onIndexChange={setIndex} />`, ["Fluid Tabs vocabulary", "touch gesture"]),
-  item("mobile", "pull-to-refresh", "Pull to Refresh", "PullToRefresh", "A frontend-only pull gesture exposing an explicit refresh callback and honest states.", ["refresh", "pull", "mobile"], `<PullToRefresh onRefresh={reload}>{content}</PullToRefresh>`, ["requestAnimationFrame", "callback-owned data"]),
-  item("mobile", "edge-swipe-panel", "Edge Swipe Panel", "EdgeSwipePanel", "A touch-only edge gesture with a visible button and semantic panel alternative.", ["drawer", "edge", "gesture"], `<EdgeSwipePanel label="Filters">{filters}</EdgeSwipePanel>`, ["touch gesture", "dialog semantics"]),
+  item("mobile", "pull-to-refresh", "Pull to Refresh", "PullToRefresh", "A resistance-driven refresh chamber with threshold, armed, refreshing and complete states plus an accessible button path.", ["refresh", "pull", "tension", "mobile"], `<PullToRefresh onRefresh={reload}>{content}</PullToRefresh>`, ["requestAnimationFrame", "pointer capture", "callback-owned data"]),
+  item("mobile", "edge-swipe-panel", "Edge Swipe Panel", "EdgeSwipePanel", "A progressive edge reveal that follows the gesture, displaces the underlying surface and settles by distance plus velocity.", ["panel", "edge", "reveal", "gesture"], `<EdgeSwipePanel label="Filters">{filters}</EdgeSwipePanel>`, ["pointer tracking", "velocity settlement", "dialog semantics"]),
   item("mobile", "long-press-action", "Long Press Action", "LongPressAction", "A cancellable long press with click, keyboard and context-menu alternatives.", ["long press", "context", "touch"], `<LongPressAction onLongPress={select}>{item}</LongPressAction>`, ["timer cleanup", "button semantics"]),
 ];
 

@@ -29,5 +29,9 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
     include: ["packages/**/*.test.{ts,tsx}"],
+    // The workspace lives on an exFAT volume that can leave macOS resource
+    // fork sidecars beside touched files. They are binary AppleDouble files,
+    // not tests, even though their names match the include glob.
+    exclude: ["**/._*"],
   },
 });

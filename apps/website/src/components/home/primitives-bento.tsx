@@ -103,13 +103,6 @@ export function PrimitivesBento() {
             </div>
           </Tile>
 
-          <Tile className="lg:col-span-3" name="Morph" note="Shared-element state transitions." pending />
-          <Tile
-            className="lg:col-span-3"
-            name="Liquid Surface"
-            note="Displacement driven by pointer velocity."
-            pending
-          />
         </div>
       </Container>
     </Section>
@@ -121,29 +114,21 @@ function Tile({
   note,
   children,
   className,
-  pending = false,
 }: {
   name: string;
   note: string;
   children?: ReactNode;
   className?: string;
-  pending?: boolean;
 }) {
   return (
     <section
       className={cn(
         "relative flex min-h-44 flex-col overflow-hidden rounded-xl border border-line bg-white/80",
-        pending && "border-dashed bg-white/40",
         className,
       )}
     >
       <div className="flex items-baseline justify-between gap-3 px-5 pt-5">
         <h3 className="font-display text-sm font-semibold tracking-tight">{name}</h3>
-        {pending ? (
-          <span className="font-mono text-[0.625rem] tracking-[0.1em] text-ink-500 uppercase">
-            in progress
-          </span>
-        ) : null}
       </div>
       <p className="px-5 pt-1 text-xs leading-relaxed text-ink-500">{note}</p>
       <div className="flex-1 p-5">{children}</div>

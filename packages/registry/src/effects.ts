@@ -54,13 +54,16 @@ export const motionEffects: EffectRegistryEntry[] = [
   entry("motion", "stagger-reveal", "Stagger Reveal", "A parent-driven sequence for child content."),
   entry("motion", "image-reveal", "Image Reveal", "A media-specific mask, scale and focus entrance."),
   entry("motion", "liquid-loader", "Liquid Loader", "A small accessible loading/progress indicator."),
-  entry("motion", "shared-morph", "Shared Morph", "Guidance for the existing shared-element Morph primitive.", "shared-morph"),
+  // `shared-morph` used to be listed here. It never had an implementation or an
+  // export — it was guidance for the existing `Morph` primitive. It now lives
+  // where guidance belongs, as `packages/skills/patterns/shared-morph.md`, so
+  // the catalogue only advertises things you can actually import.
 ];
 
 export const textEffects: EffectRegistryEntry[] = [
-  entry("text", "split-text-reveal", "Split Text Reveal", "Stable word, character or line entrance."),
-  entry("text", "word-stagger", "Word Stagger", "A focused word-level reveal."),
-  entry("text", "character-stagger", "Character Stagger", "A short-heading character reveal."),
+  entry("text", "split-text-reveal", "Split Text Reveal", "Stable word, character or line entrance. The canonical text reveal — Word Stagger and Character Stagger are its presets."),
+  entry("text", "word-stagger", "Word Stagger", "Preset of Split Text Reveal: `by=\"word\"`. No additional behaviour."),
+  entry("text", "character-stagger", "Character Stagger", "Preset of Split Text Reveal: `by=\"character\"`. No additional behaviour."),
   entry("text", "hover-text-reveal", "Hover Text Reveal", "A focused alternate label transition."),
   entry("text", "text-scramble", "Text Scramble", "A brief decorative decode effect."),
   entry("text", "kinetic-underline", "Kinetic Underline", "A small hover and focus underline motion."),

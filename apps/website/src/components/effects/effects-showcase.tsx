@@ -13,7 +13,6 @@ import {
   HoverImagePreviewItem,
   HorizontalStory,
   HoverTextReveal,
-  ImageReveal,
   ImageTrail,
   KineticUnderline,
   LensCursor,
@@ -32,13 +31,28 @@ import {
   TextScramble,
   WordStagger,
 } from "@pinky/effects";
+import { useState } from "react";
 
+import { LazyMount } from "@/components/site/lazy-mount";
+import { SOFT_MEDIA_SOURCES } from "@/components/previews/soft-surface";
+
+/**
+ * Demo surfaces rather than stock photography.
+ *
+ * These effects operate on whatever node they are given; using architectural
+ * photographs made the pictures the subject and the effect the frame, which is
+ * the opposite of the argument this page is making.
+ */
 const IMAGES = [
-  "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
+  "linear-gradient(150deg, var(--color-blush-100), var(--color-blush-200) 55%, var(--color-cloud-100))",
+  "linear-gradient(160deg, var(--color-cloud-100), var(--color-cloud-200) 60%, var(--color-white))",
+  "linear-gradient(140deg, var(--color-white), var(--color-blush-100) 48%, var(--color-cloud-200))",
+  "linear-gradient(170deg, var(--color-blush-50), var(--color-cloud-100) 52%, var(--color-blush-200))",
 ];
+
+function Surface({ index, className }: { index: number; className?: string }) {
+  return <span aria-hidden className={className} style={{ backgroundImage: IMAGES[index % IMAGES.length], display: "block" }} />;
+}
 
 const panelStyle = {
   minHeight: 220,
@@ -49,29 +63,53 @@ const panelStyle = {
   boxShadow: "var(--shadow-soft)",
 };
 
+/**
+ * The page-level cursor layers a visitor can have running.
+ *
+ * `cursor-etiquette` allows exactly one signature cursor per page, so this is a
+ * single-choice control rather than a stack. `SoftCursor` and `CursorText` are
+ * not alternatives to each other: the follower is the cursor, and CursorText is
+ * how a `CursorTarget` labels it, so they ship together as the base layer.
+ */
+const CURSOR_LAYERS = [
+  { id: "soft", label: "Soft Cursor" },
+  { id: "trail", label: "Cursor Trail" },
+  { id: "blob", label: "Cursor Blob" },
+  { id: "none", label: "None" },
+] as const;
+
+type CursorLayer = (typeof CURSOR_LAYERS)[number]["id"];
+
 export function EffectsShowcase() {
+  const [layer, setLayer] = useState<CursorLayer>("soft");
+
   return (
     <CursorProvider>
-      <SoftCursor followerOnly />
+      {/*
+        One cursor at a time. Mounting Soft Cursor, Trail and Blob together is
+        what this page used to do, and it contradicted the guidance the page
+        itself publishes.
+      */}
+      <SoftCursor followerOnly disabled={layer !== "soft"} />
+      <CursorTrail count={10} size={8} lifetime={520} disabled={layer !== "trail"} />
+      <CursorBlob opacity={0.22} size={260} disabled={layer !== "blob"} />
       <CursorText />
-      <CursorBlob opacity={0.22} size={260} />
-      <CursorTrail count={10} size={8} lifetime={520} />
       <ScrollProgress />
 
       <div className="relative overflow-hidden pb-32">
-        <section className="mx-auto max-w-[76rem] px-5 pt-24 sm:px-8 sm:pt-32">
+        <section className="mx-auto max-w-[76rem] px-5 pt-14 sm:px-8 sm:pt-16">
           <p className="font-mono text-[0.6875rem] tracking-[0.18em] text-ink-500 uppercase">
-            Milestone 2.6 · Effects
+            Effects
           </p>
-          <h1 className="mt-5 max-w-4xl text-display text-balance-tight">
+          <h1 className="mt-4 max-w-3xl text-section text-balance-tight">
             A calmer way to make interfaces feel alive.
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-700">
+          <p className="mt-4 max-w-2xl leading-relaxed text-ink-700">
             Cursor, motion, text and scroll effects with a native, keyboard-safe fallback built in.
             Move through the page on a desktop pointer, then try the same content with reduced
             motion enabled.
           </p>
-          <div className="mt-10 flex flex-wrap gap-3">
+          <div className="mt-7 flex flex-wrap gap-3">
             <MagneticCursorTarget label="Explore" influence="both">
               <a className="rounded-pill bg-ink-900 px-5 py-3 text-sm text-milk" href="#cursor">
                 Explore effects
@@ -84,6 +122,38 @@ export function EffectsShowcase() {
               Explore experience-level UI →
             </KineticUnderline>
           </div>
+
+          <fieldset className="mt-10 rounded-2xl border border-line bg-white/70 p-5">
+            <legend className="px-2 font-mono text-[0.6875rem] tracking-[0.16em] text-ink-500 uppercase">
+              Cursor layer
+            </legend>
+            <p className="text-sm leading-relaxed text-ink-700">
+              A page gets one signature cursor. Switch the active layer rather than stacking them —
+              running several at once is the most common way these effects turn into noise.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {CURSOR_LAYERS.map((option) => (
+                <label
+                  key={option.id}
+                  className={`cursor-pointer rounded-pill border px-3.5 py-2 text-sm transition-colors ${
+                    layer === option.id
+                      ? "border-ink-900 bg-ink-900 text-milk"
+                      : "border-line bg-white text-ink-700 hover:border-line-strong"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="cursor-layer"
+                    value={option.id}
+                    checked={layer === option.id}
+                    onChange={() => setLayer(option.id)}
+                    className="sr-only"
+                  />
+                  {option.label}
+                </label>
+              ))}
+            </div>
+          </fieldset>
         </section>
 
         <section id="cursor" className="mx-auto max-w-[76rem] px-5 pt-28 sm:px-8">
@@ -124,27 +194,28 @@ export function EffectsShowcase() {
             <div style={panelStyle}>
               <p className="font-mono text-xs tracking-[0.16em] text-ink-500 uppercase">Image trail</p>
               <h3 className="mt-3 text-2xl">Sweep through the archive.</h3>
-              <ImageTrail images={IMAGES} threshold={120} className="mt-6 overflow-hidden rounded-2xl">
-                <div className="flex min-h-40 items-end rounded-2xl bg-ink-900 p-5 text-milk">
-                  Move quickly across this field
-                </div>
-              </ImageTrail>
+              <LazyMount minHeight={160} className="mt-6 rounded-2xl bg-cloud-50">
+                <ImageTrail images={SOFT_MEDIA_SOURCES} threshold={120} className="overflow-hidden rounded-2xl">
+                  <div className="flex min-h-40 items-end rounded-2xl border border-line bg-blush-50 p-5 text-ink-700">
+                    Move quickly across this field
+                  </div>
+                </ImageTrail>
+              </LazyMount>
             </div>
             <div style={panelStyle}>
               <p className="font-mono text-xs tracking-[0.16em] text-ink-500 uppercase">Preview + lens</p>
               <h3 className="mt-3 text-2xl">Media arrives when it helps.</h3>
               <HoverImagePreview className="mt-6 space-y-1">
                 {IMAGES.slice(0, 3).map((image, index) => (
-                  <HoverImagePreviewItem key={image} src={image} as="div">
+                  <HoverImagePreviewItem key={image} src={SOFT_MEDIA_SOURCES[index]!} as="div">
                     <a className="block rounded-xl px-4 py-3 text-ink-700 hover:bg-blush-50" href={`#image-${index}`}>
                       Case study {String(index + 1).padStart(2, "0")}
                     </a>
                   </HoverImagePreviewItem>
                 ))}
               </HoverImagePreview>
-              <LensCursor src={IMAGES[0]} className="mt-4 overflow-hidden rounded-2xl" disabled>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={IMAGES[0]} alt="A quiet concrete interior" className="h-28 w-full object-cover" />
+              <LensCursor className="mt-4 overflow-hidden rounded-2xl" disabled>
+                <Surface index={0} className="h-28 w-full" />
               </LensCursor>
               <div className="mt-3 flex gap-3 text-xs text-ink-500">
                 <LiquidCursor disabled />
@@ -154,7 +225,7 @@ export function EffectsShowcase() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-[76rem] px-5 pt-32 sm:px-8">
+        <section id="motion" className="mx-auto max-w-[76rem] px-5 pt-32 sm:px-8">
           <SectionLabel eyebrow="02 · Motion" title="Entrance is a rhythm, not a gate." />
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             <BlurReveal>
@@ -194,31 +265,37 @@ export function EffectsShowcase() {
               </div>
             </div>
           </div>
-          <ImageReveal src={IMAGES[1]} alt="A bright shared studio" className="mt-6 h-72 rounded-[28px]" />
+          <div className="mt-6 overflow-hidden rounded-[28px]"><Surface index={1} className="h-72 w-full" /></div>
         </section>
 
-        <section className="mx-auto max-w-[76rem] px-5 pt-32 sm:px-8">
+        <section id="text" className="mx-auto max-w-[76rem] px-5 pt-32 sm:px-8">
           <SectionLabel eyebrow="03 · Text" title="Typography can move without losing its voice." />
-          <div className="mt-10 rounded-[28px] bg-ink-900 p-7 text-milk sm:p-12">
+          <div
+            className="mt-10 rounded-[28px] border border-line p-7 shadow-soft sm:p-12"
+            style={{
+              background:
+                "linear-gradient(150deg, var(--color-white), var(--color-blush-50) 45%, var(--color-cloud-100))",
+            }}
+          >
             <SplitTextReveal by="word" className="block max-w-3xl text-4xl leading-tight sm:text-6xl">
               Interfaces that feel alive, not loud.
             </SplitTextReveal>
-            <div className="mt-10 grid gap-6 border-t border-white/15 pt-7 text-sm sm:grid-cols-2">
+            <div className="mt-10 grid gap-6 border-t border-line pt-7 text-sm sm:grid-cols-2">
               <div>
-                <p className="text-milk/60">Word Stagger</p>
+                <p className="text-ink-500">Word Stagger</p>
                 <WordStagger className="mt-3 block text-2xl">A word at a time.</WordStagger>
               </div>
               <div>
-                <p className="text-milk/60">Character Stagger</p>
+                <p className="text-ink-500">Character Stagger</p>
                 <CharacterStagger className="mt-3 block text-2xl">Short titles only.</CharacterStagger>
               </div>
               <div>
-                <p className="text-milk/60">Hover Text</p>
+                <p className="text-ink-500">Hover Text</p>
                 <HoverTextReveal text="View project" hoverText="Open project →" className="mt-3 text-2xl" />
-                <p className="mt-3 text-sm text-milk/60">Scramble: <TextScramble text="Decode" trigger="hover" /></p>
+                <p className="mt-3 text-sm text-ink-500">Scramble: <TextScramble text="Decode" trigger="hover" /></p>
               </div>
               <div>
-                <p className="text-milk/60">Kinetic Underline</p>
+                <p className="text-ink-500">Kinetic Underline</p>
                 <KineticUnderline className="mt-3 text-2xl">Read the note →</KineticUnderline>
               </div>
             </div>
@@ -241,16 +318,17 @@ export function EffectsShowcase() {
             steps={[
               { id: "listen", title: "Listen", description: "Start with the quiet signal.", visual: <div className="rounded-3xl bg-blush-100 p-10 text-4xl">01</div> },
               { id: "shape", title: "Shape", description: "Give the response a human scale.", visual: <div className="rounded-3xl bg-cloud-100 p-10 text-4xl">02</div> },
-              { id: "release", title: "Release", description: "Let the interface get out of the way.", visual: <div className="rounded-3xl bg-ink-900 p-10 text-4xl text-milk">03</div> },
+              { id: "release", title: "Release", description: "Let the interface get out of the way.", visual: <div className="rounded-3xl bg-blush-200 p-10 text-4xl">03</div> },
             ]}
           />
-          <HorizontalStory className="mt-12" panels={IMAGES.map((image, index) => (
+          <LazyMount minHeight={360} className="mt-12 rounded-3xl bg-cloud-50/60">
+          <HorizontalStory panels={IMAGES.map((image, index) => (
             <div key={image} className="overflow-hidden rounded-3xl bg-white shadow-soft">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={image} alt={`Story panel ${index + 1}`} className="h-64 w-full object-cover" />
+              <Surface index={index} className="h-64 w-full" />
               <p className="p-5 text-sm text-ink-700">Panel {index + 1} · native fallback included</p>
             </div>
           ))} />
+          </LazyMount>
         </section>
       </div>
     </CursorProvider>

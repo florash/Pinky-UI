@@ -1,49 +1,58 @@
 # Magnetic Button
 
-## Purpose
+## What it does
 
-Use Magnetic Button for primary actions that deserve to feel responsive before
-they are even clicked. The button leans toward an approaching pointer and the
-label drifts slightly further, which reads as depth rather than as dragging.
+Magnetic Button gives a spacious action a small pull before activation. The
+button stays anchored while its surface leans toward an approaching pointer.
+
+## Interaction anatomy
+
+- **Trigger:** a native button with its normal label and hit area.
+- **State:** proximity, hover, focus, pressed and disabled.
+- **Motion:** capped spring translation; the surrounding layout never moves.
+- **Surface:** the button and its optional label layer.
+- **Feedback:** the same native focus and activation path remains visible.
 
 ## Good for
 
-- primary calls to action with space around them
-- hero and landing-page actions
-- sparse toolbars
+- A primary CTA with breathing room around it.
+- A hero or landing-page action with one clear destination.
+- A sparse toolbar with no competing proximity fields.
 
 ## Avoid for
 
-- dense button groups, where overlapping proximity fields fight each other
-- destructive actions, which should feel deliberate rather than eager
-- rows inside tables and lists
+- Dense button groups, tables or repeated list rows.
+- Destructive actions that should feel deliberate.
+- Touch-only interfaces where there is no useful approach state.
 
-## Recommended defaults
+## Live example
 
-`strength={0.4} range={110} maxOffset={8}`. The 8px cap is a house rule: the
-user must still perceive the button as anchored to its position. If a button
-appears to chase the cursor, the effect has failed.
+Try the live preview above. Move close to the action, then focus it with Tab;
+the button remains a button in both cases.
 
-Use `wrapperClassName` for layout (display, visibility, grid placement) and
-`className` for the button's own styling.
+## Usage
+
+```tsx
+<MagneticButton strength={0.4} range={110} maxOffset={8}>
+  Open the project
+</MagneticButton>
+```
+
+## Tune
+
+- `strength={0.4}` controls how much of the approach is followed.
+- `range={110}` controls how far away the field begins.
+- `maxOffset={8}` is the travel ceiling; keep it small enough to preserve place.
+- Use `wrapperClassName` for layout and `className` for the button surface.
 
 ## Accessibility
 
-- It is a real `<button>` — every native attribute and event is forwarded.
-- Keyboard focus and activation work with no pointer involved.
-- Disabled buttons opt out of magnetism as well as clicks.
-- The hit area never separates from the visible label.
+- Keep the native button, label, disabled state and event forwarding intact.
+- Focus and activation must work without a pointer.
+- The hit area must not separate from the visible label.
+- On coarse pointers the button keeps its ordinary touch target.
 
-## Performance
+## Reduced motion
 
-Proximity is computed from one shared pointer subscription; the rect is cached
-and re-measured only on resize and scroll. Many magnetic buttons on a page are
-cheap. The reason to limit them is visual, not computational.
-
-## Composition
-
-Good: `<Magnetic strength={0.12}><GlowBorder><Button /></GlowBorder></Magnetic>`
-for a framed CTA.
-
-For dense toolbars or touch-first interfaces, prefer Ripple Button — press
-feedback beats proximity where pointers are scarce.
+Reduced motion resolves the translation to zero while the button keeps its
+focus, pressed and activation feedback.

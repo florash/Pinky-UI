@@ -274,7 +274,7 @@ const foundationalLayouts: LayoutEntry[] = [
   {
     slug: "card-fan",
     name: "Card Fan",
-    description: "Cards held like a hand of playing cards, fanning out on approach.",
+    description: "A compressed collection that separates into an inspectable layered deck with selection and residual-stack reflow.",
     family: "stacks",
     status: "ready",
     tags: ["fan", "deck", "hand", "playful"],
@@ -290,10 +290,10 @@ const foundationalLayouts: LayoutEntry[] = [
       { name: "rotation", type: "number", defaultValue: "8", description: "Rotation of the outermost cards, in degrees." },
       { name: "activeIndex", type: "number", description: "Controlled selection." },
       { name: "onActiveIndexChange", type: "(index: number) => void", description: "Selection callback." },
-      { name: "collapsible", type: "boolean", defaultValue: "true", description: "Start collapsed and fan out on hover or focus." },
+      { name: "collapsible", type: "boolean", defaultValue: "true", description: "Start as a compressed deck and open on proximity, focus or selection." },
     ],
     itemRange: "3–7 cards. A fan of twelve is a mess in any hand.",
-    mobile: "Reduce `spread` and consider `collapsible={false}` — there is no hover to open it with.",
+    mobile: "Reduce `spread`; taps select and horizontal touch drags browse the deck without requiring hover.",
     accessibility: [
       "Roving tab stop with arrow keys, Home and End.",
       "Fanning is triggered by focus as well as hover.",
@@ -478,10 +478,10 @@ const spatialLayouts: LayoutEntry[] = [
   }),
   modernLayout({
     component: "InfiniteSpatialCanvas", slug: "infinite-spatial-canvas", name: "Infinite Spatial Canvas", family: "spatial",
-    description: "A bounded pan/zoom content plane for curated projects, notes or media—not a full whiteboard application.",
-    tags: ["canvas", "pan", "zoom", "spatial", "signature"], builtOn: ["MotionValues", "CSS transforms", "content-visibility"],
+    description: "A bounded spatial browsing field for curated projects, notes or media with authored depth planes, clusters and orientation cues—not a whiteboard application.",
+    tags: ["canvas", "pan", "zoom", "spatial", "depth", "signature"], builtOn: ["MotionValues", "inertia", "CSS transforms", "orientation map"],
     usage: `<InfiniteSpatialCanvas items={projects} bounds={{ left: -360, right: 360, top: -220, bottom: 220 }} />`, primaryProp: { name: "items", type: "SpatialCanvasItem[]", description: "Curated items with explicit coordinates and labels." }, itemRange: "6–30 curated items; use a dedicated data product for more.", mobile: "Pointer/touch drag remains available; keyboard arrows, zoom buttons and reset provide non-pointer control.",
-    accessibility: ["Canvas items are ordinary focusable articles in DOM order.", "Arrow keys pan, +/- changes zoom and Home/0 resets the view.", "The canvas has bounds and explicit controls so it is not an infinite keyboard trap."], performance: ["Pan uses MotionValues and direct pointer updates instead of React per frame.", "Items use content-visibility/contain hints, with a deliberately bounded curated data model."], whenToUse: ["Creative indexes, spatial portfolios and small collections with meaningful relationships."], whenNotToUse: ["Collaborative whiteboards, unbounded maps or primary application navigation."], related: ["perspective-gallery", "stack-spatial", "orbit-menu"],
+    accessibility: ["Canvas items are ordinary focusable articles in DOM order.", "Arrow keys pan, +/- changes zoom and Home/0 resets the view.", "The orientation map, bounds and explicit controls keep spatial browsing from becoming a keyboard trap."], performance: ["Pan uses MotionValues and direct pointer updates instead of React per frame.", "Inertia is bounded and items use transform-only emphasis with a deliberately curated data model."], whenToUse: ["Creative indexes, spatial portfolios and small collections with meaningful relationships."], whenNotToUse: ["Collaborative whiteboards, unbounded maps or primary application navigation."], related: ["perspective-gallery", "stack-spatial", "orbit-menu"],
   }),
 ];
 

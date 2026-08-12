@@ -2,7 +2,11 @@
 
 ## Purpose
 
-`CharacterStagger` gives a short display heading a letter-by-letter entrance. It is a signature detail for a hero title or a very brief wordmark-like phrase.
+`CharacterStagger` is a **named preset, not a separate implementation**: it is exactly
+`<SplitTextReveal {...props} by="character" />` and accepts every `SplitTextReveal` prop except
+`by`. There is no behaviour here that `SplitTextReveal` does not have.
+
+It gives a short display heading a letter-by-letter entrance — a signature detail for a hero title or a very brief wordmark-like phrase.
 
 Reserve it for roughly 1–5 words. Do not use it on paragraphs, body copy, long links or frequently updated content: many spans increase layout and reading friction. If the heading is long, choose `WordStagger`.
 

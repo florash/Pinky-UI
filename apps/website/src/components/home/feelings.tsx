@@ -12,8 +12,6 @@ type Feeling = {
   description: string;
   /** Wide tiles put the caption beside the demo instead of under it. */
   wide?: boolean;
-  /** No primitive behind it yet — the tile says so instead of pretending. */
-  pending?: boolean;
   demo: ReactNode;
 };
 
@@ -93,11 +91,6 @@ export function Feelings() {
                   <h3 className="font-display text-lg font-semibold tracking-tight">
                     {feeling.name}
                   </h3>
-                  {feeling.pending ? (
-                    <span className="font-mono text-[0.5625rem] tracking-[0.12em] text-ink-500 uppercase">
-                      primitive soon
-                    </span>
-                  ) : null}
                 </div>
                 <p className="mt-1.5 text-sm leading-relaxed text-ink-700">{feeling.description}</p>
               </div>

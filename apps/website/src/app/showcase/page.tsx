@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Container, Halo } from "@/components/site/layout";
+import { InteractionStudyWall } from "@/components/home/featured-interaction-wall";
 import { ShowcaseGrid } from "@/components/showcase/showcase-grid";
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default function ShowcasePage() {
         </p>
 
         <ShowcaseGrid className="mt-14" />
+        <InteractionStudyWall />
       </Container>
     </div>
   );

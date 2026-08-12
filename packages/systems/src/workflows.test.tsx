@@ -4,7 +4,7 @@ import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import { setReducedMotion } from "../../../vitest.setup";
-import { ActionUndoBar, AsyncButton, BottomSheet, CommandPalette, LongPressAction, ReorderableList, Stepper, ToastProvider, useToast } from "@pinky/systems";
+import { ActionUndoBar, AsyncButton, BottomSheet, CommandPalette, EdgeSwipePanel, LongPressAction, PullToRefresh, ReorderableList, Stepper, ToastProvider, useToast } from "@pinky/systems";
 import { moveItem } from "./lists";
 
 function ToastTrigger() { const { toast } = useToast(); return <button type="button" onClick={() => toast({ title: "File saved", action: { label: "Open file", onClick: vi.fn() } })}>Notify</button>; }
@@ -61,4 +61,80 @@ describe("Workflow systems", () => {
   });
 
   it("keeps feedback state usable when reduced motion is enabled", () => { setReducedMotion(true); render(<ActionUndoBar message="Item deleted" onUndo={vi.fn()} />); expect(screen.getByRole("status")).toHaveTextContent("Item deleted"); });
+
+  it("keeps Pull to Refresh honest and keyboard reachable", async () => {
+    const user = userEvent.setup();
+    const refresh = vi.fn();
+    render(<PullToRefresh onRefresh={refresh}><p>Studio feed</p></PullToRefresh>);
+
+    expect(screen.getByRole("status", { name: "Refresh content" })).toHaveTextContent(/reveal refresh/i);
+    await user.click(screen.getByRole("button", { name: "Refresh" }));
+    expect(refresh).toHaveBeenCalledTimes(1);
+  });
+
+  it("requires the Pull to Refresh threshold before invoking the callback", async () => {
+    const refresh = vi.fn();
+    const { container } = render(<PullToRefresh threshold={64} onRefresh={refresh}><p>Studio feed</p></PullToRefresh>);
+    const surface = container.querySelector("[data-pull-state]");
+    if (!surface) throw new Error("Pull to Refresh surface was not rendered");
+
+    act(() => {
+      fireEvent.pointerDown(surface, { clientY: 0, pointerId: 1, pointerType: "touch" });
+      fireEvent.pointerMove(surface, { clientY: 63, pointerId: 1, pointerType: "touch" });
+      fireEvent.pointerUp(surface, { clientY: 63, pointerId: 1, pointerType: "touch" });
+    });
+    expect(refresh).not.toHaveBeenCalled();
+
+    await act(async () => {
+      fireEvent.pointerDown(surface, { clientY: 0, pointerId: 2, pointerType: "touch" });
+      fireEvent.pointerMove(surface, { clientY: 64, pointerId: 2, pointerType: "touch" });
+      fireEvent.pointerUp(surface, { clientY: 64, pointerId: 2, pointerType: "touch" });
+      await Promise.resolve();
+    });
+    expect(refresh).toHaveBeenCalledTimes(1);
+  });
+
+  it("tracks Edge Swipe progress and restores focus after Escape", async () => {
+    const user = userEvent.setup();
+    function EdgeHarness() {
+      const [open, setOpen] = useState(false);
+      return <><button type="button">Outside</button><EdgeSwipePanel open={open} onOpenChange={setOpen} label="Filters"><button type="button">Apply filters</button></EdgeSwipePanel></>;
+    }
+
+    render(<EdgeHarness />);
+    const trigger = screen.getByRole("button", { name: "Open Filters" });
+    trigger.focus();
+    await user.click(trigger);
+    const dialog = await screen.findByRole("dialog", { name: "Filters" });
+    expect(dialog).toHaveAttribute("aria-label", "Filters");
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(trigger).toHaveFocus());
+    expect(screen.queryByRole("dialog", { name: "Filters" })).not.toBeInTheDocument();
+  });
+
+  it("opens Edge Swipe Panel from a tracked touch gesture", () => {
+    const onOpenChange = vi.fn();
+    const { container } = render(<EdgeSwipePanel onOpenChange={onOpenChange} label="Filters"><p>Filter content</p></EdgeSwipePanel>);
+    const rail = container.querySelector("[aria-hidden='true']");
+    if (!rail) throw new Error("Edge rail was not rendered");
+
+    fireEvent.pointerDown(rail, { clientX: 2, clientY: 120, pointerId: 1, pointerType: "touch" });
+    fireEvent.pointerMove(rail, { clientX: 190, clientY: 120, pointerId: 1, pointerType: "touch" });
+    fireEvent.pointerUp(rail, { clientX: 190, clientY: 120, pointerId: 1, pointerType: "touch" });
+
+    expect(onOpenChange).toHaveBeenCalledWith(true);
+  });
+
+  it("keeps refresh and edge alternatives usable with reduced motion", async () => {
+    setReducedMotion(true);
+    const user = userEvent.setup();
+    render(<><PullToRefresh onRefresh={vi.fn()}><p>Feed</p></PullToRefresh><EdgeSwipePanel label="Filters"><p>Filter content</p></EdgeSwipePanel></>);
+
+    await user.click(screen.getByRole("button", { name: "Refresh" }));
+    const edgeTrigger = screen.getByRole("button", { name: "Open Filters" });
+    await user.click(edgeTrigger);
+    expect(screen.getByRole("dialog", { name: "Filters" })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(edgeTrigger).toHaveFocus());
+  });
 });

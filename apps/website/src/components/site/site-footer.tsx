@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { NAV_LINKS, SITE } from "@/lib/site";
+import { LIBRARY_SECTIONS, NAV_LINKS, SITE, UTILITY_LINKS } from "@/lib/site";
 
 import { GitHubMark } from "./icons";
 import { Container } from "./layout";
@@ -8,7 +8,7 @@ import { Container } from "./layout";
 export function SiteFooter() {
   return (
     <footer className="relative mt-24 border-t border-line py-14">
-      <Container className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
+      <Container className="flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-sm">
           <p className="font-display text-lg font-semibold tracking-tight">{SITE.name}</p>
           <p className="mt-3 text-sm leading-relaxed text-ink-500">{SITE.tagline}</p>
@@ -17,43 +17,42 @@ export function SiteFooter() {
           </p>
         </div>
 
-        <div className="flex gap-12 sm:gap-16">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-6 lg:gap-12">
           <nav aria-label="Footer" className="flex flex-col gap-3">
+            <p className="font-mono text-[0.65rem] tracking-[0.14em] text-ink-500 uppercase">Site</p>
             {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm text-ink-700 transition-colors hover:text-ink-900"
-              >
+              <Link key={link.href} href={link.href} className={footerLink}>
                 {link.label}
               </Link>
             ))}
-          </nav>
-          <div className="flex flex-col gap-3">
-            <a
-              href={SITE.github}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="inline-flex items-center gap-2 text-sm text-ink-700 transition-colors hover:text-ink-900"
-            >
+            <p className="mt-3 font-mono text-[0.65rem] tracking-[0.14em] text-ink-500 uppercase">Tools</p>
+            {UTILITY_LINKS.map((link) => (
+              <Link key={link.href} href={link.href} className={footerLink}>
+                {link.label}
+              </Link>
+            ))}
+            <a href={SITE.github} target="_blank" rel="noreferrer noopener" className={`inline-flex items-center gap-2 ${footerLink}`}>
               <GitHubMark className="size-4" />
               GitHub
             </a>
-            <Link
-              href="/showcase"
-              className="text-sm text-ink-700 transition-colors hover:text-ink-900"
-            >
-              Showcase
-            </Link>
-            <Link
-              href="/components"
-              className="text-sm text-ink-700 transition-colors hover:text-ink-900"
-            >
-              Component index
-            </Link>
-          </div>
+          </nav>
+
+          {LIBRARY_SECTIONS.map((section) => (
+            <nav key={section.label} aria-label={section.label} className="flex flex-col gap-3">
+              <p className="font-mono text-[0.65rem] tracking-[0.14em] text-ink-500 uppercase">
+                {section.label}
+              </p>
+              {section.links.map((link) => (
+                <Link key={link.href} href={link.href} className={footerLink}>
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          ))}
         </div>
       </Container>
     </footer>
   );
 }
+
+const footerLink = "text-sm text-ink-700 transition-colors hover:text-ink-900";

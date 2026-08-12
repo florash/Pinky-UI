@@ -23,8 +23,8 @@ export async function SkillsTeaser() {
   return (
     <Section id="skills">
       <Container>
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-16">
-          <div>
+        <div className="grid min-w-0 gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-16">
+          <div className="min-w-0">
             <SectionHeading
               eyebrow="Skills"
               title="Built for developers — and coding agents."
@@ -53,11 +53,11 @@ export async function SkillsTeaser() {
             </Link>
           </div>
 
-          <div className="rounded-xl bg-white/70 p-6 ring-1 ring-line/60">
+          <div className="min-w-0 rounded-xl bg-white/70 p-6 ring-1 ring-line/60">
             <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">
               packages/skills/components/jelly-card.md
             </p>
-            <pre className="mt-4 overflow-x-auto font-mono text-[0.8125rem] leading-relaxed text-ink-700">
+            <pre className="mt-4 min-w-0 max-w-full overflow-x-auto font-mono text-[0.8125rem] leading-relaxed text-ink-700">
               <code>{SAMPLE}</code>
             </pre>
             <p className="mt-5 text-sm leading-relaxed text-ink-500">

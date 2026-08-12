@@ -11,6 +11,14 @@ export { LiquidSurface, type LiquidSurfaceProps, type LiquidTint } from "./liqui
 export { Morph, type MorphProps } from "./morph/morph";
 export { Proximity, useProximityItem, type ProximityProps } from "./proximity/proximity";
 export { Parallax, ParallaxLayer, type ParallaxProps, type ParallaxLayerProps } from "./parallax/parallax";
+export {
+  DepthSurface,
+  surfaceShadow,
+  surfaceLift,
+  type DepthSurfaceProps,
+  type SurfaceLevel,
+  type DepthStep,
+} from "./depth/depth-surface";
 export { useMotionEnabled } from "./internal/use-motion-enabled";
 export { subscribeToPointer, type PointerSnapshot } from "./internal/pointer-store";
 export { scatterAt, signedNoise, type ScatterOptions, type ScatterTransform } from "./collection/scatter";

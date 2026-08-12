@@ -4,7 +4,13 @@
 
 Pinky UI is an open-source collection of expressive React components and motion primitives built for interfaces that feel responsive, playful and alive.
 
-Explore jelly, liquid, magnetic, morph, glow, depth, elastic and proximity interactions — twelve components and twelve primitives, designed to stay composable, accessible and practical to use.
+Explore jelly, liquid, magnetic, morph, glow, depth, elastic and proximity interactions —
+**139 implemented items across 12 primitives, 12 components, 21 layouts, 27 effects, 19
+experiences and 48 product and workflow systems** — designed to stay composable, accessible
+and practical to use.
+
+Every item listed on the site is implemented and importable. Nothing is documented before it
+exists, and the registry in `packages/registry` is the single source of the counts above.
 
 React · TypeScript · Tailwind CSS · Motion · Accessible · Open Source
 
@@ -70,17 +76,27 @@ Ways to arrange many things, where the arrangement itself is the interaction.
 import { PolaroidWall, StackGrid } from "@pinky/layouts";
 ```
 
-Depth Carousel, Shuffle Grid, Peek Carousel, Focus Gallery, Parallax Gallery and
-Infinite Gallery are planned and **not implemented** — they do not appear on the
-site.
+Since this list was written the layouts package has grown an editorial family
+(Editorial Mosaic, Gallery ↔ List Morph, Split-Screen Gallery, Cinematic
+Horizontal Gallery, Broken / Offset Grid, Layered Editorial, Floating Columns)
+and a spatial family (Perspective Bento, Curved 3D Grid, Helix Gallery, Cylinder
+Gallery, Depth Scroll Gallery, Spatial Card Tunnel, Stack → Spatial, Infinite
+Spatial Canvas). All 21 layouts are implemented; see `packages/registry/src/layouts.ts`.
+
+The spatial layouts use CSS 3D transforms and Motion only — there is no WebGL,
+Three.js or React Three Fiber anywhere in this repository. The full runtime
+dependency list is `motion`, `next`, `react` and `react-dom`.
 
 ## Skills
 
-Pinky UI ships **agent-readable interaction Skills**: markdown in
-`packages/skills` covering what each component is for, when it is the wrong
-choice, recommended defaults, accessibility constraints and composition
-patterns — plus system-level patterns on interaction density, reduced motion,
-landing-page motion, choosing a card, and composition.
+Pinky UI ships **agent-readable interaction Skills**: 174 markdown files in
+`packages/skills` — 134 covering individual items (what each one is for, when it
+is the wrong choice, recommended defaults, accessibility constraints) and 40
+system-level patterns on interaction density, reduced motion, landing-page
+motion, choosing a card, and composition.
+
+Five primitives (`spring`, `parallax`, `press-spring`, `cursor`, `glow`) do not
+have skills yet. They are public API, not internals.
 
 The website renders those files directly, so there is no second copy to fall out
 of date.
@@ -88,14 +104,16 @@ of date.
 ## Repository
 
 ```text
-apps/website        Next.js site — components, layouts, playground, skills
-packages/primitives Interaction primitives
-packages/components Components built on top of the primitives
-packages/registry   Metadata describing every component and primitive
-packages/layouts    Galleries, grids and stacks
-packages/skills     Agent-readable Skills (components, layouts, primitives, patterns)
-content/components  Long-form component guidance
-examples/           Small standalone compositions
+apps/website         Next.js site — components, layouts, playground, skills
+packages/primitives  Interaction primitives
+packages/components  Components built on top of the primitives
+packages/layouts     Galleries, grids, stacks, editorial and spatial layouts
+packages/effects     Cursor, motion, text and scroll effects
+packages/experiences Navigation, heroes, backgrounds, transitions, spatial UI
+packages/systems     Media, forms, data and product workflow systems
+packages/registry    Metadata describing every item in the library
+packages/skills      Agent-readable Skills (items + patterns)
+examples/            Small standalone compositions
 ```
 
 The website compiles `packages/*` straight from TypeScript source through the
@@ -116,10 +134,10 @@ npm run dev
 
 Then open `http://localhost:3000`.
 
-Other scripts: `npm run build`, `npm run typecheck`.
+Other scripts: `npm run build`, `npm run typecheck`, `npm run lint`, `npm test`.
 
-ESLint is not configured yet — `next lint` is deprecated in Next 15, and a flat
-config with the Next plugin is still to be added.
+ESLint uses a flat config (`eslint.config.mjs`) with the Next plugin. Tests run
+on Vitest with Testing Library.
 
 ## Accessibility
 

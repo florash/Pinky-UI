@@ -15,4 +15,12 @@ export function ExpandableListRow({ summary, children, open, defaultOpen = false
 
 export function SwipeActionRow({ children, actions, threshold = 72, className }: { children: ReactNode; actions: Array<{ label: string; onAction: () => void; destructive?: boolean }>; threshold?: number; className?: string }) { const [open, setOpen] = useState(false); const start = useRef(0); return <div className={cn("relative overflow-hidden rounded-2xl bg-cloud-100", className)}><div className="absolute inset-y-0 right-0 flex items-stretch">{actions.map((action) => <button key={action.label} type="button" onClick={action.onAction} className={cn("min-w-20 px-3 text-sm", action.destructive ? "bg-red-600 text-white" : "bg-cloud-200")}>{action.label}</button>)}</div><motion.div drag="x" dragConstraints={{ left: -actions.length * 80, right: 0 }} dragElastic={.08} animate={{ x: open ? -actions.length * 80 : 0 }} onDragStart={(_, info) => { start.current = info.point.x; }} onDragEnd={(_, info) => setOpen(start.current - info.point.x > threshold)} className="relative flex items-center gap-3 bg-white p-4"><div className="min-w-0 flex-1">{children}</div><button type="button" aria-expanded={open} aria-label="Show row actions" onClick={() => setOpen(!open)}>•••</button></motion.div></div>; }
 export function StickyDataHeader({ children, className }: { children: ReactNode; className?: string }) { return <div className={cn("sticky top-0 z-10 border-b border-line bg-white/90 p-3 backdrop-blur supports-[backdrop-filter]:shadow-sm", className)}>{children}</div>; }
-export function RowSpotlight({ children, className }: { children: ReactNode; className?: string }) { return <div tabIndex={0} className={cn("group rounded-xl px-3 py-2 outline-none transition-colors hover:bg-blush-50 focus-visible:bg-blush-50 focus-visible:ring-2 focus-visible:ring-blush-300", className)}>{children}</div>; }
+/**
+ * A presentational emphasis wrapper for a row.
+ *
+ * It deliberately carries no role and no tab stop: it decorates whatever
+ * interactive content the caller puts inside it. Focus emphasis is driven by
+ * `focus-within`, so it lights up when a real control inside the row is
+ * focused, rather than adding an empty tab stop of its own.
+ */
+export function RowSpotlight({ children, className }: { children: ReactNode; className?: string }) { return <div className={cn("group rounded-xl px-3 py-2 transition-colors hover:bg-blush-50 focus-within:bg-blush-50", className)}>{children}</div>; }

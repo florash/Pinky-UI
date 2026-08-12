@@ -1,35 +1,61 @@
 # Morph
 
-## Purpose
+## What it does
 
-Expands one surface into another as a single continuous object, with full dialog
-semantics.
+Morph expands one surface into another as one continuous object. It is a
+geometry transition with dialog semantics, not a generic fade between panels.
 
-## Use it when
+## Interaction anatomy
 
-A compact surface should become a detailed one and the user must not lose track
-of which thing became which.
+- **Trigger:** the collapsed surface, normally a button or equivalent control.
+- **State:** closed, opening, open and closing.
+- **Motion:** shared layout identity and a spring when motion is enabled.
+- **Surface:** the trigger and the expanded dialog share visual identity.
+- **Feedback:** Escape, backdrop close and focus restoration explain the exit.
 
-## API shape
+## Good for
 
-`children` is the collapsed state, `expanded` is the panel, `label` names the
-dialog. Controlled via `open` / `onOpenChange` or left uncontrolled.
+- A card becoming a focused detail panel.
+- A thumbnail becoming a larger inspection surface.
+- A compact navigation trigger becoming a short menu.
 
-## Judgment
+## Avoid for
 
-The continuity is the entire value. If the collapsed and expanded states share
-no visual identity — different colours, different proportions, unrelated content
-— a morph will confuse rather than orient, and a plain dialog is the better
-choice.
+- Destructive confirmations or unrelated route changes.
+- States with no visual identity in common.
+- Long forms that need a stable page context.
 
-Never use it for destructive confirmations. Playful spatial transitions
-undermine the seriousness those moments need.
+## Live example
 
-## Accessibility — non-negotiable
+Open the live surface above, move focus through the dialog, then press Escape.
+The trigger is restored after the object returns.
 
-Dialog role, `aria-modal`, Escape to close, focus trap, focus restoration to the
-trigger, scroll lock. If you fork this primitive, keep all of it.
+## Usage
 
-## Performance
+```tsx
+<Morph
+  label="Project details"
+  expanded={<ProjectDetails />}
+>
+  <ProjectPreview />
+</Morph>
+```
 
-The expanded content mounts only while open. Keep it that way.
+## Tune
+
+- `maxWidth` should match the reading task, not the largest screen available.
+- Keep the collapsed and expanded surfaces close in colour, radius and identity.
+- Use `triggerLabel` only when the collapsed child has no visible text.
+- Keep expanded content mounted only while open.
+
+## Accessibility
+
+- Preserve `role="dialog"`, `aria-modal`, a useful label and a focus trap.
+- Escape and backdrop close must return focus to the trigger.
+- The trigger remains a real button; do not make a decorative `div` clickable.
+- Touch uses the same explicit trigger and close paths as pointer input.
+
+## Reduced motion
+
+Reduced motion removes the travel and resolves the dialog immediately. Open,
+close, focus and state feedback remain fully available.

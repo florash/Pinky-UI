@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { PreviewPanel } from "@/components/gallery/preview-panel";
+import { hasComponentPreview } from "@/components/previews/preview-manifest";
 import { Markdown } from "@/components/skills/markdown";
 import { getSkill } from "@/lib/skills";
 import { Playground } from "@/components/playground/playground";
@@ -30,9 +31,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ComponentDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const entry = getComponent(slug);
-  if (!entry) notFound();
+  if (!entry || entry.status !== "ready" || !hasComponentPreview(entry.slug)) notFound();
 
-  const ready = entry.status === "ready";
   const related = entry.related.map(getComponent).filter((item) => item !== undefined);
   // One source of truth: the same markdown the /skills route renders.
   const skill = entry.skill ? await getSkill("components", entry.skill) : null;
@@ -63,11 +63,6 @@ export default async function ComponentDetailPage({ params }: PageProps) {
         <header className="mt-8 max-w-2xl">
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-section text-balance-tight">{entry.name}</h1>
-            {!ready ? (
-              <span className="rounded-pill border border-line px-2.5 py-1 font-mono text-[0.625rem] tracking-[0.1em] text-ink-500 uppercase">
-                in progress
-              </span>
-            ) : null}
           </div>
           <p className="mt-5 text-lg leading-relaxed text-ink-700">{entry.description}</p>
 
@@ -105,8 +100,7 @@ export default async function ComponentDetailPage({ params }: PageProps) {
           />
         </div>
 
-        {ready ? (
-          <div className="mt-20 grid gap-16 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-12">
+        <div className="mt-20 grid gap-16 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-12">
             <div className="flex flex-col gap-16">
               {entry.presets.length > 0 ? (
                 <Block title="Presets" id="presets">
@@ -130,8 +124,8 @@ export default async function ComponentDetailPage({ params }: PageProps) {
 
               <Block title="Installation" id="installation">
                 <p className="text-sm leading-relaxed text-ink-700">
-                  Pinky UI is not published to npm yet. Copy the component and the primitives it is
-                  built on into your project — they depend only on React and Motion.
+                  Copy the component and the primitives it is built on into your project — they
+                  depend only on React and Motion.
                 </p>
                 <CodeBlock
                   className="mt-4"
@@ -247,12 +241,6 @@ export default async function ComponentDetailPage({ params }: PageProps) {
               ) : null}
             </aside>
           </div>
-        ) : (
-          <p className="mt-16 max-w-xl rounded-xl border border-dashed border-line px-6 py-10 text-sm leading-relaxed text-ink-500">
-            {entry.name} is on the V1 roadmap but not implemented yet. Nothing here is documented
-            until the component actually exists.
-          </p>
-        )}
       </Container>
     </article>
   );

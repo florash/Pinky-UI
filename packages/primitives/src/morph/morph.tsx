@@ -21,6 +21,8 @@ export type MorphProps = {
   expanded: ReactNode;
   /** Accessible name for the expanded dialog. */
   label: string;
+  /** Optional name for visual-only triggers whose children have no text. */
+  triggerLabel?: string;
   /** Controlled open state. Omit to let the primitive own it. */
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -48,6 +50,7 @@ export function Morph({
   children,
   expanded,
   label,
+  triggerLabel,
   open: controlledOpen,
   onOpenChange,
   maxWidth = 620,
@@ -159,6 +162,7 @@ export function Morph({
         transition={transition}
         aria-expanded={open}
         aria-haspopup="dialog"
+        aria-label={triggerLabel}
         disabled={disabled}
         onClick={() => setOpen(true)}
         className={className}

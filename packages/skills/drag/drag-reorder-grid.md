@@ -13,7 +13,11 @@ Large collections where full-list layout animation is expensive or order has no 
 Provide handle labels, arrow movement, live announcements, and stable item identity.
 
 ## Keyboard and touch
-Pointer/touch drag is optional acceleration; directional buttons or keys are required.
+Dragging is implemented with the native HTML5 drag-and-drop API, which does **not** fire on touch
+input. On touch devices there is no drag path at all, so the arrow-key handle is the only way to
+reorder — treat it as the primary interaction and always render a visible move control beside it.
+This differs from `Reorderable List` and `Sortable Chips`, which use Motion's `Reorder` and do
+support touch dragging.
 
 ## Reduced motion and performance
 Use transform/layout animation sparingly and avoid per-pointer React state.

@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import {
@@ -20,26 +19,26 @@ import {
 } from "@pinky/layouts";
 import type { ReactNode } from "react";
 
-const PHOTOS = [
-  "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1100&q=82",
-  "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1100&q=82",
-  "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1100&q=82",
-  "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1100&q=82",
-];
+import { SoftSurface } from "./soft-surface";
 
-const ALT = [
-  "Curved concrete architecture",
-  "Sunlit shared studio",
-  "Glass-walled working room",
-  "Long communal table",
-];
-
-function Photo({ index, className = "h-full w-full object-cover", alt }: { index: number; className?: string; alt?: string }) {
-  return <img loading="lazy" src={PHOTOS[index % PHOTOS.length]} alt={alt ?? ALT[index % ALT.length]} className={className} />;
+/**
+ * Demo surfaces, not photography.
+ *
+ * The layouts are content-agnostic — `content` is a ReactNode — so the previews
+ * had no reason to be photo-driven beyond habit. Blush, cloud and white keep the
+ * arrangement itself the only thing worth looking at.
+ */
+function Photo({ index, className = "h-full w-full" }: { index: number; className?: string; alt?: string }) {
+  return <SoftSurface index={index} className={className} />;
 }
 
 function PhotoTile({ index, title, className = "" }: { index: number; title: string; className?: string }) {
-  return <figure className={`relative h-full min-h-32 overflow-hidden bg-cloud-100 ${className}`}><Photo index={index} /><figcaption className="absolute inset-x-3 bottom-3 rounded-pill bg-ink-900/75 px-3 py-1.5 text-xs text-milk">{title}</figcaption></figure>;
+  return (
+    <figure className={`relative h-full min-h-32 overflow-hidden bg-cloud-50 ${className}`}>
+      <SoftSurface index={index} className="h-full w-full" />
+      <figcaption className="absolute inset-x-3 bottom-3 rounded-pill bg-white/80 px-3 py-1.5 text-xs text-ink-700 shadow-soft">{title}</figcaption>
+    </figure>
+  );
 }
 
 const EDITORIAL_ITEMS = [
@@ -98,9 +97,9 @@ export const MODERN_LAYOUT_PREVIEWS: Record<string, ReactNode> = {
   "spatial-card-tunnel": <SpatialCardTunnel items={COLLECTION_ITEMS.map((item, index) => ({ id: item.id, label: item.label, meta: item.meta, content: <SmallSpatialCard index={index} title={item.label} /> }))} className="w-full max-w-2xl" />,
   "stack-spatial": <StackSpatial items={COLLECTION_ITEMS.map((item, index) => ({ id: item.id, label: item.label, meta: item.meta, content: <SmallSpatialCard index={index} title={item.label} /> }))} className="w-full max-w-2xl" />,
   "infinite-spatial-canvas": <InfiniteSpatialCanvas items={[
-    { id: "canvas-1", label: "Arrival", x: 36, y: 36, meta: "01", content: <Photo index={0} className="h-36 w-full object-cover" /> },
-    { id: "canvas-2", label: "Commons", x: 340, y: 70, meta: "02", content: <Photo index={1} className="h-40 w-full object-cover" /> },
-    { id: "canvas-3", label: "Threshold", x: 110, y: 250, meta: "03", content: <Photo index={2} className="h-32 w-full object-cover" /> },
-    { id: "canvas-4", label: "Work table", x: 420, y: 290, meta: "04", content: <Photo index={3} className="h-36 w-full object-cover" /> },
+    { id: "canvas-1", label: "Arrival", x: 36, y: 36, meta: "near field", cluster: "near field", plane: "foreground", content: <Photo index={0} className="h-36 w-full object-cover" /> },
+    { id: "canvas-2", label: "Commons", x: 340, y: 70, meta: "shared", cluster: "near field", plane: "working", content: <Photo index={1} className="h-40 w-full object-cover" /> },
+    { id: "canvas-3", label: "Threshold", x: 110, y: 250, meta: "edge study", cluster: "quiet edge", plane: "distant", content: <Photo index={2} className="h-32 w-full object-cover" /> },
+    { id: "canvas-4", label: "Work table", x: 420, y: 290, meta: "deep focus", cluster: "deep focus", plane: "foreground", content: <Photo index={3} className="h-36 w-full object-cover" /> },
   ]} height={470} bounds={{ left: -80, right: 80, top: -80, bottom: 80 }} className="w-full max-w-3xl" />,
 };

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { LayoutPreview } from "@/components/previews/layout-previews";
 import { ArrowRight } from "@/components/site/icons";
 import { Container, Section, SectionHeading } from "@/components/site/layout";
+import { hasLayoutPreview } from "@/components/previews/preview-manifest";
 
 /** Ordered so the first two are the most spatially surprising. */
 const SHOWN = [
@@ -17,7 +18,8 @@ const SHOWN = [
 
 export function LayoutsSection() {
   const shown = SHOWN.map((slug) => layouts.find((entry) => entry.slug === slug)).filter(
-    (entry) => entry !== undefined,
+    (entry): entry is NonNullable<typeof entry> =>
+      Boolean(entry && entry.status === "ready" && hasLayoutPreview(entry.slug)),
   );
 
   return (

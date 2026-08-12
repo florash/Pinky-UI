@@ -10,6 +10,7 @@ import { cn } from "../internal/cn";
 export type MorphingHeroProps = {
   eyebrow?: ReactNode;
   title: ReactNode;
+  titleAs?: "h1" | "h2" | "h3";
   description?: ReactNode;
   media: ReactNode;
   actions?: ReactNode;
@@ -24,6 +25,7 @@ export type MorphingHeroProps = {
 export function MorphingHero({
   eyebrow,
   title,
+  titleAs = "h1",
   description,
   media,
   actions,
@@ -45,6 +47,7 @@ export function MorphingHero({
   const mediaY = useTransform(smooth, [0, 1], [0, -26], { clamp: true });
   const radius = useTransform(smooth, [0, 1], [24, 38], { clamp: true });
   const compactOpacity = useTransform(smooth, [0.58, 0.9], [0, 1], { clamp: true });
+  const Heading = titleAs;
 
   return (
     <section
@@ -66,7 +69,7 @@ export function MorphingHero({
             style={active ? { scale: titleScale, y: titleY, opacity: titleOpacity, transformOrigin: "left top" } : undefined}
           >
             {eyebrow ? <div>{eyebrow}</div> : null}
-            <h1>{title}</h1>
+            <Heading>{title}</Heading>
             {description ? <div>{description}</div> : null}
             {actions ? <div>{actions}</div> : null}
           </motion.div>

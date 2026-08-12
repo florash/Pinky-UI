@@ -242,4 +242,14 @@ describe("CardFan", () => {
     await user.tab();
     expect(cards[0]).toHaveFocus();
   });
+
+  it("keeps deck selection usable with reduced motion", async () => {
+    setReducedMotion(true);
+    const user = userEvent.setup();
+    render(<CardFan label="Plans">{PHOTOS.map((photo) => <p key={photo}>{photo}</p>)}</CardFan>);
+
+    await user.tab();
+    await user.keyboard("{ArrowRight}");
+    expect(screen.getByRole("button", { name: "Lisbon" })).toHaveAttribute("aria-pressed", "true");
+  });
 });

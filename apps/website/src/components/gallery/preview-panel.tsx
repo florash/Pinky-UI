@@ -40,7 +40,7 @@ export function PreviewPanel({
             <CodeBlock code={code} label="usage" />
           ) : (
             <p className="rounded-xl px-6 py-14 text-center text-sm text-ink-500 ring-1 ring-line/60 ring-dashed">
-              This component is still being built — there is no API to document yet.
+              This live preview does not need a usage snippet.
             </p>
           ),
         },

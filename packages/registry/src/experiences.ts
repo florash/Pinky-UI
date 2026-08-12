@@ -190,7 +190,7 @@ export const transitionExperiences = [
     primaryProp: { name: "name", type: "string", description: "Stable identity shared by source and destination." }, quietProps: { disabled: true },
     accessibility: ["Route mode remains a real anchor.", "In-place detail mode inherits Escape, focus trap and focus restoration from Morph."],
     performance: ["Transforms one meaningful surface rather than the whole page.", "View Transition naming is progressive enhancement."],
-    whenToUse: ["Thumbnail-to-detail continuity"], whenNotToUse: ["Unrelated page changes or many simultaneous shared objects"], related: ["morph", "shared-morph"],
+    whenToUse: ["Thumbnail-to-detail continuity"], whenNotToUse: ["Unrelated page changes or many simultaneous shared objects"], related: ["morph", "blur-route-transition"],
   }),
   entry({
     component: "BubbleTransition", family: "transitions", slug: "bubble-transition", name: "Bubble Transition",

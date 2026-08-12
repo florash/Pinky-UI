@@ -11,11 +11,11 @@ import { SITE } from "@/lib/site";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden pt-12 pb-24 sm:pt-20 sm:pb-32">
+    <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14">
       <HeroAtmosphere />
 
       <Container className="relative">
-        <div className="grid items-center gap-16 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-12">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-10">
           <div className="max-w-xl">
             <p className="flex items-center gap-2.5 font-mono text-[0.6875rem] tracking-[0.2em] text-ink-500 uppercase">
               <span className="size-1.5 rounded-pill bg-blush-300" />
@@ -29,17 +29,17 @@ export function Hero() {
               in the header, the logo and the eyebrow above. What a first-time
               visitor should remember is what the library does.
             */}
-            <h1 className="mt-8 text-display text-balance-tight">
+            <h1 className="mt-6 max-w-xl text-[clamp(2.75rem,5vw,4.5rem)] leading-[0.96] tracking-[-0.055em] text-balance-tight">
               UI that likes
               <br />
               to move.
             </h1>
 
-            <p className="mt-8 max-w-md text-lg leading-relaxed text-ink-700">
-              Soft, fluid and interactive React components for expressive modern interfaces.
+            <p className="mt-5 max-w-md text-base leading-relaxed text-ink-700 sm:text-lg">
+              A curated interaction reference system — real UI, already moving, ready to touch.
             </p>
 
-            <div className="mt-10 flex flex-wrap items-center gap-3">
+            <div className="mt-7 flex flex-wrap items-center gap-3">
               <MagneticLink href="/components" size="lg">
                 Explore components
                 <ArrowRight className="size-4" />
@@ -112,8 +112,8 @@ function HeroAtmosphere() {
  */
 function HeroStage() {
   return (
-    <CursorGlow size={520} intensity={0.4} className="rounded-2xl">
-      <div className="relative mx-auto w-full max-w-md lg:h-[30rem] lg:max-w-none">
+    <CursorGlow size={460} intensity={0.36} className="rounded-2xl">
+      <div className="relative mx-auto w-full max-w-md lg:h-[23rem] lg:max-w-none">
         {/* An abstract soft surface, purely there to give the scene depth. */}
         <span
           aria-hidden
@@ -130,7 +130,7 @@ function HeroStage() {
           radius="2xl"
           elasticity={0.4}
           intensity={0.2}
-          className="lg:absolute lg:top-16 lg:left-0 lg:z-20 lg:w-[21.5rem]"
+          className="lg:absolute lg:top-10 lg:left-0 lg:z-20 lg:w-[20rem]"
           surfaceClassName="p-7"
         >
           <p className="font-mono text-[0.6875rem] tracking-[0.16em] text-ink-500 uppercase">
@@ -159,7 +159,7 @@ function HeroStage() {
         <GlowBorder
           radius="xl"
           size={170}
-          className="mt-4 lg:absolute lg:top-0 lg:right-0 lg:z-10 lg:mt-0 lg:w-[14rem]"
+          className="mt-4 lg:absolute lg:top-0 lg:right-0 lg:z-10 lg:mt-0 lg:w-[13rem]"
         >
           <div className="rounded-xl bg-white/90 p-5 shadow-soft ring-1 ring-line">
             <p className="font-mono text-[0.6875rem] tracking-[0.16em] text-ink-500 uppercase">
@@ -171,7 +171,7 @@ function HeroStage() {
           </div>
         </GlowBorder>
 
-        <div className="mt-4 lg:absolute lg:right-0 lg:bottom-10 lg:z-30 lg:mt-0 lg:w-[16.5rem]">
+        <div className="mt-4 lg:absolute lg:right-0 lg:bottom-6 lg:z-30 lg:mt-0 lg:w-[15rem]">
           <div className="rounded-xl bg-white/90 p-4 shadow-lift ring-1 ring-line">
             <p className="mb-3 font-mono text-[0.6875rem] tracking-[0.16em] text-ink-500 uppercase">
               Fluid Tabs
@@ -190,7 +190,7 @@ function HeroStage() {
         </div>
 
         {/* Floating free of any card, so the magnetism reads as its own thing. */}
-        <div className="mt-6 flex justify-center lg:absolute lg:bottom-0 lg:left-12 lg:z-30 lg:mt-0 lg:justify-start">
+        <div className="mt-5 flex justify-center lg:absolute lg:bottom-0 lg:left-8 lg:z-30 lg:mt-0 lg:justify-start">
           <MagneticButton size="lg" strength={0.45} range={150}>
             Magnetic
           </MagneticButton>

@@ -105,4 +105,14 @@ describe("spatial layouts", () => {
     expect(screen.getByRole("button", { name: "Spread into space" })).toBeEnabled();
     expect(screen.getAllByRole("listitem")).toHaveLength(ITEMS.length);
   });
+
+  it("keeps direct canvas controls available with reduced motion", async () => {
+    setReducedMotion(true);
+    const user = userEvent.setup();
+    render(<InfiniteSpatialCanvas items={ITEMS.map((item, index) => ({ ...item, x: index * 80, y: index * 40 }))} />);
+
+    await user.click(screen.getByRole("button", { name: "Zoom in spatial canvas" }));
+    expect(screen.getByText("Zoom 110% · 3 items")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Reset view" })).toBeEnabled();
+  });
 });

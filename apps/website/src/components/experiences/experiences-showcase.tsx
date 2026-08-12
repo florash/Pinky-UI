@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element */
 
 import {
   BlurRouteTransition,
@@ -26,21 +25,29 @@ import {
 import type { ExperienceFamily } from "@pinky/registry";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
+import { LazyMount } from "@/components/site/lazy-mount";
 
 const FAMILY_LINKS: Array<{ family: ExperienceFamily; label: string; href: string }> = [
   { family: "navigation", label: "Navigation", href: "/navigation" },
   { family: "heroes", label: "Heroes", href: "/heroes" },
   { family: "backgrounds", label: "Backgrounds", href: "/backgrounds" },
   { family: "transitions", label: "Transitions", href: "/transitions" },
-  { family: "spatial", label: "Spatial", href: "/spatial" },
+  // Kept as a secondary wall for existing routes; public Layouts → Spatial is
+  // the canonical home for collection arrangements.
+  { family: "spatial", label: "Spatial · experimental", href: "/spatial" },
 ];
 
+/** Demo surfaces, not photography — the experience is the subject. */
 const IMAGES = [
-  "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1100&q=82",
-  "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1100&q=82",
-  "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1100&q=82",
-  "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1100&q=82",
+  "linear-gradient(150deg, var(--color-blush-100), var(--color-blush-200) 55%, var(--color-cloud-100))",
+  "linear-gradient(160deg, var(--color-cloud-100), var(--color-cloud-200) 60%, var(--color-white))",
+  "linear-gradient(140deg, var(--color-white), var(--color-blush-100) 48%, var(--color-cloud-200))",
+  "linear-gradient(170deg, var(--color-blush-50), var(--color-cloud-100) 52%, var(--color-blush-200))",
 ] as const;
+
+function Surface({ image, className }: { image: string; className?: string }) {
+  return <span aria-hidden className={className} style={{ backgroundImage: image, display: "block" }} />;
+}
 
 export function ExperiencesShowcase({ family = "all" }: { family?: ExperienceFamily | "all" }) {
   const visible = (candidate: ExperienceFamily) => family === "all" || family === candidate;
@@ -51,9 +58,9 @@ export function ExperiencesShowcase({ family = "all" }: { family?: ExperienceFam
       <SoftMeshBackground className="border-b border-line/70">
         <header className="mx-auto max-w-[76rem] px-5 py-20 sm:px-8 sm:py-28">
           <p className="font-mono text-[0.6875rem] tracking-[0.18em] text-ink-500 uppercase">
-            Milestone 2.7 · {title}
+            {title}
           </p>
-          <h1 className="mt-5 max-w-4xl text-display text-balance-tight">
+          <h1 className="mt-4 max-w-3xl text-section text-balance-tight">
             Shape the whole experience, quietly.
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-700">
@@ -144,7 +151,7 @@ function HeroesSection() {
           title={<span className="block max-w-3xl text-4xl leading-[1.04] sm:text-6xl">Spaces for slower, better work.</span>}
           description={<p className="mt-4 max-w-xl text-ink-700">A meaningful compression, with no pinned scroll takeover.</p>}
           actions={<a href="#depth-hero" className="mt-5 inline-flex rounded-pill bg-ink-900 px-5 py-3 text-sm text-milk">See the layers</a>}
-          media={<img src={IMAGES[1]} alt="Sunlit shared studio" className="h-[42vh] min-h-72 w-full object-cover" />}
+          media={<Surface image={IMAGES[1]} className="h-[42vh] min-h-72 w-full" />}
           compactLabel={<span className="rounded-pill bg-white/85 px-3 py-1.5 text-xs shadow-soft">Studio 01</span>}
         />
       </DemoFrame>
@@ -188,17 +195,30 @@ function BackgroundsSection() {
   return (
     <ExperienceSection id="backgrounds" eyebrow="03 · Backgrounds" title="Atmosphere that knows it is behind the content.">
       <div className="grid gap-6 lg:grid-cols-2">
+        {/*
+          Each of these animates continuously once mounted. Four of them starting
+          at page load is a cost the visitor pays long before scrolling here, so
+          they wait until they are actually near the viewport.
+        */}
         <DemoFrame id="soft-mesh-background" label="Soft Mesh Background" description="Three slow themeable fields pause when this section leaves view.">
-          <SoftMeshBackground className="min-h-72 rounded-2xl">{copy}</SoftMeshBackground>
+          <LazyMount minHeight={288} className="rounded-2xl bg-cloud-50/40">
+            <SoftMeshBackground className="min-h-72 rounded-2xl">{copy}</SoftMeshBackground>
+          </LazyMount>
         </DemoFrame>
         <DemoFrame id="interactive-gradient" label="Interactive Gradient" description="A shared pointer source moves a broad, low-intensity local field.">
-          <InteractiveGradient className="min-h-72 rounded-2xl">{copy}</InteractiveGradient>
+          <LazyMount minHeight={288} className="rounded-2xl bg-cloud-50/40">
+            <InteractiveGradient className="min-h-72 rounded-2xl">{copy}</InteractiveGradient>
+          </LazyMount>
         </DemoFrame>
         <DemoFrame id="bubble-field" label="Bubble Field" description="Ten deterministic orbs—not a particle engine—with optional gentle repulsion.">
-          <BubbleField count={10} pointerResponse className="min-h-72 rounded-2xl bg-cloud-50">{copy}</BubbleField>
+          <LazyMount minHeight={288} className="rounded-2xl bg-cloud-50/40">
+            <BubbleField count={10} pointerResponse className="min-h-72 rounded-2xl bg-cloud-50">{copy}</BubbleField>
+          </LazyMount>
         </DemoFrame>
         <DemoFrame id="spotlight-grid" label="Spotlight Grid" description="A local light reveals structure without becoming a neon cyber grid.">
-          <SpotlightGrid className="min-h-72 rounded-2xl bg-white">{copy}</SpotlightGrid>
+          <LazyMount minHeight={288} className="rounded-2xl bg-cloud-50/40">
+            <SpotlightGrid className="min-h-72 rounded-2xl bg-white">{copy}</SpotlightGrid>
+          </LazyMount>
         </DemoFrame>
       </div>
     </ExperienceSection>
@@ -216,9 +236,9 @@ function TransitionsSection() {
           label="Quiet Room project"
           className="block w-full overflow-hidden rounded-2xl bg-white text-left shadow-soft"
           expandedClassName="overflow-hidden bg-white"
-          expanded={<div><img src={IMAGES[0]} alt="Concrete cultural space" className="h-64 w-full object-cover" /><div className="p-6"><Eyebrow>Case study</Eyebrow><h3 className="mt-3 text-3xl">Quiet Room</h3><p className="mt-3 text-ink-700">A shared surface keeps the source and detail spatially related. Press Escape to return.</p></div></div>}
+          expanded={<div><Surface image={IMAGES[0]} className="h-64 w-full" /><div className="p-6"><Eyebrow>Case study</Eyebrow><h3 className="mt-3 text-3xl">Quiet Room</h3><p className="mt-3 text-ink-700">A shared surface keeps the source and detail spatially related. Press Escape to return.</p></div></div>}
         >
-          <div className="grid gap-5 sm:grid-cols-[220px_1fr] sm:items-center"><img src={IMAGES[0]} alt="Concrete cultural space" className="h-44 w-full object-cover" /><div className="p-5 sm:p-0 sm:pr-6"><Eyebrow>Open project</Eyebrow><h3 className="mt-2 text-2xl">Quiet Room</h3></div></div>
+          <div className="grid gap-5 sm:grid-cols-[220px_1fr] sm:items-center"><Surface image={IMAGES[0]} className="h-44 w-full" /><div className="p-5 sm:p-0 sm:pr-6"><Eyebrow>Open project</Eyebrow><h3 className="mt-2 text-2xl">Quiet Room</h3></div></div>
         </SharedElementTransition>
       </DemoFrame>
 
@@ -323,12 +343,12 @@ function viewContent(value: number) {
 }
 
 function MediaCard({ image, title }: { image: string; title: string }) {
-  return <div className="w-64 overflow-hidden rounded-[22px] bg-white shadow-lift sm:w-72"><img src={image} alt="" className="h-52 w-full object-cover" /><div className="p-4"><p className="font-display font-semibold">{title}</p><p className="mt-1 text-xs text-ink-500">Spatial study · 2026</p></div></div>;
+  return <div className="w-64 overflow-hidden rounded-[22px] bg-white shadow-lift sm:w-72"><Surface image={image} className="h-52 w-full" /><div className="p-4"><p className="font-display font-semibold">{title}</p><p className="mt-1 text-xs text-ink-500">Spatial study · 2026</p></div></div>;
 }
 
 function WindowContent({ tone, title }: { tone: "blush" | "cloud" | "ink"; title: string }) {
-  const colors = { blush: "bg-blush-50", cloud: "bg-cloud-50", ink: "bg-ink-900 text-milk" };
-  return <div className={`${colors[tone]} min-h-52 p-6`}><p className="font-mono text-xs tracking-[0.14em] uppercase opacity-60">Live overview</p><p className="mt-7 font-display text-3xl font-semibold">{title}</p><div className="mt-8 grid grid-cols-3 gap-2"><span className="h-12 rounded-lg bg-white/50" /><span className="h-12 rounded-lg bg-white/50" /><span className="h-12 rounded-lg bg-white/50" /></div></div>;
+  const colors = { blush: "bg-blush-50", cloud: "bg-cloud-50", ink: "bg-blush-100" };
+  return <div className={`${colors[tone]} min-h-52 p-6`}><p className="font-mono text-xs tracking-[0.14em] uppercase opacity-60">Live overview</p><p className="mt-7 font-display text-3xl font-semibold">{title}</p><div className="mt-8 grid grid-cols-3 gap-2"><span className="h-12 rounded-lg bg-white/80" /><span className="h-12 rounded-lg bg-white/80" /><span className="h-12 rounded-lg bg-white/80" /></div></div>;
 }
 
 function Eyebrow({ children }: { children: ReactNode }) {

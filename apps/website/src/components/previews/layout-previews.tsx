@@ -34,16 +34,10 @@ export const LAYOUT_PREVIEWS: Record<string, ReactNode> = {
 export function LayoutPreview({ slug }: { slug: string }) {
   const preview = LAYOUT_PREVIEWS[slug];
   if (preview) return <>{preview}</>;
-
-  return (
-    <div className="flex flex-col items-center gap-2 text-center">
-      <span className="size-10 rounded-pill ring-1 ring-line-strong ring-dashed" aria-hidden />
-      <p className="font-mono text-[0.6875rem] tracking-[0.14em] text-ink-500 uppercase">
-        In progress
-      </p>
-    </div>
-  );
+  return null;
 }
+
+export { hasLayoutPreview } from "./preview-manifest";
 
 /** Six repeatable tints, so a collection reads as varied without imagery. */
 const TINTS = [
@@ -222,26 +216,30 @@ function BentoPreview({ index, title, note }: { index: number; title: string; no
 }
 
 function CardFanDemo() {
-  const cards = ["Studio", "Team", "Business", "Enterprise", "Custom"];
+  const cards = [
+    ["Arrival", "01 / entry"],
+    ["Commons", "02 / shared"],
+    ["Threshold", "03 / edge"],
+    ["Work table", "04 / focus"],
+  ];
 
-  // Not collapsible in the demo: a fan that only opens on hover shows nothing
-  // at rest, and nothing at all on touch.
   return (
     <CardFan
-      spread={26}
-      rotation={8}
-      collapsible={false}
+      spread={24}
+      rotation={7}
       className="w-full max-w-lg"
-      label="Sample fan"
+      label="Curated studio deck"
     >
-      {cards.map((card, index) => (
+      {cards.map(([title, meta], index) => (
         <div
-          key={card}
-          className="w-36 rounded-xl bg-white p-4 shadow-lift ring-1 ring-line"
+          key={title}
+          className="w-36 overflow-hidden rounded-[18px] bg-white shadow-lift ring-1 ring-line"
         >
-          <Swatch index={index} ratio="1 / 1" />
-          <p className="mt-3 text-sm font-medium">{card}</p>
-          <p className="text-xs text-ink-500">Plan</p>
+          <Swatch index={index} ratio="4 / 3" className="rounded-none" />
+          <div className="p-3">
+            <p className="text-sm font-medium">{title}</p>
+            <p className="mt-1 font-mono text-[0.58rem] text-ink-500">{meta}</p>
+          </div>
         </div>
       ))}
     </CardFan>

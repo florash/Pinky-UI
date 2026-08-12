@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-import { ComponentPreview } from "@/components/previews/component-previews";
+import { ComponentPreview, hasComponentPreview } from "@/components/previews/component-previews";
 import { SearchMark } from "@/components/site/icons";
 
 export function ComponentGallery() {
@@ -21,7 +21,10 @@ export function ComponentGallery() {
   const [interaction, setInteraction] = useState<Interaction | "all">("all");
 
   const results = useMemo(
-    () => filterComponents(components, { query, category, interaction }),
+    () =>
+      filterComponents(components, { query, category, interaction }).filter(
+        (entry) => entry.status === "ready" && hasComponentPreview(entry.slug),
+      ),
     [category, interaction, query],
   );
 
@@ -36,7 +39,7 @@ export function ComponentGallery() {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search interactions, tags, components…"
-            className="h-12 w-full rounded-pill border border-line bg-white/80 pr-4 pl-11 text-sm text-ink-900 placeholder:text-ink-500 focus:border-line-strong focus:outline-none"
+            className="h-12 w-full rounded-pill border border-line bg-white/80 pr-4 pl-11 text-sm text-ink-900 placeholder:text-ink-500 focus:border-line-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-900 focus-visible:ring-offset-2 focus-visible:ring-offset-milk"
           />
         </label>
 
@@ -68,22 +71,13 @@ export function ComponentGallery() {
             <Link
               key={entry.slug}
               href={`/components/${entry.slug}`}
-              className="group flex flex-col overflow-hidden rounded-xl border border-line bg-white/80 transition-shadow duration-500 ease-[var(--ease-soft)] hover:shadow-soft"
+              className="group flex flex-col overflow-hidden rounded-xl border border-line bg-white/80 transition-[transform,box-shadow] duration-500 ease-[var(--ease-soft)] hover:shadow-soft focus-visible:shadow-lift active:translate-y-px"
             >
               <div className="flex h-52 items-center justify-center overflow-hidden border-b border-line bg-milk/50 p-6">
                 <ComponentPreview slug={entry.slug} />
               </div>
               <div className="flex flex-1 flex-col p-5">
-                <div className="flex items-center gap-2">
-                  <h2 className="font-display text-base font-semibold tracking-tight">
-                    {entry.name}
-                  </h2>
-                  {entry.status === "in-progress" ? (
-                    <span className="rounded-pill border border-line px-2 py-0.5 font-mono text-[0.625rem] tracking-[0.1em] text-ink-500 uppercase">
-                      soon
-                    </span>
-                  ) : null}
-                </div>
+                <h2 className="font-display text-base font-semibold tracking-tight">{entry.name}</h2>
                 <p className="mt-1.5 text-sm leading-relaxed text-ink-700">{entry.description}</p>
                 <ul className="mt-4 flex flex-wrap gap-1.5">
                   {entry.interactions.map((tag) => (
@@ -127,7 +121,7 @@ function FilterRow({
           aria-pressed={value === option}
           onClick={() => onChange(option)}
           className={cn(
-            "rounded-pill border px-3.5 py-1.5 text-xs font-medium capitalize transition-colors duration-200",
+            "min-h-10 rounded-pill border px-3.5 py-2 text-xs font-medium capitalize transition-colors duration-200 sm:min-h-0 sm:py-1.5",
             value === option
               ? "border-ink-900 bg-ink-900 text-milk"
               : "border-line text-ink-700 hover:border-line-strong hover:bg-white/80",

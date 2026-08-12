@@ -40,16 +40,10 @@ export const COMPONENT_PREVIEWS: Record<string, ReactNode> = {
 export function ComponentPreview({ slug }: { slug: string }) {
   const preview = COMPONENT_PREVIEWS[slug];
   if (preview) return <>{preview}</>;
-
-  return (
-    <div className="flex flex-col items-center gap-2 text-center">
-      <span className="size-10 rounded-pill ring-1 ring-line-strong ring-dashed" aria-hidden />
-      <p className="font-mono text-[0.6875rem] tracking-[0.14em] text-ink-500 uppercase">
-        In progress
-      </p>
-    </div>
-  );
+  return null;
 }
+
+export { hasComponentPreview } from "./preview-manifest";
 
 function Avatar({ className }: { className?: string }) {
   return (

@@ -2,8 +2,9 @@
 
 ## Purpose
 
-Cards held like a hand of playing cards: gathered when idle, fanned out on
-approach, with the selected card lifted forward.
+Treat a small collection as a compressed, inspectable layered deck. The resting
+stack exposes uneven edges and depth; the selected card separates, corrects its
+orientation and lets the residual collection reflow around it.
 
 ## Good for
 
@@ -22,18 +23,22 @@ Three to seven. A fan of twelve is a mess in any hand.
 
 ## Mobile
 
-Reduce `spread`, and consider `collapsible={false}` — there is no hover on
-touch, so a fan that only opens on hover opens for nobody.
+Reduce `spread` for narrow cards. Touch does not depend on hover: tap selects a
+card and a horizontal drag advances or reverses the deck without turning it
+into a regular carousel.
 
 ## Motion intensity
 
-`rotation={8}` across the whole fan, not per card. Past about 12° the outer
-cards turn far enough that their content becomes hard to read.
+`rotation={8}` is only the ceiling for the outer cards. The resting stack uses
+small authored offsets and the inspection state keeps the selected card close
+to level; past about 12° content becomes hard to read.
 
 ## Accessibility
 
 - Roving tab stop with arrow keys, Home and End.
-- Fanning triggers on focus as well as hover.
+- Focus opens the inspection state and the selected card has a roving tab stop.
+- ArrowLeft/ArrowRight, Home and End browse the collection; selection is
+  announced separately from the visual depth cue.
 - The fan is a list; the spatial arrangement is presentation only.
 
 Because cards overlap, make sure the selected card is distinguishable by more
@@ -41,8 +46,8 @@ than z-order — the lift is not visible to everyone.
 
 ## Performance
 
-One spring per card and no pointer subscription. Every card renders in every
-state, so keep the set small and the content light.
+The pointer proximity signal is scoped to the fan surface. Cards use transform
+and opacity/depth cues, so keep the set small and the content light.
 
 ## Composes with
 

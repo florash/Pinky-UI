@@ -32,7 +32,7 @@ export function ThemeSwitch({ className }: { className?: string }) {
           title={option}
           onClick={() => setTheme(option)}
           className={cn(
-            "size-6 rounded-pill border transition-[transform,box-shadow,border-color] duration-300 ease-[var(--ease-soft)]",
+            "size-8 rounded-pill border transition-[transform,box-shadow,border-color] duration-300 ease-[var(--ease-soft)] sm:size-6",
             theme === option
               ? "scale-105 border-ink-500/40 shadow-soft"
               : "border-line hover:border-line-strong",

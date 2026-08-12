@@ -2,7 +2,7 @@
 
 import { springs, useMotionEnabled } from "@pinky/primitives";
 import { motion } from "motion/react";
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import { cn } from "../utils/cn";
 
@@ -41,6 +41,11 @@ export function ElasticToggle({
   const [internal, setInternal] = useState(defaultChecked);
   const isChecked = checked ?? internal;
   const [travelling, setTravelling] = useState(false);
+  const travelTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (travelTimer.current) clearTimeout(travelTimer.current);
+  }, []);
 
   const toggle = () => {
     if (disabled) return;
@@ -49,7 +54,11 @@ export function ElasticToggle({
 
     if (!motionEnabled) return;
     setTravelling(true);
-    setTimeout(() => setTravelling(false), 160);
+    if (travelTimer.current) clearTimeout(travelTimer.current);
+    travelTimer.current = setTimeout(() => {
+      setTravelling(false);
+      travelTimer.current = null;
+    }, 160);
   };
 
   const scaleX = travelling ? 1 + 0.35 * stretch : 1;

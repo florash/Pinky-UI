@@ -15,13 +15,19 @@ directory should be described as installable today.
 
 ## Writing one
 
-Keep it short and prescriptive. Cover, in this order:
+Keep it short, prescriptive and useful beside a live preview. Cover, in this
+order:
 
-1. What the component is for.
-2. Two or three situations where it is the right choice.
-3. The situations where it is the wrong choice, stated plainly.
-4. Parameter guidance — the range that stays tasteful, not the full API.
-5. The accessibility and reduced-motion constraints an agent must not drop.
+1. `What it does` — one direct interaction description.
+2. `Interaction anatomy` — trigger, state, motion, surface and feedback.
+3. `Good for` / `Avoid for` — the judgment, stated plainly.
+4. `Live example` and `Usage` — the smallest honest composition.
+5. `Tune` — three to five variables that materially change the feel.
+6. `Accessibility` — keyboard, focus, touch and reduced-motion behaviour.
+
+The website highlights a small set of representative recipes with actual
+interactive previews. A skill can stay useful without exposing the entire API;
+the registry owns props, defaults, status and import metadata.
 
 Name the file after the component slug: `jelly-card.md`.
 

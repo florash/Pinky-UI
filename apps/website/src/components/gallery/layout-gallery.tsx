@@ -1,20 +1,31 @@
 "use client";
 
 import { cn } from "@pinky/components";
-import { LAYOUT_FAMILIES, layouts, type LayoutFamily } from "@pinky/registry";
+import { layouts } from "@pinky/registry";
 import Link from "next/link";
 import { useState } from "react";
 
-import { LayoutPreview } from "@/components/previews/layout-previews";
+import { LayoutPreview, hasLayoutPreview } from "@/components/previews/layout-previews";
+import {
+  layoutBelongsToPublicFamily,
+  publicLayoutFamilyFor,
+  PUBLIC_LAYOUT_FAMILIES,
+  type PublicLayoutFamily,
+} from "@/lib/site";
 
 /**
  * Layout cards are much larger than component cards on purpose: a spatial
  * arrangement needs room to say what it is. A masonry gallery shrunk into a
  * component-sized tile just looks like a grid.
  */
-export function LayoutGallery() {
-  const [family, setFamily] = useState<LayoutFamily | "all">("all");
-  const results = family === "all" ? layouts : layouts.filter((entry) => entry.family === family);
+export function LayoutGallery({ initialFamily = "all" }: { initialFamily?: PublicLayoutFamily | "all" }) {
+  const [family, setFamily] = useState<PublicLayoutFamily | "all">(initialFamily);
+  const results = layouts.filter(
+    (entry) =>
+      entry.status === "ready" &&
+      hasLayoutPreview(entry.slug) &&
+      layoutBelongsToPublicFamily(entry.family, family),
+  );
 
   return (
     <>
@@ -22,14 +33,14 @@ export function LayoutGallery() {
         <span className="mr-1 font-mono text-[0.6875rem] tracking-[0.14em] text-ink-500 uppercase">
           Family
         </span>
-        {(["all", ...LAYOUT_FAMILIES] as const).map((option) => (
+        {(["all", ...PUBLIC_LAYOUT_FAMILIES] as const).map((option) => (
           <button
             key={option}
             type="button"
             aria-pressed={family === option}
             onClick={() => setFamily(option)}
             className={cn(
-              "rounded-pill px-3.5 py-1.5 text-xs font-medium capitalize transition-colors duration-200",
+              "min-h-10 rounded-pill px-3.5 py-2 text-xs font-medium capitalize transition-colors duration-200 sm:min-h-0 sm:py-1.5",
               family === option
                 ? "bg-ink-900 text-milk"
                 : "text-ink-700 ring-1 ring-line hover:bg-white/70 hover:ring-line-strong",
@@ -50,7 +61,7 @@ export function LayoutGallery() {
             key={entry.slug}
             className="flex flex-col overflow-hidden rounded-2xl bg-white/60 ring-1 ring-line/60"
           >
-            <div className="flex min-h-[26rem] items-center justify-center overflow-hidden bg-milk/50 p-8">
+            <div className="flex min-h-[20rem] items-center justify-center overflow-hidden bg-milk/50 p-4 sm:min-h-[26rem] sm:p-8">
               <LayoutPreview slug={entry.slug} />
             </div>
 
@@ -62,7 +73,7 @@ export function LayoutGallery() {
                   </Link>
                 </h2>
                 <span className="font-mono text-[0.625rem] tracking-[0.12em] text-ink-500 uppercase">
-                  {entry.family}
+                  {publicLayoutFamilyFor(entry.family)}
                 </span>
               </div>
               <p className="text-sm leading-relaxed text-ink-700">{entry.description}</p>

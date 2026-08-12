@@ -63,9 +63,8 @@ export function CodeSection() {
             <CodeBlock code={USAGE} label="usage" />
             <CodeBlock code={INSTALL} label="install" copy={false} className="bg-milk/70" />
             <p className="rounded-lg border border-dashed border-line px-4 py-3 text-xs leading-relaxed text-ink-500">
-              A registry-backed CLI (<code className="font-mono">npx pinky-ui add jelly-card</code>)
-              is designed for but not built yet. Until it exists, copying the component and its
-              primitives is the supported path.
+              Copy the component and its primitives into your project; the usage above is the
+              supported path.
             </p>
           </div>
         </div>

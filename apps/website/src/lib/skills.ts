@@ -1,6 +1,8 @@
 import { access, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
+import { EXPLORE_PREVIEW_SLUGS } from "@/components/previews/preview-manifest";
+
 /**
  * Skills live as markdown in `packages/skills` and are read from disk at build
  * time. That directory is the single source of truth: the website renders it,
@@ -62,6 +64,15 @@ export const SKILL_KINDS = [
 ] as const;
 export type SkillKind = (typeof SKILL_KINDS)[number];
 
+/** Public skill paths that moved folders without changing their guidance. */
+export const SKILL_ROUTE_ALIASES = [
+  { from: "/skills/motion/shared-morph", to: "/skills/patterns/shared-morph", kind: "patterns" as const, slug: "shared-morph" },
+] as const;
+
+export function skillRouteAlias(kind: string, slug: string) {
+  return SKILL_ROUTE_ALIASES.find((alias) => alias.from === `/skills/${kind}/${slug}`);
+}
+
 export type Skill = {
   kind: SkillKind;
   slug: string;
@@ -70,6 +81,16 @@ export type Skill = {
   summary: string;
   body: string;
 };
+
+export type SkillPreviewClass = "LIVE" | "COMPOSABLE" | "CONCEPTUAL" | "BROKEN";
+
+const EXPLORE_PREVIEW_SET = new Set<string>(EXPLORE_PREVIEW_SLUGS);
+
+export function classifySkillPreview(kind: SkillKind, slug: string): SkillPreviewClass {
+  if (hasSkillLivePreview(kind, slug) || EXPLORE_PREVIEW_SET.has(slug)) return "LIVE";
+  if (kind === "patterns") return "CONCEPTUAL";
+  return "COMPOSABLE";
+}
 
 export const KIND_LABEL: Record<SkillKind, string> = {
   components: "Components",
@@ -123,6 +144,63 @@ export const KIND_BLURB: Record<SkillKind, string> = {
   patterns: "System-level guidance: density, restraint, reduced motion, composition.",
 };
 
+export const SKILL_PUBLIC_GROUPS = [
+  { label: "Components", description: "Pieces with a direct surface or control response.", kinds: ["components"] },
+  { label: "Layouts", description: "Collection arrangements where geometry carries meaning.", kinds: ["layouts"] },
+  { label: "Experiences", description: "Navigation, heroes, atmosphere and transitions.", kinds: ["navigation", "heroes", "backgrounds", "transitions", "spatial"] },
+  { label: "Systems", description: "Media, product controls and workflows with real state.", kinds: ["media", "forms", "data", "feedback", "search", "loading", "lists", "drag", "onboarding", "mobile"] },
+  { label: "Effects", description: "Cursor, motion, text and scroll as expressive layers.", kinds: ["cursor", "motion", "text", "scroll"] },
+  { label: "Primitives", description: "One reusable behaviour at a time.", kinds: ["primitives"] },
+  { label: "Patterns", description: "Restraint, composition and accessibility guidance.", kinds: ["patterns"] },
+] as const satisfies ReadonlyArray<{ label: string; description: string; kinds: readonly SkillKind[] }>;
+
+export const FEATURED_SKILLS = [
+  { kind: "components", slug: "magnetic-button", eyebrow: "Component · proximity", liveLabel: "Move close to the action" },
+  { kind: "primitives", slug: "morph", eyebrow: "Primitive · geometry", liveLabel: "Open the same surface" },
+  { kind: "components", slug: "ripple-button", eyebrow: "Component · press", liveLabel: "Press feedback" },
+  { kind: "navigation", slug: "morph-menu", eyebrow: "Experience · navigation", liveLabel: "Open the compact menu" },
+  { kind: "cursor", slug: "magnetic-cursor-target", eyebrow: "Effect · cursor", liveLabel: "Approach the target" },
+  { kind: "layouts", slug: "gallery-list-morph", eyebrow: "Layout · collection", liveLabel: "Switch the collection" },
+  { kind: "media", slug: "morph-lightbox", eyebrow: "System · media", liveLabel: "Expand a study" },
+  { kind: "scroll", slug: "sticky-story", eyebrow: "Effect · scroll", liveLabel: "Scroll the story" },
+] as const satisfies ReadonlyArray<{ kind: SkillKind; slug: string; eyebrow: string; liveLabel: string }>;
+
+export const DIRECT_PREVIEW_SKILLS = [
+  { kind: "components", slug: "magnetic-button", eyebrow: "Input · proximity", liveLabel: "Move close to the action", signature: "approach → capped pull", span: "wide" },
+  { kind: "primitives", slug: "morph", eyebrow: "Shape · geometry", liveLabel: "Open the same surface", signature: "resting surface → more room", span: "wide" },
+  { kind: "patterns", slug: "tactile-press", eyebrow: "Input · depth", liveLabel: "Compare three press constructions", signature: "lift → contact → settle", span: "wide" },
+  { kind: "navigation", slug: "menu-trigger-motion", eyebrow: "Navigation · trigger", liveLabel: "Compare three close marks", signature: "mark → stateful close", span: "wide" },
+  { kind: "components", slug: "extruded-button", eyebrow: "Input · material", liveLabel: "Collapse the visible thickness", signature: "lift → collapse" },
+  { kind: "components", slug: "layered-button", eyebrow: "Input · layers", liveLabel: "Separate the rear planes", signature: "separate → recombine" },
+  { kind: "components", slug: "inset-button", eyebrow: "Input · recess", liveLabel: "Bring the recess toward flush", signature: "recess → flush → deeper" },
+  { kind: "components", slug: "directional-button", eyebrow: "Input · semantics", liveLabel: "Follow the action direction", signature: "meaningful arrow travel" },
+  { kind: "components", slug: "double-ring-button", eyebrow: "Input · proximity", liveLabel: "Approach the outer ring", signature: "near field → ring response" },
+  { kind: "navigation", slug: "bracket-menu", eyebrow: "Navigation · geometry", liveLabel: "Converge the frame", signature: "brackets → framed close" },
+  { kind: "navigation", slug: "split-rail", eyebrow: "Navigation · structure", liveLabel: "Part the two rails", signature: "counter-slide → recombine" },
+  { kind: "navigation", slug: "text-menu", eyebrow: "Navigation · type", liveLabel: "Draw the rule and swap the word", signature: "rule draw → word travel" },
+  { kind: "components", slug: "ripple-button", eyebrow: "Input · press", liveLabel: "Press feedback", signature: "contact → bounded wave" },
+  { kind: "navigation", slug: "morph-menu", eyebrow: "Navigation · compact", liveLabel: "Open the compact menu", signature: "trigger → navigation surface" },
+  { kind: "cursor", slug: "magnetic-cursor-target", eyebrow: "Cursor · proximity", liveLabel: "Approach the target", signature: "near field → target pull" },
+  { kind: "layouts", slug: "gallery-list-morph", eyebrow: "Shape · collection", liveLabel: "Switch the collection", signature: "grid → list continuity" },
+  { kind: "media", slug: "morph-lightbox", eyebrow: "Shape · media", liveLabel: "Expand a study", signature: "thumbnail → inspection" },
+  { kind: "scroll", slug: "sticky-story", eyebrow: "Scroll · relationship", liveLabel: "Scroll the story", signature: "reading step → visual state" },
+] as const satisfies ReadonlyArray<{
+  kind: SkillKind;
+  slug: string;
+  eyebrow: string;
+  liveLabel: string;
+  signature: string;
+  span?: "wide";
+}>;
+
+export function hasSkillLivePreview(kind: SkillKind, slug: string) {
+  return DIRECT_PREVIEW_SKILLS.some((entry) => entry.kind === kind && entry.slug === slug);
+}
+
+export function skillPublicGroup(kind: SkillKind) {
+  return SKILL_PUBLIC_GROUPS.find((group) => group.kinds.some((candidate) => candidate === kind))?.label ?? "Skills";
+}
+
 function parse(kind: SkillKind, slug: string, raw: string): Skill {
   const title = raw.match(/^#\s+(.+)$/m)?.[1]?.trim() ?? slug;
 
@@ -140,6 +218,9 @@ function parse(kind: SkillKind, slug: string, raw: string): Skill {
 export async function getSkill(kind: SkillKind, slug: string): Promise<Skill | null> {
   const root = await skillsRoot();
   if (!root) return null;
+  // macOS resource-fork sidecars can appear beside markdown files on the
+  // portable workspace. They are filesystem metadata, never public skills.
+  if (slug.startsWith("._")) return null;
 
   try {
     const raw = await readFile(path.join(root, kind, `${slug}.md`), "utf8");
@@ -162,7 +243,7 @@ export async function listSkills(kind: SkillKind): Promise<Skill[]> {
 
   const skills = await Promise.all(
     files
-      .filter((file) => file.endsWith(".md"))
+      .filter((file) => file.endsWith(".md") && !file.startsWith("._"))
       .map((file) => getSkill(kind, file.replace(/\.md$/, ""))),
   );
 
