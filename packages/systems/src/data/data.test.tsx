@@ -7,8 +7,12 @@ import { allProductSystems } from "@pinky/registry";
 import { AnimatedNumber } from "./animated-number";
 import { ComparisonBars } from "./comparison-bars";
 import { DataLens } from "./data-lens";
+import { ExpandableDataRow } from "./expandable-data-row";
+import { FilterRail } from "./filter-rail";
 import { InteractiveSparkline } from "./interactive-sparkline";
 import { RadialMeter } from "./radial-meter";
+import { SelectionTray } from "./selection-tray";
+import { SortableDataRows } from "./sortable-data-rows";
 import { TimelineScrubber } from "./timeline-scrubber";
 
 const DATA = [{ label: "May", value: 12 }, { label: "June", value: 18 }, { label: "July", value: 16 }];
@@ -50,9 +54,44 @@ describe("Data systems", () => {
   });
 
   it("registers all non-duplicative production systems with live demos", () => {
-    expect(allProductSystems).toHaveLength(18);
-    expect(new Set(allProductSystems.map((item) => item.slug))).toHaveProperty("size", 18);
+    expect(allProductSystems).toHaveLength(26);
+    expect(new Set(allProductSystems.map((item) => item.slug))).toHaveProperty("size", 26);
     expect(allProductSystems.every((item) => item.status === "ready")).toBe(true);
     expect(allProductSystems.every((item) => item.demoPath.endsWith(`#${item.slug}`))).toBe(true);
+  });
+
+  it("selects and clears a grouped FilterRail option", async () => {
+    const user = userEvent.setup(); const change = vi.fn();
+    render(<FilterRail groups={[{ id: "status", label: "Status", options: [{ id: "ready", label: "Ready" }] }]} onValueChange={change} />);
+    await user.click(screen.getByRole("button", { name: /Ready/ }));
+    expect(change).toHaveBeenCalledWith({ status: "ready" });
+    await user.click(screen.getByRole("button", { name: "Remove Ready filter" }));
+    expect(change).toHaveBeenLastCalledWith({});
+  });
+
+  it("reorders data rows with the keyboard handle", () => {
+    const change = vi.fn(); const items = [{ id: "a", label: "Alpha", values: { status: "Ready" } }, { id: "b", label: "Beta", values: { status: "Review" } }];
+    render(<SortableDataRows columns={[{ id: "status", label: "Status" }]} items={items} onReorder={change} />);
+    const handle = screen.getByRole("button", { name: "Reorder Alpha" });
+    fireEvent.keyDown(handle, { key: " " }); fireEvent.keyDown(handle, { key: "ArrowDown" });
+    expect(change).toHaveBeenCalledWith([items[1], items[0]]);
+  });
+
+  it("opens an ExpandableDataRow detail region and exposes a selection tray action", async () => {
+    const user = userEvent.setup(); const action = vi.fn();
+    render(<><ExpandableDataRow row={{ id: "row", label: "Alpha", values: ["Ready"], detail: <p>Row details</p> }} columns={["Status"]} /><SelectionTray items={[{ id: "row", label: "Alpha" }]} actions={[{ id: "archive", label: "Archive", onAction: action }]} /></>);
+    await user.click(screen.getByRole("button", { name: "Expand Alpha" }));
+    expect(screen.getByRole("region", { name: "Alpha details" })).toHaveTextContent("Row details");
+    await user.click(screen.getByRole("checkbox", { name: "Alpha" }));
+    await user.click(screen.getByRole("button", { name: "Archive" }));
+    expect(action).toHaveBeenCalledWith([{ id: "row", label: "Alpha" }]);
+  });
+
+  it("keeps data disclosure usable when motion is reduced", async () => {
+    setReducedMotion(true);
+    const user = userEvent.setup();
+    render(<ExpandableDataRow row={{ id: "row", label: "Alpha", detail: <p>Details</p> }} />);
+    await user.click(screen.getByRole("button", { name: "Expand Alpha" }));
+    expect(screen.getByRole("region", { name: "Alpha details" })).toHaveTextContent("Details");
   });
 });

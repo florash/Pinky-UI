@@ -85,6 +85,7 @@ import { COMPONENT_PREVIEWS } from "./component-previews";
 import { LAYOUT_PREVIEWS } from "./layout-previews";
 import { MODERN_LAYOUT_PREVIEWS } from "./modern-layout-previews";
 import { SOFT_MEDIA_SOURCES, SoftSurface } from "./soft-surface";
+import { PRODUCT_EXPANSION_PREVIEWS, WORKFLOW_EXPANSION_PREVIEWS } from "./product-expansion-previews";
 
 const SURFACE = "linear-gradient(150deg, var(--color-blush-100), var(--color-blush-200) 55%, var(--color-cloud-100))";
 
@@ -657,7 +658,9 @@ const ALL_PREVIEWS: Record<string, ReactNode> = {
   ...EFFECT_PREVIEWS,
   ...EXPERIENCE_PREVIEWS,
   ...PRODUCT_PREVIEWS,
+  ...PRODUCT_EXPANSION_PREVIEWS,
   ...WORKFLOW_PREVIEWS,
+  ...WORKFLOW_EXPANSION_PREVIEWS,
 };
 
 export { hasExplorePreview } from "./preview-manifest";

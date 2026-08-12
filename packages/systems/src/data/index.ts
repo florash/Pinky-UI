@@ -4,3 +4,7 @@ export * from "./data-lens";
 export * from "./timeline-scrubber";
 export * from "./radial-meter";
 export * from "./comparison-bars";
+export * from "./filter-rail";
+export * from "./sortable-data-rows";
+export * from "./expandable-data-row";
+export * from "./selection-tray";

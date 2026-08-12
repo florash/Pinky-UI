@@ -4,10 +4,14 @@ import { describe, expect, it, vi } from "vitest";
 
 import { setReducedMotion } from "../../../../vitest.setup";
 import { ElasticSegmentedControl } from "./elastic-segmented-control";
+import { ExpandingSearch } from "./expanding-search";
 import { HoldToConfirm } from "./hold-to-confirm";
+import { InlineEditField } from "./inline-edit-field";
 import { InlineEditMorph } from "./inline-edit-morph";
 import { MorphSelect } from "./morph-select";
+import { ProgressiveForm } from "./progressive-form";
 import { SmartDropzone } from "./smart-dropzone";
+import { ValidationField } from "./validation-field";
 
 describe("Form systems", () => {
   it("moves segmented radio selection and focus with arrows", async () => {
@@ -80,5 +84,54 @@ describe("Form systems", () => {
     expect(confirm).not.toHaveBeenCalled();
     await user.click(button);
     expect(confirm).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps the field context attached while saving an inline edit", async () => {
+    const user = userEvent.setup(); const change = vi.fn();
+    render(<InlineEditField label="Workspace name" defaultValue="Pinky" description="Shared with the team." onValueChange={change} />);
+    const trigger = screen.getByRole("button", { name: "Edit Workspace name" });
+    await user.click(trigger);
+    await user.clear(screen.getByRole("textbox", { name: "Workspace name" }));
+    await user.type(screen.getByRole("textbox", { name: "Workspace name" }), "Studio");
+    await user.click(screen.getByRole("button", { name: "Save" }));
+    expect(change).toHaveBeenCalledWith("Studio");
+    await waitFor(() => expect(screen.getByRole("button", { name: "Edit Workspace name" })).toHaveFocus());
+    expect(screen.getByText("Shared with the team.")).toBeInTheDocument();
+  });
+
+  it("opens ExpandingSearch and restores trigger focus on Escape", async () => {
+    const user = userEvent.setup();
+    render(<ExpandingSearch label="Workspace search" results={<p>Results</p>} />);
+    const trigger = screen.getByRole("button", { name: "Workspace search" });
+    await user.click(trigger);
+    await waitFor(() => expect(screen.getByRole("textbox", { name: "Workspace search" })).toHaveFocus());
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.getByRole("button", { name: "Workspace search" })).toHaveFocus());
+  });
+
+  it("publishes readable validation state while a value is corrected", async () => {
+    const user = userEvent.setup();
+    render(<ValidationField label="Email" defaultValue="bad" validate={(value) => value.includes("@") ? { status: "valid", message: "Looks good." } : { status: "invalid", message: "Add an @." }} />);
+    const input = screen.getByRole("textbox", { name: "Email" });
+    await user.click(input); await user.tab();
+    expect(screen.getByRole("alert")).toHaveTextContent("Add an @.");
+    await user.click(input); await user.type(input, "@studio.com");
+    expect(screen.getByText("Looks good.")).toBeInTheDocument();
+  });
+
+  it("moves ProgressiveForm context to the next section", async () => {
+    const user = userEvent.setup();
+    render(<ProgressiveForm steps={[{ id: "one", label: "Brief", content: <p>Brief content</p> }, { id: "two", label: "Audience", content: <p>Audience content</p> }]} />);
+    await user.click(screen.getByRole("button", { name: "Continue to Audience" }));
+    expect(screen.getByRole("heading", { name: "Audience" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Edit Brief" })).toBeInTheDocument();
+  });
+
+  it("keeps ExpandingSearch usable when motion is reduced", async () => {
+    setReducedMotion(true);
+    const user = userEvent.setup();
+    render(<ExpandingSearch label="Search" />);
+    await user.click(screen.getByRole("button", { name: "Search" }));
+    expect(screen.getByRole("textbox", { name: "Search" })).toBeInTheDocument();
   });
 });

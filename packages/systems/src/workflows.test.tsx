@@ -4,7 +4,7 @@ import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import { setReducedMotion } from "../../../vitest.setup";
-import { ActionUndoBar, AsyncButton, BottomSheet, CommandPalette, EdgeSwipePanel, LongPressAction, PullToRefresh, ReorderableList, Stepper, ToastProvider, useToast } from "@pinky/systems";
+import { ActionUndoBar, AsyncButton, BottomSheet, CommandPalette, EdgeSwipePanel, LongPressAction, ProgressiveStepWorkflow, PullToRefresh, ReorderableList, StatusPipeline, Stepper, ToastProvider, useToast } from "@pinky/systems";
 import { moveItem } from "./lists";
 
 function ToastTrigger() { const { toast } = useToast(); return <button type="button" onClick={() => toast({ title: "File saved", action: { label: "Open file", onClick: vi.fn() } })}>Notify</button>; }
@@ -136,5 +136,32 @@ describe("Workflow systems", () => {
     expect(screen.getByRole("dialog", { name: "Filters" })).toBeInTheDocument();
     await user.keyboard("{Escape}");
     await waitFor(() => expect(edgeTrigger).toHaveFocus());
+  });
+
+  it("keeps ProgressiveStepWorkflow context while advancing", async () => {
+    const user = userEvent.setup();
+    render(<ProgressiveStepWorkflow steps={[{ id: "draft", label: "Draft", content: <p>Draft content</p> }, { id: "review", label: "Review", content: <p>Review content</p> }]} />);
+    await user.click(screen.getByRole("button", { name: "Continue to Review" }));
+    expect(screen.getByRole("heading", { name: "Review" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Edit Draft" })).toBeInTheDocument();
+  });
+
+  it("advances StatusPipeline and exposes retry for a failed stage", async () => {
+    const user = userEvent.setup(); const retry = vi.fn();
+    function Harness() { const [failed, setFailed] = useState(false); return <><StatusPipeline stages={[{ id: "queued", label: "Queued" }, { id: "active", label: "Active" }]} failedId={failed ? "active" : undefined} onRetry={(id) => { retry(id); setFailed(false); }} /><button type="button" onClick={() => setFailed(true)}>Fail active</button></>; }
+    render(<Harness />);
+    await user.click(screen.getByRole("button", { name: "Advance stage" }));
+    await user.click(screen.getByRole("button", { name: "Fail active" }));
+    expect(screen.getByRole("button", { name: "Active, failed" })).toHaveAttribute("aria-current", "step");
+    await user.click(screen.getByRole("button", { name: "Retry stage" }));
+    expect(retry).toHaveBeenCalledWith("active");
+  });
+
+  it("keeps StatusPipeline state changes semantic when motion is reduced", async () => {
+    setReducedMotion(true);
+    const user = userEvent.setup();
+    render(<StatusPipeline stages={[{ id: "queued", label: "Queued" }, { id: "active", label: "Active" }]} />);
+    await user.click(screen.getByRole("button", { name: "Advance stage" }));
+    expect(screen.getByRole("button", { name: "Active, current" })).toHaveAttribute("aria-current", "step");
   });
 });

@@ -4,3 +4,7 @@ export * from "./tactile-range";
 export * from "./smart-dropzone";
 export * from "./hold-to-confirm";
 export * from "./inline-edit-morph";
+export * from "./inline-edit-field";
+export * from "./expanding-search";
+export * from "./validation-field";
+export * from "./progressive-form";

@@ -24,7 +24,7 @@ export function InlineEditMorph({ label, value, defaultValue = "", onValueChange
   const [error, setError] = useState("");
   const input = useRef<HTMLInputElement>(null);
   const motionEnabled = useMotionEnabled();
-  useEffect(() => { if (editing) { setDraft(current); requestAnimationFrame(() => { input.current?.focus(); input.current?.select(); }); } }, [current, editing]);
+  useEffect(() => { if (editing) { setDraft(current); input.current?.focus(); input.current?.select(); } }, [current, editing]);
   const save = () => { const problem = validate?.(draft); if (problem) { setError(problem); return; } setError(""); setCurrent(draft); setEditing(false); };
   const cancel = () => { setDraft(current); setError(""); setEditing(false); };
   const keys = (event: KeyboardEvent) => { if (event.key === "Enter") { event.preventDefault(); save(); } else if (event.key === "Escape") { event.preventDefault(); cancel(); } };
