@@ -18,7 +18,7 @@ import { Container } from "@/components/site/layout";
  */
 export function FeaturedInteractionWall({ compact = false }: { compact?: boolean }) {
   return (
-    <section id="featured-interactions" className={`relative overflow-hidden ${compact ? "pt-5 pb-12 sm:pt-8 sm:pb-16" : "py-14 sm:py-20"}`}>
+    <section id="featured-interactions" className={`relative overflow-x-clip ${compact ? "pt-5 pb-12 sm:pt-8 sm:pb-16" : "py-14 sm:py-20"}`}>
       <Container>
         {!compact ? (
           <header className="flex flex-wrap items-end justify-between gap-6">
@@ -45,11 +45,9 @@ export function FeaturedInteractionWall({ compact = false }: { compact?: boolean
             <SurfaceSampler />
           </Exhibit>
 
-          <Exhibit label="Magnetic" note="move close, then press" className="lg:col-span-5">
-            <div className="flex min-h-36 items-center justify-center">
-              <MagneticButton size="lg" strength={0.45} range={150}>Move me</MagneticButton>
-            </div>
-          </Exhibit>
+          {!compact ? <Exhibit label="Magnetic" note="move close, then press" className="lg:col-span-5">
+            <div className="flex min-h-36 items-center justify-center"><MagneticButton size="lg" strength={0.45} range={150}>Move me</MagneticButton></div>
+          </Exhibit> : null}
 
           <Exhibit label="Gallery ↔ List Morph" note="same collection, two readings" className="lg:col-span-7">
             <GalleryListDemo />
@@ -63,25 +61,17 @@ export function FeaturedInteractionWall({ compact = false }: { compact?: boolean
             <EditorialMosaicDemo />
           </Exhibit>
 
-          <Exhibit label="Tactile Buttons" note="recess / silhouette" className="lg:col-span-5">
-            <TactileButtonSampler />
-          </Exhibit>
+          {!compact ? <Exhibit label="Tactile Buttons" note="recess / silhouette" className="lg:col-span-5"><TactileButtonSampler /></Exhibit> : null}
 
-          <Exhibit label="Command Palette" note="keyboard-first search" className="lg:col-span-4">
+          <Exhibit label="Command Palette" note="keyboard-first search" className={compact ? "lg:col-span-5" : "lg:col-span-4"}>
             <CommandPaletteDemo />
           </Exhibit>
 
-          <Exhibit label="Stack → Spatial" note="one collection, more depth" className="lg:col-span-8">
-            <StackSpatialDemo />
-          </Exhibit>
+          {!compact ? <Exhibit label="Stack → Spatial" note="one collection, more depth" className="lg:col-span-8"><StackSpatialDemo /></Exhibit> : null}
 
-          <Exhibit label="Sticky Story" note="the visual follows the reading" className="lg:col-span-7">
-            <StickyStoryDemo compact={compact} />
-          </Exhibit>
+          {!compact ? <Exhibit label="Sticky Story" note="the visual follows the reading" clipContent={false} className="lg:col-span-7"><StickyStoryDemo compact={compact} /></Exhibit> : null}
 
-          <Exhibit label="Menu Triggers" note="three close marks, one trigger vocabulary" className="lg:col-span-5">
-            <MenuTriggerSampler idPrefix={compact ? "explore-menu" : "home-menu"} />
-          </Exhibit>
+          {!compact ? <Exhibit label="Menu Triggers" note="three close marks, one trigger vocabulary" className="lg:col-span-5 lg:self-start"><MenuTriggerSampler idPrefix="home-menu" /></Exhibit> : null}
         </div>
       </Container>
     </section>
@@ -227,9 +217,9 @@ function EdgeSwipeReview() {
   );
 }
 
-function Exhibit({ label, note, children, className = "" }: { label: string; note: string; children: ReactNode; className?: string }) {
+function Exhibit({ label, note, children, className = "", clipContent = true }: { label: string; note: string; children: ReactNode; className?: string; clipContent?: boolean }) {
   return (
-    <div className={`relative overflow-hidden rounded-[24px] border border-line bg-white/70 p-4 shadow-soft sm:rounded-[28px] sm:p-6 ${className}`}>
+    <div className={`relative rounded-[24px] border border-line bg-white/70 p-4 shadow-soft sm:rounded-[28px] sm:p-6 ${clipContent ? "overflow-hidden" : ""} ${className}`}>
       <div className="flex items-baseline justify-between gap-4">
         <p className="font-mono text-[0.625rem] tracking-[0.15em] text-ink-500 uppercase">{label}</p>
         <span className="font-mono text-[0.6rem] text-ink-500">{note}</span>
@@ -363,12 +353,12 @@ function StickyStoryDemo({ compact }: { compact: boolean }) {
   return (
     <StickyStory
       disabled={compact}
-      top={20}
+      top={96}
       className="min-h-[24rem]"
-      visualClassName="min-h-36"
+      visualClassName="min-h-48 md:min-h-[20rem]"
       steps={[
-        { id: "arrive", eyebrow: <span className="font-mono text-[0.6rem] tracking-[0.14em] text-ink-500 uppercase">01 / Arrive</span>, title: <span className="mt-2 block text-xl">Start with a surface.</span>, description: <span className="mt-2 block text-sm leading-relaxed text-ink-700">A visual can hold the quiet while the story catches up.</span>, visual: <SoftSurface index={0} className="min-h-36 w-full rounded-2xl" /> },
-        { id: "settle", eyebrow: <span className="font-mono text-[0.6rem] tracking-[0.14em] text-ink-500 uppercase">02 / Settle</span>, title: <span className="mt-2 block text-xl">Then let the content lead.</span>, description: <span className="mt-2 block text-sm leading-relaxed text-ink-700">The visual changes in context, not on a timer disconnected from reading.</span>, visual: <SoftSurface index={2} className="min-h-36 w-full rounded-2xl" /> },
+        { id: "arrive", eyebrow: <span className="font-mono text-[0.6rem] tracking-[0.14em] text-ink-500 uppercase">01 / Arrive</span>, title: <span className="mt-2 block text-xl">Start with a surface.</span>, description: <span className="mt-2 block text-sm leading-relaxed text-ink-700">A visual can hold the quiet while the story catches up.</span>, visual: <SoftSurface index={0} className="min-h-48 w-full rounded-2xl md:min-h-[20rem]" /> },
+        { id: "settle", eyebrow: <span className="font-mono text-[0.6rem] tracking-[0.14em] text-ink-500 uppercase">02 / Settle</span>, title: <span className="mt-2 block text-xl">Then let the content lead.</span>, description: <span className="mt-2 block text-sm leading-relaxed text-ink-700">The visual changes in context, not on a timer disconnected from reading.</span>, visual: <SoftSurface index={2} className="min-h-48 w-full rounded-2xl md:min-h-[20rem]" /> },
       ]}
     />
   );

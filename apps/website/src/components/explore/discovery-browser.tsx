@@ -1,6 +1,7 @@
 "use client";
 
 import { allEffects, allExperiences, allProductSystems, allWorkflowSystems, components, layouts } from "@pinky/registry";
+import { cn } from "@pinky/components";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -144,7 +145,7 @@ const ORDERED = [...PUBLIC_ITEMS].sort((a, b) => {
 /** Keep the default wall editorial: sample across families instead of letting
  * the largest registry family consume the whole section. Featured items are
  * already running above, so complementary pieces get the first look here. */
-function curateSection(items: DiscoveryItem[], limit = 6) {
+function curateSection(items: DiscoveryItem[], limit = 4) {
   const ordered = [
     ...items.filter((item) => !CURATED_SLUGS.has(item.slug)),
     ...items.filter((item) => CURATED_SLUGS.has(item.slug)),
@@ -187,23 +188,20 @@ export function DiscoveryBrowser() {
     <div>
       {curatedView ? <FeaturedInteractionWall compact /> : null}
 
-      <section id="browse" className="relative overflow-hidden py-14 sm:py-20">
+      <section id="browse" className="relative overflow-hidden py-12 sm:py-16">
         <div className="mx-auto max-w-[76rem] px-5 sm:px-8">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div className="max-w-2xl">
               <p className="font-mono text-[0.6875rem] tracking-[0.18em] text-ink-500 uppercase">Browse the reference</p>
-              <h2 className="mt-4 text-section text-balance-tight">Find a relationship worth keeping.</h2>
-              <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-700 sm:text-lg">
-                Featured pieces come first. The full catalogue stays here, but it now has a public shape:
-                components, collections, experiences, systems and effects.
-              </p>
+              <h2 className="mt-4 text-section text-balance-tight">Browse by interaction family.</h2>
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-700">A restrained first edit of every family. Search or choose a filter to open the complete catalogue.</p>
             </div>
             <p className="font-mono text-xs text-ink-500">
               {curatedView ? `${filtered.length} in catalogue · curated by family` : `${filtered.length} results · ${live} running right here`}
             </p>
           </div>
 
-          <label className="mt-10 block max-w-2xl">
+          <label className="mt-8 block max-w-2xl">
             <span className="font-mono text-xs tracking-[0.16em] text-ink-500 uppercase">Search the wall</span>
             <input
               type="search"
@@ -214,7 +212,7 @@ export function DiscoveryBrowser() {
             />
           </label>
 
-          <div role="group" aria-label="Filter by public family" className="mt-5 flex max-w-full gap-2 overflow-x-auto pb-2">
+          <div role="group" aria-label="Filter by public family" className="mt-5 flex max-w-full gap-2 overflow-x-auto pb-2 md:flex-wrap md:overflow-visible">
             {FILTERS.map((option) => (
               <button key={option} type="button" aria-pressed={filter === option} onClick={() => setFilter(option)} className={filterChip(filter === option)}>
                 {option}
@@ -224,7 +222,7 @@ export function DiscoveryBrowser() {
 
           {curatedView ? <ExperimentalShelf items={ORDERED.filter((item) => EXPERIMENTAL_SLUGS.has(item.slug))} /> : null}
 
-          <div className="mt-16 space-y-20">
+          <div className="mt-14 space-y-16">
             {PUBLIC_SECTIONS.map((section) => {
               const sectionItems = filtered.filter((item) => item.group === section.id);
               if (sectionItems.length === 0) return null;
@@ -253,7 +251,11 @@ export function DiscoveryBrowser() {
                     )}
                   </div>
 
-                  <div className="mt-9 space-y-12">
+                  {curatedView ? (
+                    <div className="mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
+                      {displayedItems.map((item) => <DiscoveryCard key={`${item.group}-${item.slug}`} item={item} className="w-[82vw] shrink-0 snap-start sm:w-auto" />)}
+                    </div>
+                  ) : <div className="mt-9 space-y-12">
                     {families.map((family) => {
                       const familyItems = displayedItems.filter((item) => item.family === family);
                       return (
@@ -269,7 +271,7 @@ export function DiscoveryBrowser() {
                         </div>
                       );
                     })}
-                  </div>
+                  </div>}
                 </section>
               );
             })}
@@ -283,6 +285,7 @@ export function DiscoveryBrowser() {
 }
 
 function ExperimentalShelf({ items }: { items: DiscoveryItem[] }) {
+  const visibleItems = items.slice(0, 3);
   return (
     <section id="experimental" className="mt-16 border-y border-line py-10" aria-labelledby="experimental-title">
       <div className="flex flex-wrap items-end justify-between gap-5">
@@ -294,23 +297,21 @@ function ExperimentalShelf({ items }: { items: DiscoveryItem[] }) {
         <Link href="/controls" className="text-sm font-medium text-ink-700 underline decoration-line-strong underline-offset-4">Open the full Menu Trigger wall</Link>
       </div>
 
-      <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.95fr)]">
+      <div className={cn("mt-8 grid gap-4", visibleItems.length > 0 && "lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.9fr)]")}>
         <div className="rounded-[24px] border border-line bg-white/70 p-5 shadow-soft">
           <p className="font-mono text-[0.625rem] tracking-[0.15em] text-ink-500 uppercase">Menu Trigger sampler</p>
           <div className="mt-5"><HomeMenuTriggerSampler idPrefix="explore-experimental-menu" /></div>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map((item) => <DiscoveryCard key={item.slug} item={item} experimental />)}
-        </div>
+        {visibleItems.length > 0 ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{visibleItems.map((item) => <DiscoveryCard key={item.slug} item={item} experimental />)}</div> : null}
       </div>
     </section>
   );
 }
 
-function DiscoveryCard({ item, experimental = false }: { item: DiscoveryItem; experimental?: boolean }) {
+function DiscoveryCard({ item, experimental = false, className }: { item: DiscoveryItem; experimental?: boolean; className?: string }) {
   const livePreview = hasExplorePreview(item.slug);
   return (
-    <article className="group flex min-w-0 flex-col overflow-hidden rounded-[22px] border border-line bg-white/75 shadow-soft transition-shadow duration-500 ease-[var(--ease-soft)] hover:shadow-lift">
+    <article className={cn("group flex min-w-0 flex-col overflow-hidden rounded-[22px] border border-line bg-white/75 shadow-soft transition-shadow duration-500 ease-[var(--ease-soft)] hover:shadow-lift", className)}>
       {livePreview ? (
         <LazyMount minHeight={176} className="bg-cloud-50/50">
           <div className="grid min-h-44 place-items-center overflow-hidden bg-[radial-gradient(120%_90%_at_30%_0%,var(--color-blush-50),transparent_70%)] p-5">

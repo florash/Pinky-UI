@@ -132,9 +132,9 @@ export function SiteHeader() {
                 role="menu"
                 aria-label="Library sections"
                 onKeyDown={onLibraryMenuKeyDown}
-                className="absolute top-[calc(100%+0.75rem)] right-0 z-50 w-[min(44rem,calc(100vw-2rem))] rounded-[24px] border border-line bg-white/95 p-5 shadow-soft backdrop-blur-xl"
+                className="fixed top-[calc(4.5rem+0.75rem)] left-1/2 z-50 max-h-[calc(100dvh-6rem)] w-[min(72rem,calc(100vw-2rem))] -translate-x-1/2 overflow-y-auto rounded-[24px] border border-line bg-white/95 p-5 shadow-soft backdrop-blur-xl"
               >
-                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-5 lg:grid-cols-5">
                   {LIBRARY_SECTIONS.map((section) => (
                     <div key={section.label}>
                       <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">{section.label}</p>

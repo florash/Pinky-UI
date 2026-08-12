@@ -4,10 +4,9 @@ import { FluidTabs, GlowBorder, JellyCard, MagneticButton } from "@pinky/compone
 import { CursorGlow, subscribeToPointer, useMotionEnabled } from "@pinky/primitives";
 import { useEffect, useRef } from "react";
 
-import { ArrowRight, GitHubMark } from "@/components/site/icons";
+import { ArrowRight } from "@/components/site/icons";
 import { Container } from "@/components/site/layout";
 import { MagneticLink } from "@/components/site/magnetic-link";
-import { SITE } from "@/lib/site";
 
 export function Hero() {
   return (
@@ -29,24 +28,25 @@ export function Hero() {
               in the header, the logo and the eyebrow above. What a first-time
               visitor should remember is what the library does.
             */}
-            <h1 className="mt-6 max-w-xl text-[clamp(2.75rem,5vw,4.5rem)] leading-[0.96] tracking-[-0.055em] text-balance-tight">
+            <h1 className="mt-6 max-w-xl text-[clamp(2.5rem,4.4vw,4rem)] leading-[0.96] tracking-[-0.055em] text-balance-tight">
               UI that likes
               <br />
               to move.
             </h1>
 
-            <p className="mt-5 max-w-md text-base leading-relaxed text-ink-700 sm:text-lg">
-              A curated interaction reference system — real UI, already moving, ready to touch.
+            {/*
+              One sentence and one door. GitHub already sits in the header and
+              closes the page, so the hero does not need a second CTA competing
+              with the live surfaces beside it.
+            */}
+            <p className="mt-5 max-w-sm text-base leading-relaxed text-ink-700">
+              An open-source interaction system — real UI, already moving, ready to touch.
             </p>
 
-            <div className="mt-7 flex flex-wrap items-center gap-3">
-              <MagneticLink href="/components" size="lg">
-                Explore components
+            <div className="mt-7">
+              <MagneticLink href="/explore" size="lg">
+                Explore
                 <ArrowRight className="size-4" />
-              </MagneticLink>
-              <MagneticLink href={SITE.github} variant="ghost" size="lg" external>
-                <GitHubMark className="size-4" />
-                View on GitHub
               </MagneticLink>
             </div>
           </div>
@@ -82,7 +82,17 @@ function HeroAtmosphere() {
   }, [motionEnabled]);
 
   return (
-    <div ref={ref} aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+    // The section clips its overflow, so the light pools are faded out before
+    // the bottom edge — otherwise the hero ends on a hard horizontal seam.
+    <div
+      ref={ref}
+      aria-hidden
+      className="pointer-events-none absolute inset-0 -z-10"
+      style={{
+        maskImage: "linear-gradient(180deg, #000 55%, transparent 100%)",
+        WebkitMaskImage: "linear-gradient(180deg, #000 55%, transparent 100%)",
+      }}
+    >
       <div
         className="absolute -top-40 -left-32 size-[36rem] rounded-pill blur-[100px]"
         style={{
@@ -137,9 +147,9 @@ function HeroStage() {
             Jelly Card
           </p>
           <p className="mt-4 font-display text-2xl leading-tight font-semibold tracking-tight">
-            Move your pointer
+            Move across
             <br />
-            across this card.
+            this card.
           </p>
           <p className="mt-3 text-sm leading-relaxed text-ink-700">
             The surface leans toward you, drifts a little, and settles on a spring.
@@ -156,10 +166,12 @@ function HeroStage() {
           </div>
         </JellyCard>
 
+        {/* Pointer-only, so it earns nothing on a touch screen and only makes
+            the mobile hero taller. */}
         <GlowBorder
           radius="xl"
           size={170}
-          className="mt-4 lg:absolute lg:top-0 lg:right-0 lg:z-10 lg:mt-0 lg:w-[13rem]"
+          className="mt-4 hidden lg:absolute lg:top-0 lg:right-0 lg:z-10 lg:mt-0 lg:block lg:w-[13rem]"
         >
           <div className="rounded-xl bg-white/90 p-5 shadow-soft ring-1 ring-line">
             <p className="font-mono text-[0.6875rem] tracking-[0.16em] text-ink-500 uppercase">

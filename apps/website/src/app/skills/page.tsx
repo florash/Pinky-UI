@@ -26,7 +26,7 @@ export default async function SkillsPage() {
   })).filter((entry): entry is typeof entry & { skill: NonNullable<typeof entry.skill> } => Boolean(entry.skill));
 
   return (
-    <div className="relative overflow-hidden pt-12 pb-24 sm:pt-16">
+    <div className="relative overflow-x-clip pt-12 pb-24 sm:pt-16">
       <Halo className="-top-40 left-[-10rem] size-[28rem]" />
       <Halo className="top-24 right-[-12rem] size-[26rem]" color="var(--pinky-halo-b)" />
 
