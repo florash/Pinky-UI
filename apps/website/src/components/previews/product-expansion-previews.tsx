@@ -1,15 +1,23 @@
 "use client";
 
 import {
+  AnnotatedTimeline,
+  ChartTableView,
+  ComparisonChart,
   ExpandableDataRow,
   ExpandingSearch,
   FilterRail,
+  InteractiveBarRanking,
+  InteractiveLineChart,
   InlineEditField,
+  LinkedSmallMultiples,
   ProgressiveForm,
   ProgressiveStepWorkflow,
+  RangeBrushChart,
   SelectionTray,
   SortableDataRows,
   StatusPipeline,
+  ThresholdBandChart,
   ValidationField,
   type SortableDataRow,
 } from "@pinky/systems";
@@ -17,8 +25,41 @@ import { useState, type ReactNode } from "react";
 
 const PREVIEW_FILTERS = [{ id: "status", label: "Status", options: [{ id: "ready", label: "Ready", count: 12 }, { id: "review", label: "Review", count: 4 }] }, { id: "owner", label: "Owner", options: [{ id: "flora", label: "Flora", count: 7 }, { id: "team", label: "Team", count: 9 }] }];
 const PREVIEW_COLUMNS = [{ id: "owner", label: "Owner" }, { id: "status", label: "Status" }];
+const PREVIEW_VIZ_DATA = [
+  { id: "mon", label: "Mon", value: 12, context: "Quiet start" },
+  { id: "tue", label: "Tue", value: 15, context: "First campaign" },
+  { id: "wed", label: "Wed", value: 14, context: "Midweek dip" },
+  { id: "thu", label: "Thu", value: 19, context: "Release note" },
+  { id: "fri", label: "Fri", value: 23, context: "Launch day" },
+  { id: "sat", label: "Sat", value: 21, context: "Weekend" },
+  { id: "sun", label: "Sun", value: 26, context: "Catch-up" },
+];
+const PREVIEW_TIMELINE_EVENTS = [
+  { id: "campaign", index: 1, label: "Campaign", description: "The first campaign widened the audience." },
+  { id: "release", index: 4, label: "Release", description: "The release note made the new flow visible." },
+  { id: "review", index: 6, label: "Review", description: "The team reviewed the weekend catch-up." },
+];
+const PREVIEW_BANDS = [
+  { id: "normal", label: "Normal", min: 0, max: 60 },
+  { id: "warning", label: "Watch", min: 60, max: 80 },
+  { id: "target", label: "Target", min: 80, max: 100 },
+];
+const PREVIEW_MULTIPLES = [
+  { id: "revenue", label: "Revenue", data: PREVIEW_VIZ_DATA.map((point, index) => ({ ...point, value: point.value * 1.8 + index * 2 })), formatValue: (value: number) => `$${Math.round(value)}k` },
+  { id: "conversion", label: "Conversion", data: PREVIEW_VIZ_DATA.map((point, index) => ({ ...point, value: 3 + index * 0.4 + (index === 4 ? 1.2 : 0) })), formatValue: (value: number) => `${value.toFixed(1)}%` },
+  { id: "retention", label: "Retention", data: PREVIEW_VIZ_DATA.map((point, index) => ({ ...point, value: 74 + index * 1.4 - (index === 2 ? 3 : 0) })), formatValue: (value: number) => `${Math.round(value)}%` },
+  { id: "sessions", label: "Sessions", data: PREVIEW_VIZ_DATA.map((point, index) => ({ ...point, value: 18 + index * 3 + (index === 5 ? 4 : 0) })), formatValue: (value: number) => `${Math.round(value)}k` },
+];
 
 export const PRODUCT_EXPANSION_PREVIEWS: Record<string, ReactNode> = {
+  "interactive-line-chart": <InteractiveLineChart data={PREVIEW_VIZ_DATA} label="Weekly usage" formatValue={(value) => `${value}k`} />,
+  "range-brush-chart": <RangeBrushChart data={PREVIEW_VIZ_DATA} label="Usage history" formatValue={(value) => `${value}k`} defaultStartIndex={1} defaultEndIndex={5} />,
+  "comparison-chart": <ComparisonChart labels={PREVIEW_VIZ_DATA.map((point) => point.label)} series={[{ id: "a", label: "Studio", values: [52, 58, 56, 64, 72, 70, 78], marker: "circle" }, { id: "b", label: "Team", values: [44, 51, 49, 60, 63, 66, 69], marker: "square" }]} label="Studio and team comparison" formatValue={(value) => `${value}`} />,
+  "annotated-timeline": <AnnotatedTimeline data={PREVIEW_VIZ_DATA} annotations={PREVIEW_TIMELINE_EVENTS} label="Launch timeline" formatValue={(value) => `${value}k`} />,
+  "threshold-band-chart": <ThresholdBandChart data={[{ ...PREVIEW_VIZ_DATA[0]!, value: 42 }, { ...PREVIEW_VIZ_DATA[1]!, value: 58 }, { ...PREVIEW_VIZ_DATA[2]!, value: 66 }, { ...PREVIEW_VIZ_DATA[3]!, value: 74 }, { ...PREVIEW_VIZ_DATA[4]!, value: 88 }, { ...PREVIEW_VIZ_DATA[5]!, value: 79 }, { ...PREVIEW_VIZ_DATA[6]!, value: 94 }]} bands={PREVIEW_BANDS} label="Response time health" formatValue={(value) => `${value}ms`} />,
+  "interactive-bar-ranking": <InteractiveBarRanking items={[{ id: "a", label: "Research", meta: "12 notes", values: { reach: 84, quality: 72 } }, { id: "b", label: "Prototype", meta: "9 notes", values: { reach: 68, quality: 91 } }, { id: "c", label: "Release", meta: "15 notes", values: { reach: 76, quality: 83 } }]} metrics={[{ id: "reach", label: "Reach", formatValue: (value) => `${value}%` }, { id: "quality", label: "Quality", formatValue: (value) => `${value}%` }]} label="Interaction ranking" />,
+  "linked-small-multiples": <LinkedSmallMultiples charts={PREVIEW_MULTIPLES} label="Weekly metric comparison" />,
+  "chart-table-view": <ChartTableView data={PREVIEW_VIZ_DATA} label="Weekly usage" summary="The same weekly usage data is available as a chart and a table." formatValue={(value) => `${value}k`} />,
   "inline-edit-field": <InlineEditField label="Workspace name" defaultValue="Pinky studio" description="Click the value to edit." />,
   "expanding-search": <ExpandingSearch placeholder="Search workspace" results={<p className="px-3 py-2 text-xs text-ink-500">Type to filter workspace items.</p>} />,
   "validation-field": <ValidationPreview />,

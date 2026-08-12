@@ -54,8 +54,8 @@ describe("Data systems", () => {
   });
 
   it("registers all non-duplicative production systems with live demos", () => {
-    expect(allProductSystems).toHaveLength(26);
-    expect(new Set(allProductSystems.map((item) => item.slug))).toHaveProperty("size", 26);
+    expect(allProductSystems).toHaveLength(34);
+    expect(new Set(allProductSystems.map((item) => item.slug))).toHaveProperty("size", 34);
     expect(allProductSystems.every((item) => item.status === "ready")).toBe(true);
     expect(allProductSystems.every((item) => item.demoPath.endsWith(`#${item.slug}`))).toBe(true);
   });

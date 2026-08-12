@@ -26,6 +26,7 @@ import {
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { ProductSystemsExpansion } from "./product-expansion-showcase";
+import { DataVisualizationShowcase } from "./data-visualization-showcase";
 
 const IMAGES = [
   "linear-gradient(150deg, var(--color-blush-100), var(--color-blush-200) 55%, var(--color-cloud-100))",
@@ -78,6 +79,7 @@ function DataSection() {
     <div className="mt-6 grid gap-6 lg:grid-cols-2"><Demo id="interactive-sparkline" title="Interactive Sparkline" copy="Pointer, touch and Arrow keys inspect the same textual trend points."><InteractiveSparkline data={METRICS} label="Weekly project views" summary="Seven daily project-view values, rising overall from 12 to 26." formatValue={(value) => `${value}k views`} /></Demo><Demo id="data-lens" title="Data Lens" copy="The inspector wraps custom chart content without coupling to its rendering system."><DataLens items={METRICS} label="Inspect weekly revenue" renderLens={(item) => <span><strong>{item.label}</strong><br />${item.value}k</span>} className="overflow-hidden rounded-2xl bg-cloud-50"><div className="flex h-56 items-end gap-2 p-6">{METRICS.map((item) => <i key={item.label} className="flex-1 rounded-t-xl bg-blush-200" style={{ height: `${item.value * 3}%` }} />)}</div></DataLens></Demo></div>
     <Demo id="timeline-scrubber" title="Timeline Scrubber" copy="A product milestone controller that can also drive media or custom content." className="mt-6"><TimelineScrubber stops={[{ id: "research", label: "Research", description: "Find the meaningful interaction." }, { id: "prototype", label: "Prototype", description: "Test keyboard and touch first." }, { id: "release", label: "Release", description: "Ship the smallest useful motion." }]} /></Demo>
     <ProductSystemsExpansion family="data" />
+    <DataVisualizationShowcase />
   </Section>;
 }
 
