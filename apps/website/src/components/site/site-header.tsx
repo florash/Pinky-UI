@@ -114,7 +114,7 @@ export function SiteHeader() {
               ref={libraryTrigger}
               type="button"
               aria-expanded={libraryOpen}
-              aria-controls={LIBRARY_MENU_ID}
+              aria-controls={libraryOpen ? LIBRARY_MENU_ID : undefined}
               onClick={() => setLibraryOpen((open) => !open)}
               onKeyDown={onLibraryTriggerKeyDown}
               className={cn(

@@ -67,7 +67,7 @@ export function ExpandingSearch({
             onClick={() => setOpen(true)}
             aria-label={label}
             aria-expanded={false}
-            aria-controls={resultsId}
+            aria-controls={open && results !== undefined ? resultsId : undefined}
             className="flex w-full items-center justify-between gap-4 rounded-[18px] border border-line bg-white/80 px-4 py-3 text-left text-sm text-ink-700 shadow-sm transition-colors hover:border-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20 disabled:cursor-not-allowed disabled:opacity-50"
             initial={motionEnabled ? { opacity: 0.6, scale: 0.98 } : false}
             animate={{ opacity: 1, scale: 1 }}

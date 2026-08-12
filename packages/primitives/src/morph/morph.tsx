@@ -105,25 +105,6 @@ export function Morph({
     (first ?? panel).focus();
   }, [open]);
 
-  // Restore only after React has committed the closed state and made the
-  // trigger visible again. Focusing it from the open effect's cleanup works in
-  // jsdom but real browsers correctly reject focus on `display:none` content.
-  const hadOpened = useRef(false);
-  useEffect(() => {
-    if (open) {
-      hadOpened.current = true;
-      return;
-    }
-    if (!hadOpened.current) return;
-    hadOpened.current = false;
-    if (!motionEnabled) {
-      triggerRef.current?.focus();
-      return;
-    }
-    const frame = requestAnimationFrame(() => triggerRef.current?.focus());
-    return () => cancelAnimationFrame(frame);
-  }, [motionEnabled, open]);
-
   const trapTab = useCallback((event: ReactKeyboardEvent<HTMLDivElement>) => {
     if (event.key !== "Tab") return;
     const panel = panelRef.current;
@@ -171,7 +152,7 @@ export function Morph({
         {children}
       </motion.button>
 
-      <AnimatePresence>
+      <AnimatePresence onExitComplete={() => triggerRef.current?.focus()}>
         {open ? (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8">
             <motion.div

@@ -2,7 +2,7 @@
 
 import { usePressSpring } from "@pinky/primitives";
 import { motion } from "motion/react";
-import { forwardRef, useCallback, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 
 import { buttonSurface, type MagneticButtonProps } from "./magnetic-button";
 
@@ -47,7 +47,13 @@ export const RippleButton = forwardRef<HTMLButtonElement, RippleButtonProps>(fun
 ) {
   const [ripples, setRipples] = useState<Ripple[]>([]);
   const nextId = useRef(0);
+  const rippleTimers = useRef(new Set<ReturnType<typeof setTimeout>>());
   const press = usePressSpring({ scale: pressScale, disabled });
+
+  useEffect(() => () => {
+    for (const timer of rippleTimers.current) clearTimeout(timer);
+    rippleTimers.current.clear();
+  }, []);
 
   const addRipple = useCallback(
     (x: number, y: number) => {
@@ -56,7 +62,11 @@ export const RippleButton = forwardRef<HTMLButtonElement, RippleButtonProps>(fun
       setRipples((current) => [...current, { id, x, y }]);
       // Removed on a timer rather than on animation end: a button unmounted
       // mid-press should not leave a listener behind.
-      setTimeout(() => setRipples((current) => current.filter((r) => r.id !== id)), 620);
+      const timer = setTimeout(() => {
+        setRipples((current) => current.filter((r) => r.id !== id));
+        rippleTimers.current.delete(timer);
+      }, 620);
+      rippleTimers.current.add(timer);
     },
     [press.active],
   );

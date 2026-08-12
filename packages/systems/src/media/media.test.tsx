@@ -21,6 +21,7 @@ describe("Media systems", () => {
     await user.click(screen.getByRole("button", { name: "Next media" }));
     expect(screen.getByText("Second full")).toBeInTheDocument();
     await user.keyboard("{Escape}");
+    expect(trigger).not.toHaveFocus();
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
     expect(trigger).toHaveFocus();
   });

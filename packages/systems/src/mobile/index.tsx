@@ -6,7 +6,7 @@ import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEv
 import { cn } from "../internal/cn";
 import { useControllable } from "../internal/use-controllable";
 
-export function BottomSheet({ open, defaultOpen = false, onOpenChange, snapPoints = [45, 85], title = "Sheet", children, className }: { open?: boolean; defaultOpen?: boolean; onOpenChange?: (open: boolean) => void; snapPoints?: number[]; title?: string; children: ReactNode; className?: string }) { const [shown, setShown] = useControllable(open, defaultOpen, onOpenChange); const [snap, setSnap] = useState(0); const previous = useRef<HTMLElement | null>(null); const sheet = useRef<HTMLElement>(null); const titleId = useId(); const enabled = useMotionEnabled(); useEffect(() => { if (!shown) return; previous.current = document.activeElement as HTMLElement; sheet.current?.focus(); const key = (event: globalThis.KeyboardEvent) => { if (event.key === "Escape") setShown(false); }; document.addEventListener("keydown", key); return () => { document.removeEventListener("keydown", key); previous.current?.focus(); }; }, [setShown, shown]); return <AnimatePresence>{shown ? <motion.div className="fixed inset-0 z-[80] flex items-end bg-ink-900/35" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onMouseDown={(event) => { if (event.target === event.currentTarget) setShown(false); }}><motion.section ref={sheet} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} drag={enabled ? "y" : false} dragConstraints={{ top: 0, bottom: 0 }} dragElastic={.18} onDragEnd={(_, info) => { if (info.offset.y > 100) setShown(false); else if (info.offset.y < -70) setSnap(Math.min(snap + 1, snapPoints.length - 1)); }} initial={{ y: "100%" }} animate={{ y: 0, height: `${snapPoints[snap] ?? 45}vh` }} exit={{ y: "100%" }} className={cn("w-full overflow-y-auto rounded-t-[28px] bg-white p-5 shadow-2xl", className)}><div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-cloud-200" /><div className="flex items-center justify-between"><h2 id={titleId} className="text-lg font-semibold">{title}</h2><button type="button" aria-label="Close sheet" onClick={() => setShown(false)} className="rounded-full p-2">×</button></div><div className="mt-5">{children}</div></motion.section></motion.div> : null}</AnimatePresence>; }
+export function BottomSheet({ open, defaultOpen = false, onOpenChange, snapPoints = [45, 85], title = "Sheet", children, className }: { open?: boolean; defaultOpen?: boolean; onOpenChange?: (open: boolean) => void; snapPoints?: number[]; title?: string; children: ReactNode; className?: string }) { const [shown, setShown] = useControllable(open, defaultOpen, onOpenChange); const [snap, setSnap] = useState(0); const previous = useRef<HTMLElement | null>(null); const sheet = useRef<HTMLElement>(null); const titleId = useId(); const enabled = useMotionEnabled(); useEffect(() => { if (!shown) return; previous.current = document.activeElement as HTMLElement; sheet.current?.focus(); const key = (event: globalThis.KeyboardEvent) => { if (event.key === "Escape") setShown(false); }; document.addEventListener("keydown", key); return () => { document.removeEventListener("keydown", key); }; }, [setShown, shown]); const onSheetKeyDown = (event: ReactKeyboardEvent<HTMLElement>) => { if (event.key !== "Tab" || !sheet.current) return; const focusable = [...sheet.current.querySelectorAll<HTMLElement>("a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex='-1'])")]; if (!focusable.length) { event.preventDefault(); return; } const first = focusable[0]; const last = focusable[focusable.length - 1]; if (!first || !last) return; if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); } else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); } }; return <AnimatePresence onExitComplete={() => { if (!shown) { previous.current?.focus(); previous.current = null; } }}>{shown ? <motion.div className="fixed inset-0 z-[80] flex items-end bg-ink-900/35" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onMouseDown={(event) => { if (event.target === event.currentTarget) setShown(false); }}><motion.section ref={sheet} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} onKeyDown={onSheetKeyDown} drag={enabled ? "y" : false} dragConstraints={{ top: 0, bottom: 0 }} dragElastic={.18} onDragEnd={(_, info) => { if (info.offset.y > 100) setShown(false); else if (info.offset.y < -70) setSnap(Math.min(snap + 1, snapPoints.length - 1)); }} initial={{ y: "100%" }} animate={{ y: 0, height: `${snapPoints[snap] ?? 45}vh` }} exit={{ y: "100%" }} className={cn("w-full overflow-y-auto rounded-t-[28px] bg-white p-5 shadow-2xl", className)}><div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-cloud-200" /><div className="flex items-center justify-between"><h2 id={titleId} className="text-lg font-semibold">{title}</h2><button type="button" aria-label="Close sheet" onClick={() => setShown(false)} className="rounded-full p-2">×</button></div><div className="mt-5">{children}</div></motion.section></motion.div> : null}</AnimatePresence>; }
 
 export type SwipeTab = { id: string; label: string; panel: ReactNode };
 export function SwipeableTabs({ tabs, index, defaultIndex = 0, onIndexChange, label = "Tabs", className }: { tabs: SwipeTab[]; index?: number; defaultIndex?: number; onIndexChange?: (index: number) => void; label?: string; className?: string }) { const [current, setCurrent] = useControllable(index, defaultIndex, onIndexChange); const start = useRef<number | null>(null); const set = (next: number) => setCurrent(Math.max(0, Math.min(tabs.length - 1, next))); const active = tabs[current]; return <div className={className}><div role="tablist" aria-label={label} className="flex gap-1 overflow-x-auto border-b border-line">{tabs.map((tab, tabIndex) => <button key={tab.id} type="button" role="tab" aria-selected={tabIndex === current} onClick={() => set(tabIndex)} onKeyDown={(event) => { if (event.key === "ArrowRight" || event.key === "ArrowLeft") { event.preventDefault(); set(tabIndex + (event.key === "ArrowRight" ? 1 : -1)); } }} className={cn("shrink-0 border-b-2 px-4 py-3 text-sm", tabIndex === current ? "border-ink-900 font-semibold" : "border-transparent text-ink-500")}>{tab.label}</button>)}</div><motion.div role="tabpanel" tabIndex={0} onPointerDown={(event) => { start.current = event.clientX; }} onPointerUp={(event) => { if (start.current != null && Math.abs(event.clientX - start.current) > 60) set(current + (event.clientX < start.current ? 1 : -1)); start.current = null; }} className="touch-pan-y py-5">{active?.panel}</motion.div></div>; }
@@ -38,6 +38,7 @@ export function PullToRefresh({
   const frame = useRef<number | null>(null);
   const timer = useRef<number | null>(null);
   const refreshing = useRef(false);
+  const alive = useRef(true);
   const stateRef = useRef<PullState>("idle");
   const safeThreshold = Math.max(1, threshold);
 
@@ -55,6 +56,7 @@ export function PullToRefresh({
     if (timer.current) window.clearTimeout(timer.current);
     timer.current = null;
     refreshing.current = false;
+    if (!alive.current) return;
     setState("idle");
     setOffset(0);
   };
@@ -64,15 +66,25 @@ export function PullToRefresh({
     refreshing.current = true;
     setState("refreshing");
     setOffset(safeThreshold * 0.7, safeThreshold);
+    let completed = false;
     try {
       await onRefresh();
+      if (!alive.current) return;
       setState("complete");
+      completed = true;
+    } catch {
+      if (alive.current) clearCompletion();
     } finally {
-      timer.current = window.setTimeout(clearCompletion, 760);
+      if (!alive.current) {
+        refreshing.current = false;
+      } else if (completed) {
+        timer.current = window.setTimeout(clearCompletion, 760);
+      }
     }
   };
 
   useEffect(() => () => {
+    alive.current = false;
     if (frame.current) cancelAnimationFrame(frame.current);
     if (timer.current) window.clearTimeout(timer.current);
   }, []);
@@ -370,7 +382,7 @@ export function EdgeSwipePanel({
       >
         <span className={cn("absolute inset-y-8 w-px bg-ink-900/20 transition-opacity", edge === "right" ? "right-0" : "left-0")} style={{ opacity: "calc(.28 + var(--edge-proximity, 0) * .62)" }} />
       </div>
-      <button ref={trigger} type="button" aria-expanded={shown} aria-controls={panelId} onClick={() => setShown(true)} className="rounded-pill border border-line bg-white px-4 py-2 text-sm transition-colors hover:bg-blush-50">Open {label}</button>
+      <button ref={trigger} type="button" aria-expanded={shown} aria-controls={mounted ? panelId : undefined} onClick={() => setShown(true)} className="rounded-pill border border-line bg-white px-4 py-2 text-sm transition-colors hover:bg-blush-50">Open {label}</button>
 
       {mounted ? (
         <div
@@ -420,4 +432,4 @@ export function EdgeSwipePanel({
   );
 }
 
-export function LongPressAction({ children, onLongPress, duration = 500, onClick, label, className }: { children: ReactNode; onLongPress: () => void; duration?: number; onClick?: () => void; label?: string; className?: string }) { const timer = useRef<number | null>(null); const fired = useRef(false); const clear = () => { if (timer.current) window.clearTimeout(timer.current); timer.current = null; }; const start = () => { fired.current = false; clear(); timer.current = window.setTimeout(() => { fired.current = true; onLongPress(); }, duration); }; return <button type="button" aria-label={label} className={className} onPointerDown={start} onPointerUp={() => { clear(); if (!fired.current) onClick?.(); }} onPointerLeave={clear} onPointerCancel={clear} onContextMenu={(event) => { event.preventDefault(); clear(); onLongPress(); }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onClick?.(); } }}>{children}</button>; }
+export function LongPressAction({ children, onLongPress, duration = 500, onClick, label, className }: { children: ReactNode; onLongPress: () => void; duration?: number; onClick?: () => void; label?: string; className?: string }) { const timer = useRef<number | null>(null); const fired = useRef(false); const clear = () => { if (timer.current) window.clearTimeout(timer.current); timer.current = null; }; useEffect(() => () => { if (timer.current) window.clearTimeout(timer.current); }, []); const start = () => { fired.current = false; clear(); timer.current = window.setTimeout(() => { fired.current = true; onLongPress(); }, duration); }; return <button type="button" aria-label={label} className={className} onPointerDown={start} onPointerUp={() => { clear(); if (!fired.current) onClick?.(); }} onPointerLeave={clear} onPointerCancel={clear} onContextMenu={(event) => { event.preventDefault(); clear(); onLongPress(); }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onClick?.(); } }}>{children}</button>; }

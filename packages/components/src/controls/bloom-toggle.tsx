@@ -2,7 +2,7 @@
 
 import { springs, useMotionEnabled } from "@pinky/primitives";
 import { motion } from "motion/react";
-import { forwardRef, useRef, useState, type ReactNode } from "react";
+import { forwardRef, useEffect, useRef, useState, type ReactNode } from "react";
 
 import { cn } from "../utils/cn";
 import { DISABLED } from "../buttons/tactile/internal";
@@ -41,14 +41,23 @@ export const BloomToggle = forwardRef<HTMLInputElement, BloomToggleProps>(functi
   const isOn = checked ?? internal;
   const [pulse, setPulse] = useState<number | null>(null);
   const nextPulse = useRef(0);
+  const pulseTimer = useRef<number | null>(null);
   const motionEnabled = useMotionEnabled();
+
+  useEffect(() => () => {
+    if (pulseTimer.current) clearTimeout(pulseTimer.current);
+  }, []);
 
   const set = (next: boolean) => {
     // Self-erasing: the bloom unmounts when it is finished, so "no colour at
     // rest" is structurally true and not merely an opacity of zero.
     const id = nextPulse.current++;
     setPulse(id);
-    window.setTimeout(() => setPulse((current) => (current === id ? null : current)), 780);
+    if (pulseTimer.current) clearTimeout(pulseTimer.current);
+    pulseTimer.current = window.setTimeout(() => {
+      setPulse((current) => (current === id ? null : current));
+      pulseTimer.current = null;
+    }, 780);
     if (checked === undefined) setInternal(next);
     onCheckedChange?.(next);
   };

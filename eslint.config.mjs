@@ -29,6 +29,14 @@ export default tseslint.config(
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
+  // Next's build-time detector evaluates this config file itself. Keep the
+  // plugin visible outside the TypeScript-only rules block so that detector
+  // does not report a false missing-plugin warning.
+  {
+    plugins: {
+      "@next/next": nextPlugin,
+    },
+  },
   {
     files: ["**/*.{ts,tsx}"],
     plugins: {

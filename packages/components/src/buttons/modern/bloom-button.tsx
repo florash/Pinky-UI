@@ -2,7 +2,7 @@
 
 import { useMotionEnabled, usePressSpring } from "@pinky/primitives";
 import { motion } from "motion/react";
-import { forwardRef, useRef, useState, type ButtonHTMLAttributes, type PointerEvent as RPE, type ReactNode } from "react";
+import { forwardRef, useEffect, useRef, useState, type ButtonHTMLAttributes, type PointerEvent as RPE, type ReactNode } from "react";
 
 import { cn } from "../../utils/cn";
 import { DISABLED, FOCUS_RING } from "../tactile/internal";
@@ -34,8 +34,14 @@ export const BloomButton = forwardRef<HTMLButtonElement, BloomButtonProps>(funct
 ) {
   const [bursts, setBursts] = useState<Array<{ id: number; x: number; y: number }>>([]);
   const next = useRef(0);
+  const burstTimers = useRef(new Set<ReturnType<typeof setTimeout>>());
   const motionEnabled = useMotionEnabled();
   const press = usePressSpring({ scale: 1, travel: 2, disabled });
+
+  useEffect(() => () => {
+    for (const timer of burstTimers.current) clearTimeout(timer);
+    burstTimers.current.clear();
+  }, []);
 
   const burst = (x: number, y: number) => {
     if (!motionEnabled || disabled) return;
@@ -43,7 +49,11 @@ export const BloomButton = forwardRef<HTMLButtonElement, BloomButtonProps>(funct
     setBursts((list) => [...list, { id, x, y }]);
     // Timer rather than animation end: a button unmounted mid-press must not
     // leave a listener behind.
-    setTimeout(() => setBursts((list) => list.filter((b) => b.id !== id)), 700);
+    const timer = setTimeout(() => {
+      setBursts((list) => list.filter((b) => b.id !== id));
+      burstTimers.current.delete(timer);
+    }, 700);
+    burstTimers.current.add(timer);
   };
 
   return (

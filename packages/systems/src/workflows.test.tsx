@@ -56,6 +56,23 @@ describe("Workflow systems", () => {
     render(<SheetHarness />); const trigger = screen.getByRole("button", { name: "Show sheet" }); trigger.focus(); fireEvent.click(trigger); expect(screen.getByRole("dialog", { name: "Filters" })).toBeInTheDocument(); fireEvent.keyDown(document, { key: "Escape" }); await waitFor(() => expect(trigger).toHaveFocus());
   });
 
+  it("keeps keyboard focus inside the bottom sheet while it is open", async () => {
+    const user = userEvent.setup();
+    function SheetHarness() { const [open, setOpen] = useState(false); return <><button type="button" onClick={() => setOpen(true)}>Show sheet</button><BottomSheet open={open} onOpenChange={setOpen} title="Filters"><button type="button">Apply filters</button></BottomSheet></>; }
+
+    render(<SheetHarness />);
+    const trigger = screen.getByRole("button", { name: "Show sheet" });
+    await user.click(trigger);
+    const dialog = screen.getByRole("dialog", { name: "Filters" });
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Close sheet" })).toHaveFocus();
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Apply filters" })).toHaveFocus();
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Close sheet" })).toHaveFocus();
+    expect(dialog).toBeInTheDocument();
+  });
+
   it("requires the long-press threshold and cancels early release", () => {
     vi.useFakeTimers(); const action = vi.fn(); render(<LongPressAction duration={500} onLongPress={action}>Select item</LongPressAction>); const button = screen.getByRole("button", { name: "Select item" }); fireEvent.pointerDown(button); act(() => vi.advanceTimersByTime(300)); fireEvent.pointerUp(button); expect(action).not.toHaveBeenCalled(); fireEvent.pointerDown(button); act(() => vi.advanceTimersByTime(500)); expect(action).toHaveBeenCalledTimes(1); fireEvent.pointerUp(button); vi.useRealTimers();
   });
@@ -70,6 +87,16 @@ describe("Workflow systems", () => {
     expect(screen.getByRole("status", { name: "Refresh content" })).toHaveTextContent(/reveal refresh/i);
     await user.click(screen.getByRole("button", { name: "Refresh" }));
     expect(refresh).toHaveBeenCalledTimes(1);
+  });
+
+  it("settles Pull to Refresh after an async refresh failure", async () => {
+    const user = userEvent.setup();
+    const refresh = vi.fn(async () => { throw new Error("offline"); });
+    render(<PullToRefresh onRefresh={refresh}><p>Studio feed</p></PullToRefresh>);
+
+    await user.click(screen.getByRole("button", { name: "Refresh" }));
+    await waitFor(() => expect(refresh).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(screen.getByRole("status", { name: "Refresh content" })).toHaveTextContent(/reveal refresh/i));
   });
 
   it("requires the Pull to Refresh threshold before invoking the callback", async () => {

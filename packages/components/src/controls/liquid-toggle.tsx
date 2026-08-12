@@ -2,7 +2,7 @@
 
 import { elasticSpring, useMotionEnabled, usePressSpring } from "@pinky/primitives";
 import { motion, useTransform } from "motion/react";
-import { forwardRef, useRef, useState, type ReactNode } from "react";
+import { forwardRef, useEffect, useRef, useState, type ReactNode } from "react";
 
 import { cn } from "../utils/cn";
 import { DISABLED } from "../buttons/tactile/internal";
@@ -48,9 +48,14 @@ export const LiquidToggle = forwardRef<HTMLInputElement, LiquidToggleProps>(func
   const isOn = checked ?? internal;
   const [pulse, setPulse] = useState<number | null>(null);
   const nextPulse = useRef(0);
+  const pulseTimer = useRef<number | null>(null);
   const direction = useRef(1);
   const motionEnabled = useMotionEnabled();
   const press = usePressSpring({ scale: 1, disabled });
+
+  useEffect(() => () => {
+    if (pulseTimer.current) clearTimeout(pulseTimer.current);
+  }, []);
 
   const set = (next: boolean) => {
     direction.current = next ? 1 : -1;
@@ -58,7 +63,11 @@ export const LiquidToggle = forwardRef<HTMLInputElement, LiquidToggleProps>(func
     // rest" is structurally true and not merely an opacity of zero.
     const id = nextPulse.current++;
     setPulse(id);
-    window.setTimeout(() => setPulse((current) => (current === id ? null : current)), 740);
+    if (pulseTimer.current) clearTimeout(pulseTimer.current);
+    pulseTimer.current = window.setTimeout(() => {
+      setPulse((current) => (current === id ? null : current));
+      pulseTimer.current = null;
+    }, 740);
     if (checked === undefined) setInternal(next);
     onCheckedChange?.(next);
   };
