@@ -23,15 +23,29 @@ import {
   BlurRouteTransition,
   BubbleField,
   BubbleTransition,
+  ClipRevealMenu,
+  CompressingScrollNavigation,
   DepthHero,
+  EdgeRailNavigation,
+  EditorialIndexNavigation,
+  ExpandableBottomNavigation,
   FloatingIslandNav,
+  HoverExpandNavigation,
   InteractiveGradient,
+  LayeredNavigationMenu,
   LiquidNavbar,
   LiquidWipeTransition,
   MagneticCtaHero,
+  MorphingMegaNavigation,
   MorphMenu,
+  NeighborShiftNavigation,
+  SectionAwareNavigation,
+  SlidingMegaPanel,
   SoftMeshBackground,
+  SpotlightMegaMenu,
   SpotlightGrid,
+  type NavigationGroup,
+  type NavigationLink,
 } from "@pinky/experiences";
 import {
   ActionUndoBar,
@@ -198,10 +212,59 @@ const EFFECT_PREVIEWS: Record<string, ReactNode> = {
 };
 
 const EXPERIENCE_ITEMS = [
-  { id: "studio", label: "Studio" },
-  { id: "work", label: "Work" },
-  { id: "notes", label: "Notes" },
-];
+  { id: "studio", label: "Studio", href: "#studio", description: "A calm starting point" },
+  { id: "work", label: "Work", href: "#work", description: "Selected interactions" },
+  { id: "notes", label: "Notes", href: "#notes", description: "Writing and process" },
+] satisfies NavigationLink[];
+
+const NAVIGATION_ITEMS = [
+  { id: "overview", label: "Overview", href: "#overview", description: "See the whole system", meta: "01" },
+  { id: "collections", label: "Collections", href: "#collections", description: "Browse considered groups", meta: "02" },
+  { id: "notes", label: "Notes", href: "#notes", description: "Read the reasoning", meta: "03" },
+  { id: "about", label: "About", href: "#about", description: "Understand the point of view", meta: "04" },
+] satisfies NavigationLink[];
+
+const NAVIGATION_GROUPS = [
+  {
+    id: "components",
+    label: "Components",
+    meta: "01 / direct",
+    description: "Small surfaces with a clear physical response.",
+    links: [
+      { id: "buttons", label: "Tactile buttons", href: "#buttons" },
+      { id: "menus", label: "Menu triggers", href: "#menus" },
+    ],
+    preview: <span className="font-display text-lg font-semibold text-ink-900">Press, pull, settle.</span>,
+  },
+  {
+    id: "layouts",
+    label: "Layouts",
+    meta: "02 / rhythm",
+    description: "Compositions where geometry carries the relationship between items.",
+    links: [
+      { id: "editorial", label: "Editorial collections", href: "#editorial" },
+      { id: "spatial", label: "Spatial surfaces", href: "#spatial" },
+    ],
+    preview: <span className="font-display text-lg font-semibold text-ink-900">Let the collection breathe.</span>,
+  },
+  {
+    id: "systems",
+    label: "Systems",
+    meta: "03 / product",
+    description: "Useful states for real product surfaces, forms and data.",
+    links: [
+      { id: "forms", label: "Forms", href: "#forms" },
+      { id: "data", label: "Data views", href: "#data" },
+    ],
+    preview: <span className="font-display text-lg font-semibold text-ink-900">Read the state, then act.</span>,
+  },
+] satisfies NavigationGroup[];
+
+const SECTION_AWARE_PREVIEW_SECTIONS = [
+  { id: "preview-nav-intro", label: "Intro", href: "#preview-nav-intro" },
+  { id: "preview-nav-material", label: "Material", href: "#preview-nav-material" },
+  { id: "preview-nav-release", label: "Release", href: "#preview-nav-release" },
+] satisfies NavigationLink[];
 
 const DATA_POINTS = [
   { label: "Mon", value: 12 },
@@ -228,6 +291,18 @@ const SEARCH_ITEMS = [
  */
 const EXPERIENCE_PREVIEWS: Record<string, ReactNode> = {
   "liquid-navbar": <LiquidNavbarPreview />,
+  "hover-expand-navigation": <HoverExpandNavigation items={NAVIGATION_ITEMS} aria-label="Expanded preview navigation" />,
+  "neighbor-shift-navigation": <NeighborShiftNavigation items={NAVIGATION_ITEMS} aria-label="Neighbor shift preview" />,
+  "editorial-index-navigation": <EditorialIndexNavigation items={NAVIGATION_ITEMS} aria-label="Editorial preview index" />,
+  "morphing-mega-navigation": <MorphingMegaNavigation groups={NAVIGATION_GROUPS} aria-label="Morphing preview navigation" />,
+  "spotlight-mega-menu": <SpotlightMegaMenu groups={NAVIGATION_GROUPS} aria-label="Spotlight preview menu" />,
+  "sliding-mega-panel": <SlidingMegaPanel groups={NAVIGATION_GROUPS} aria-label="Sliding preview panel" />,
+  "layered-navigation-menu": <LayeredNavigationMenu groups={NAVIGATION_GROUPS} aria-label="Layered preview menu" />,
+  "clip-reveal-menu": <ClipRevealMenu items={NAVIGATION_ITEMS} aria-label="Clip preview menu" />,
+  "edge-rail-navigation": <EdgeRailNavigation items={NAVIGATION_ITEMS} aria-label="Edge preview rail" />,
+  "section-aware-navigation": <SectionAwarePreview />,
+  "expandable-bottom-navigation": <ExpandableBottomNavigation items={NAVIGATION_ITEMS.slice(0, 4)} aria-label="Expandable preview navigation" />,
+  "compressing-scroll-navigation": <CompressingScrollPreview />,
   "morph-menu": (
     <MorphMenu
       trigger="Index"
@@ -515,6 +590,34 @@ function ComparisonSurface({ index, label, className = "" }: { index: number; la
 function LiquidNavbarPreview() {
   const [active, setActive] = useState("work");
   return <LiquidNavbar items={EXPERIENCE_ITEMS} activeId={active} onActiveChange={setActive} aria-label="Preview sections" />;
+}
+
+function SectionAwarePreview() {
+  return (
+    <div className="w-full space-y-3">
+      <SectionAwareNavigation sections={SECTION_AWARE_PREVIEW_SECTIONS} aria-label="Preview reading sections" />
+      <div className="max-h-36 space-y-2 overflow-auto rounded-xl border border-line bg-white p-3">
+        {SECTION_AWARE_PREVIEW_SECTIONS.map((section, index) => (
+          <section key={section.id} id={section.id} className="min-h-20 rounded-lg bg-cloud-50 p-3">
+            <p className="font-mono text-[0.6rem] tracking-[0.14em] text-ink-500 uppercase">0{index + 1}</p>
+            <h3 className="mt-1 text-sm font-semibold text-ink-900">{section.label} leads the reading window.</h3>
+          </section>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CompressingScrollPreview() {
+  const [compressed, setCompressed] = useState(false);
+  return (
+    <div className="w-full space-y-2">
+      <CompressingScrollNavigation items={NAVIGATION_ITEMS.slice(0, 3)} compressed={compressed} title="Pinky / browse" aria-label="Preview scroll navigation" />
+      <button type="button" onClick={() => setCompressed((value) => !value)} className="rounded-pill border border-line bg-white px-3 py-1.5 text-xs text-ink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">
+        {compressed ? "Restore header" : "Compress header"}
+      </button>
+    </div>
+  );
 }
 
 function TransitionPreview({ kind }: { kind: "bubble" | "wipe" | "blur" }) {

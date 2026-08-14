@@ -122,8 +122,8 @@ describe("experience accessibility and lifecycle", () => {
   });
 
   it("registers every production experience once with a live-ready status", () => {
-    expect(allExperiences).toHaveLength(19);
-    expect(new Set(allExperiences.map((item) => item.slug))).toHaveProperty("size", 19);
+    expect(allExperiences).toHaveLength(31);
+    expect(new Set(allExperiences.map((item) => item.slug))).toHaveProperty("size", 31);
     expect(allExperiences.every((item) => item.status === "ready")).toBe(true);
     expect(allExperiences.every((item) => item.demoPath.endsWith(`#${item.slug}`))).toBe(true);
   });

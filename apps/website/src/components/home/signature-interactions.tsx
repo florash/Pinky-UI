@@ -1,6 +1,7 @@
 "use client";
 
 import { ExpandButton, InsetButton, MagneticButton } from "@pinky/components";
+import { ExpandableBottomNavigation, HoverExpandNavigation, MorphingMegaNavigation, type NavigationGroup, type NavigationLink } from "@pinky/experiences";
 import { CardFan, GalleryListMorph } from "@pinky/layouts";
 import { CommandPalette, MorphLightbox, useCommandShortcut } from "@pinky/systems";
 import { useState, type ReactNode } from "react";
@@ -11,11 +12,11 @@ import { Container } from "@/components/site/layout";
 /**
  * The dense beat of the homepage.
  *
- * Five interactions, chosen because each one moves in a different way —
- * re-arrangement, expansion, attraction, compression and command. They are
- * live instances, laid out asymmetrically so the page never reads as a card
- * grid. Everything else lives in Explore; this is a first impression, not a
- * catalogue.
+ * A small set of interactions, chosen because each one moves in a different
+ * way — re-arrangement, expansion, attraction, compression, command and
+ * wayfinding. They are live instances, laid out asymmetrically so the page
+ * never reads as a card grid. Everything else lives in Explore; this is a first
+ * impression, not a catalogue.
  */
 export function SignatureInteractions() {
   return (
@@ -100,6 +101,10 @@ export function SignatureInteractions() {
 
             <Piece label="Command Palette">
               <CommandPaletteDemo />
+            </Piece>
+
+            <Piece label="Navigation signatures">
+              <NavigationSignatureDemo />
             </Piece>
           </div>
         </div>
@@ -190,6 +195,46 @@ function CommandPaletteDemo() {
         ]}
       />
       ) : null}
+    </div>
+  );
+}
+
+const NAVIGATION_SIGNATURE_ITEMS = [
+  { id: "work", label: "Work", href: "#work", description: "Selected projects", meta: "01" },
+  { id: "notes", label: "Notes", href: "#notes", description: "Writing and process", meta: "02" },
+  { id: "about", label: "About", href: "#about", description: "The point of view", meta: "03" },
+] satisfies NavigationLink[];
+
+const NAVIGATION_SIGNATURE_GROUPS = [
+  {
+    id: "work",
+    label: "Work",
+    description: "A short index of selected work.",
+    links: [{ id: "case-study", label: "Case studies", href: "#case-study" }],
+  },
+  {
+    id: "notes",
+    label: "Notes",
+    description: "The reasoning behind the surfaces.",
+    links: [{ id: "journal", label: "Read the journal", href: "#journal" }],
+  },
+] satisfies NavigationGroup[];
+
+function NavigationSignatureDemo() {
+  return (
+    <div className="space-y-7 rounded-[20px] bg-cloud-50 px-5 py-6">
+      <div>
+        <p className="font-mono text-[0.58rem] tracking-[0.14em] text-ink-500 uppercase">Reflow</p>
+        <div className="mt-3"><HoverExpandNavigation items={NAVIGATION_SIGNATURE_ITEMS} aria-label="Signature expanded navigation" /></div>
+      </div>
+      <div>
+        <p className="font-mono text-[0.58rem] tracking-[0.14em] text-ink-500 uppercase">Continuity</p>
+        <div className="mt-3"><MorphingMegaNavigation groups={NAVIGATION_SIGNATURE_GROUPS} aria-label="Signature morphing navigation" /></div>
+      </div>
+      <div>
+        <p className="font-mono text-[0.58rem] tracking-[0.14em] text-ink-500 uppercase">Touch-first</p>
+        <div className="mt-3 flex justify-center"><ExpandableBottomNavigation items={NAVIGATION_SIGNATURE_ITEMS} aria-label="Signature bottom navigation" /></div>
+      </div>
     </div>
   );
 }

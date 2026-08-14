@@ -3,6 +3,13 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import { CursorPreviewNav } from "./cursor-preview-nav";
+import {
+  ClipRevealMenu,
+  ExpandableBottomNavigation,
+  HoverExpandNavigation,
+  MorphingMegaNavigation,
+  SectionAwareNavigation,
+} from "./expanded-navigation";
 import { LiquidNavbar } from "./liquid-navbar";
 import { MorphMenu } from "./morph-menu";
 
@@ -10,6 +17,12 @@ const ITEMS = [
   { id: "home", label: "Home" },
   { id: "work", label: "Work" },
   { id: "notes", label: "Notes" },
+];
+
+const EXPANDED_ITEMS = [
+  { id: "home", label: "Home", href: "#home", description: "Start here" },
+  { id: "work", label: "Work", href: "#work", description: "Selected projects" },
+  { id: "notes", label: "Notes", href: "#notes", description: "Writing and process" },
 ];
 
 describe("LiquidNavbar", () => {
@@ -62,6 +75,62 @@ describe("MorphMenu", () => {
     expect(screen.getByRole("dialog", { name: "Site navigation" })).toBeInTheDocument();
     await user.keyboard("{Escape}");
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(trigger).toHaveFocus();
+  });
+});
+
+describe("expanded navigation structures", () => {
+  it("keeps the morphing mega surface openable and restores trigger focus on Escape", async () => {
+    const user = userEvent.setup();
+    render(
+      <MorphingMegaNavigation
+        groups={[{
+          id: "work",
+          label: "Work",
+          description: "Selected projects",
+          links: [{ id: "case", label: "Case studies", href: "/work" }],
+        }]}
+      />,
+    );
+
+    const trigger = screen.getByRole("button", { name: "Open index" });
+    await user.click(trigger);
+    expect(screen.getByRole("button", { name: "Work" })).toHaveAttribute("aria-pressed", "true");
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("button", { name: "Work" })).not.toBeInTheDocument());
+    expect(trigger).toHaveFocus();
+  });
+
+  it("keeps active and current semantics visible for reflow and touch navigation", async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <HoverExpandNavigation items={EXPANDED_ITEMS} />
+        <ExpandableBottomNavigation items={EXPANDED_ITEMS} />
+        <SectionAwareNavigation sections={EXPANDED_ITEMS} />
+      </>,
+    );
+
+    expect(screen.getAllByRole("link", { name: "Home" })[0]).toHaveAttribute("aria-current", "page");
+    await user.click(screen.getAllByRole("link", { name: "Work" })[0]!);
+    expect(screen.getAllByRole("link", { name: "Work" })[0]).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("navigation", { name: "Section navigation" })).toBeInTheDocument();
+  });
+
+  it("dismisses an anchored menu from outside pointer input", async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <ClipRevealMenu items={[{ id: "work", label: "Work", href: "#work" }]} />
+        <button type="button">Outside</button>
+      </>,
+    );
+
+    const trigger = screen.getByRole("button", { name: "Reveal menu" });
+    await user.click(trigger);
+    expect(screen.getByRole("link", { name: "Work" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Outside" }));
+    await waitFor(() => expect(screen.queryByRole("link", { name: "Work" })).not.toBeInTheDocument());
     expect(trigger).toHaveFocus();
   });
 });

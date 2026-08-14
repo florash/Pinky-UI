@@ -5,27 +5,42 @@ import {
   BlurRouteTransition,
   BubbleField,
   BubbleTransition,
+  ClipRevealMenu,
+  CompressingScrollNavigation,
   CursorPreviewNav,
   DepthHero,
+  EdgeRailNavigation,
+  EditorialIndexNavigation,
+  ExpandableBottomNavigation,
   FloatingIslandNav,
   FloatingWindowStack,
+  HoverExpandNavigation,
   InteractiveGradient,
+  LayeredNavigationMenu,
   LiquidNavbar,
   LiquidWipeTransition,
   MagneticCtaHero,
+  MorphingMegaNavigation,
   MorphingHero,
   MorphMenu,
+  NeighborShiftNavigation,
   OrbitMenu,
   PerspectiveGallery,
+  SectionAwareNavigation,
   SharedElementTransition,
   SoftMeshBackground,
   SpatialCarousel,
+  SlidingMegaPanel,
+  SpotlightMegaMenu,
   SpotlightGrid,
+  type NavigationGroup,
+  type NavigationLink,
 } from "@pinky/experiences";
-import type { ExperienceFamily } from "@pinky/registry";
+import { allExperiences, type ExperienceFamily } from "@pinky/registry";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { LazyMount } from "@/components/site/lazy-mount";
+import { RegistryCatalogue } from "@/components/site/registry-catalogue";
 
 const FAMILY_LINKS: Array<{ family: ExperienceFamily; label: string; href: string }> = [
   { family: "navigation", label: "Navigation", href: "/navigation" },
@@ -45,6 +60,46 @@ const IMAGES = [
   "linear-gradient(170deg, var(--color-blush-50), var(--color-cloud-100) 52%, var(--color-blush-200))",
 ] as const;
 
+const NAVIGATION_EXPANSION_ITEMS = [
+  { id: "overview", label: "Overview", href: "#overview", description: "See the whole system", meta: "01" },
+  { id: "collections", label: "Collections", href: "#collections", description: "Browse considered groups", meta: "02" },
+  { id: "notes", label: "Notes", href: "#notes", description: "Read the reasoning", meta: "03" },
+  { id: "about", label: "About", href: "#about", description: "Understand the point of view", meta: "04" },
+] satisfies NavigationLink[];
+
+const NAVIGATION_EXPANSION_GROUPS = [
+  {
+    id: "components",
+    label: "Components",
+    meta: "01 / direct",
+    description: "Small surfaces with a clear physical response.",
+    links: [{ id: "buttons", label: "Tactile buttons", href: "#buttons" }, { id: "menus", label: "Menu triggers", href: "#menus" }],
+    preview: <span className="font-display text-lg font-semibold text-ink-900">Press, pull, settle.</span>,
+  },
+  {
+    id: "layouts",
+    label: "Layouts",
+    meta: "02 / rhythm",
+    description: "Compositions where geometry carries the relationship between items.",
+    links: [{ id: "editorial", label: "Editorial collections", href: "#editorial" }, { id: "spatial", label: "Spatial surfaces", href: "#spatial" }],
+    preview: <span className="font-display text-lg font-semibold text-ink-900">Let the collection breathe.</span>,
+  },
+  {
+    id: "systems",
+    label: "Systems",
+    meta: "03 / product",
+    description: "Useful states for real product surfaces, forms and data.",
+    links: [{ id: "forms", label: "Forms", href: "#forms" }, { id: "data", label: "Data views", href: "#data" }],
+    preview: <span className="font-display text-lg font-semibold text-ink-900">Read the state, then act.</span>,
+  },
+] satisfies NavigationGroup[];
+
+const NAVIGATION_READING_SECTIONS = [
+  { id: "navigation-demo-intro", label: "Intro", href: "#navigation-demo-intro" },
+  { id: "navigation-demo-material", label: "Material", href: "#navigation-demo-material" },
+  { id: "navigation-demo-release", label: "Release", href: "#navigation-demo-release" },
+] satisfies NavigationLink[];
+
 function Surface({ image, className }: { image: string; className?: string }) {
   return <span aria-hidden className={className} style={{ backgroundImage: image, display: "block" }} />;
 }
@@ -52,6 +107,8 @@ function Surface({ image, className }: { image: string; className?: string }) {
 export function ExperiencesShowcase({ family = "all" }: { family?: ExperienceFamily | "all" }) {
   const visible = (candidate: ExperienceFamily) => family === "all" || family === candidate;
   const title = family === "all" ? "Experience-level UI" : FAMILY_LINKS.find((item) => item.family === family)?.label;
+  const catalogueItems = family === "all" ? allExperiences : allExperiences.filter((item) => item.family === family);
+  const catalogueLabel = family === "all" ? "experiences" : `${title ?? family} experiences`.toLowerCase();
 
   return (
     <div className="relative overflow-hidden pb-28">
@@ -75,6 +132,7 @@ export function ExperiencesShowcase({ family = "all" }: { family?: ExperienceFam
               </Link>
             ))}
             <Link href="/effects" className={chip(false)}>2.6 Effects</Link>
+            <a href="#browse-all" className={chip(false)}>Browse all {catalogueItems.length}</a>
           </nav>
         </header>
       </SoftMeshBackground>
@@ -84,6 +142,7 @@ export function ExperiencesShowcase({ family = "all" }: { family?: ExperienceFam
       {visible("backgrounds") ? <BackgroundsSection /> : null}
       {visible("transitions") ? <TransitionsSection /> : null}
       {visible("spatial") ? <SpatialSection /> : null}
+      <RegistryCatalogue id="browse-all" items={catalogueItems} hrefPrefix="/experiences" label={catalogueLabel} />
     </div>
   );
 }
@@ -137,7 +196,124 @@ function NavigationSection() {
           ]}
         />
       </DemoFrame>
+
+      <NavigationExpansionSection />
     </ExperienceSection>
+  );
+}
+
+function NavigationExpansionSection() {
+  return (
+    <div className="mt-6 space-y-6">
+      <div className="flex items-end justify-between gap-4 border-t border-line pt-8">
+        <div>
+          <Eyebrow>Navigation expansion · 12 canonical structures</Eyebrow>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-700">Each surface keeps its own relationship: reflow, layered context, anchored reveal, rail expansion or reading progress. The catalogue below is complete; the previews stay intentionally compact.</p>
+        </div>
+        <Link href="/skills/navigation/hover-expand-navigation" className="hidden shrink-0 text-sm text-ink-700 underline decoration-line-strong underline-offset-4 sm:block">Open a skill</Link>
+      </div>
+
+      <NavigationDemoGroup id="reflow-index" title="Reflow & index" description="Rows and reading indexes explain hierarchy by changing their own spacing.">
+        <DemoFrame id="hover-expand-navigation" label="Hover Expand Navigation" description="The engaged destination opens enough room for context while its neighbours yield space.">
+          <HoverExpandNavigation items={NAVIGATION_EXPANSION_ITEMS} aria-label="Hover expand navigation demo" />
+        </DemoFrame>
+        <DemoFrame id="neighbor-shift-navigation" label="Neighbor Shift Navigation" description="The active destination gains width inside one compact strip; the row does the explaining.">
+          <NeighborShiftNavigation items={NAVIGATION_EXPANSION_ITEMS} aria-label="Neighbor shift navigation demo" />
+        </DemoFrame>
+        <DemoFrame id="editorial-index-navigation" label="Editorial Index Navigation" description="A numbered reading index uses typography and one traveling rule instead of a card wall.">
+          <EditorialIndexNavigation items={NAVIGATION_EXPANSION_ITEMS} aria-label="Editorial index navigation demo" />
+        </DemoFrame>
+      </NavigationDemoGroup>
+
+      <NavigationDemoGroup id="mega-menus" title="Mega menus" description="Contextual surfaces open beside their trigger while the parent destination stays understandable.">
+        <DemoFrame id="morphing-mega-navigation" label="Morphing Mega Navigation" description="The header grows into its own contextual index, keeping the trigger and surface spatially related.">
+          <MorphingMegaNavigation groups={NAVIGATION_EXPANSION_GROUPS} aria-label="Morphing mega navigation demo" />
+        </DemoFrame>
+        <DemoFrame id="spotlight-mega-menu" label="Spotlight Mega Menu" description="One group at a time owns a contextual preview, with the next destinations still visible.">
+          <SpotlightMegaMenu groups={NAVIGATION_EXPANSION_GROUPS} aria-label="Spotlight mega menu demo" />
+        </DemoFrame>
+        <DemoFrame id="sliding-mega-panel" label="Sliding Mega Panel" description="The open frame remains stable while ordered groups change inside it.">
+          <SlidingMegaPanel groups={NAVIGATION_EXPANSION_GROUPS} aria-label="Sliding mega panel demo" />
+        </DemoFrame>
+        <DemoFrame id="layered-navigation-menu" label="Layered Navigation Menu" description="The parent index stays behind a contextual layer instead of disappearing into a new page.">
+          <LayeredNavigationMenu groups={NAVIGATION_EXPANSION_GROUPS} aria-label="Layered navigation menu demo" />
+        </DemoFrame>
+      </NavigationDemoGroup>
+
+      <NavigationDemoGroup id="anchored-reveals" title="Anchored reveals" description="Compact destinations expand from a local edge without covering the page in a generic overlay.">
+        <DemoFrame id="clip-reveal-menu" label="Clip Reveal Menu" description="A compact destination list reveals from its local trigger edge and closes cleanly.">
+          <ClipRevealMenu items={NAVIGATION_EXPANSION_ITEMS} aria-label="Clip reveal menu demo" />
+        </DemoFrame>
+        <DemoFrame id="edge-rail-navigation" label="Edge Rail Navigation" description="A narrow rail gives labels room when approached or focused, without covering the page.">
+          <div className="flex min-h-56 items-start rounded-2xl bg-cloud-50 p-4"><EdgeRailNavigation items={NAVIGATION_EXPANSION_ITEMS} aria-label="Edge rail navigation demo" /></div>
+        </DemoFrame>
+      </NavigationDemoGroup>
+
+      <NavigationDemoGroup id="reading-state" title="Reading state" description="These structures respond to section visibility or scroll position while keeping destinations present.">
+        <DemoFrame id="section-aware-navigation" label="Section-Aware Navigation" description="The local index follows the section entering the reading window instead of polling the whole page.">
+          <SectionAwareNavigationDemo />
+        </DemoFrame>
+        <DemoFrame id="compressing-scroll-navigation" label="Compressing Scroll Navigation" description="The header gives reading space back after scroll but keeps its destinations present.">
+          <CompressingScrollNavigationDemo />
+        </DemoFrame>
+      </NavigationDemoGroup>
+
+      <NavigationDemoGroup id="mobile-navigation" title="Mobile navigation" description="A touch-first pattern that expands the selected destination without hiding the route." single>
+        <DemoFrame id="expandable-bottom-navigation" label="Expandable Bottom Navigation" description="The selected mobile destination opens into a label while peers remain compact.">
+          <div className="flex min-h-32 items-end justify-center rounded-2xl bg-cloud-50 p-4"><ExpandableBottomNavigation items={NAVIGATION_EXPANSION_ITEMS.slice(0, 4)} aria-label="Expandable bottom navigation demo" /></div>
+        </DemoFrame>
+      </NavigationDemoGroup>
+    </div>
+  );
+}
+
+function NavigationDemoGroup({
+  id,
+  title,
+  description,
+  single = false,
+  children,
+}: {
+  id: string;
+  title: string;
+  description: string;
+  single?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <section aria-labelledby={`${id}-title`} className="space-y-4 border-t border-line pt-7 first:border-t-0 first:pt-0">
+      <div className="max-w-2xl">
+        <h3 id={`${id}-title`} className="font-display text-lg font-semibold tracking-tight text-ink-900">{title}</h3>
+        <p className="mt-1 text-sm leading-relaxed text-ink-600">{description}</p>
+      </div>
+      <div className={single ? "max-w-2xl" : "grid gap-6 lg:grid-cols-2"}>{children}</div>
+    </section>
+  );
+}
+
+function SectionAwareNavigationDemo() {
+  return (
+    <div className="space-y-3">
+      <SectionAwareNavigation sections={NAVIGATION_READING_SECTIONS} aria-label="Section-aware navigation demo" />
+      <div className="max-h-40 space-y-2 overflow-auto rounded-xl border border-line bg-white p-3">
+        {NAVIGATION_READING_SECTIONS.map((section, index) => (
+          <section key={section.id} id={section.id} className="min-h-24 rounded-lg bg-cloud-50 p-3">
+            <Eyebrow>0{index + 1}</Eyebrow>
+            <h3 className="mt-1 text-sm font-semibold">{section.label} leads the reading window.</h3>
+          </section>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CompressingScrollNavigationDemo() {
+  const [compressed, setCompressed] = useState(false);
+  return (
+    <div className="space-y-3">
+      <CompressingScrollNavigation items={NAVIGATION_EXPANSION_ITEMS.slice(0, 3)} compressed={compressed} title="Pinky / browse" aria-label="Compressing scroll navigation demo" />
+      <button type="button" onClick={() => setCompressed((value) => !value)} className="rounded-pill border border-line bg-white px-3 py-1.5 text-xs text-ink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">{compressed ? "Restore header" : "Compress header"}</button>
+    </div>
   );
 }
 
