@@ -42,3 +42,5 @@ export function ActionUndoBar({ message, onUndo, duration = 0, onExpire, classNa
   const [remaining, setRemaining] = useState(duration); useEffect(() => { if (!duration) return; const started = Date.now(); const timer = window.setInterval(() => { const next = Math.max(0, duration - (Date.now() - started)); setRemaining(next); if (!next) { clearInterval(timer); onExpire?.(); } }, 250); return () => clearInterval(timer); }, [duration, onExpire]);
   return <div role="status" className={cn("flex items-center gap-4 rounded-2xl bg-ink-900 px-4 py-3 text-milk shadow-xl", className)}><span className="flex-1">{message}</span>{duration ? <span aria-hidden className="font-mono text-xs">{Math.ceil(remaining / 1000)}s</span> : null}<button type="button" onClick={onUndo} className="rounded-full bg-white/15 px-3 py-1.5 font-semibold">Undo</button></div>;
 }
+
+export * from "./response-expansion";

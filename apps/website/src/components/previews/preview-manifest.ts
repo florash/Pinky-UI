@@ -175,6 +175,21 @@ export const EXPLORE_PREVIEW_SLUGS = [
   "long-press-action",
   "progressive-step-workflow",
   "status-pipeline",
+  "optimistic-action",
+  "undoable-action",
+  "inline-save-state",
+  "async-action-control",
+  "progressive-status",
+  "multi-stage-progress",
+  "background-task-row",
+  "queued-action",
+  "retry-surface",
+  "completion-morph",
+  "partial-success-summary",
+  "conflict-resolution",
+  "connection-state",
+  "resumable-progress",
+  "delayed-feedback-escalation",
 ] as const;
 
 export function hasComponentPreview(slug: string) {

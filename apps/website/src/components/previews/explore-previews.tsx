@@ -100,6 +100,7 @@ import { LAYOUT_PREVIEWS } from "./layout-previews";
 import { MODERN_LAYOUT_PREVIEWS } from "./modern-layout-previews";
 import { SOFT_MEDIA_SOURCES, SoftSurface } from "./soft-surface";
 import { PRODUCT_EXPANSION_PREVIEWS, WORKFLOW_EXPANSION_PREVIEWS } from "./product-expansion-previews";
+import { RESPONSE_EXPANSION_PREVIEWS } from "./response-previews";
 import { COLLECTION_PREVIEWS } from "./collection-previews";
 import { FORM_PREVIEWS } from "./forms-previews";
 
@@ -768,6 +769,7 @@ const ALL_PREVIEWS: Record<string, ReactNode> = {
   ...FORM_PREVIEWS,
   ...WORKFLOW_PREVIEWS,
   ...WORKFLOW_EXPANSION_PREVIEWS,
+  ...RESPONSE_EXPANSION_PREVIEWS,
 };
 
 export { hasExplorePreview } from "./preview-manifest";
