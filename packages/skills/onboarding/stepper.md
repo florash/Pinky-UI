@@ -1,7 +1,7 @@
 # Stepper
 
 ## Purpose
-Use to show a finite workflow position with completed, current, upcoming, and error states.
+Use to show a finite workflow position with completed, current, upcoming, and error states. For product flows where completed decisions should remain editable context, use `ProgressiveStepWorkflow` instead.
 
 ## Use when
 Setup, checkout, onboarding, or staged creation has a meaningful sequence.

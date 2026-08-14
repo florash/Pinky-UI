@@ -1,4 +1,4 @@
-import type { Status } from "./types";
+import type { DiscoveryMetadata, Status } from "./types";
 
 export type WorkflowFamily = "feedback" | "search" | "loading" | "lists" | "drag" | "onboarding" | "mobile";
 export type WorkflowEntry = {
@@ -20,6 +20,7 @@ export type WorkflowEntry = {
   whenToUse: string[];
   whenNotToUse: string[];
   related: string[];
+  discovery?: DiscoveryMetadata;
 };
 
 const defaults = (item: Omit<WorkflowEntry, "status" | "importPath" | "demoPath" | "skill" | "accessibility" | "reducedMotion" | "performance" | "whenToUse" | "whenNotToUse" | "related"> & Partial<Pick<WorkflowEntry, "accessibility" | "reducedMotion" | "performance" | "whenToUse" | "whenNotToUse" | "related">>): WorkflowEntry => ({
@@ -36,7 +37,7 @@ const defaults = (item: Omit<WorkflowEntry, "status" | "importPath" | "demoPath"
   related: item.related ?? [],
 });
 
-const item = (family: WorkflowFamily, slug: string, name: string, component: string, description: string, tags: string[], usage: string, builtOn: string[] = ["Motion", "native semantics"]) => defaults({ family, slug, name, component, description, tags, usage, builtOn });
+const item = (family: WorkflowFamily, slug: string, name: string, component: string, description: string, tags: string[], usage: string, builtOn: string[] = ["Motion", "native semantics"], discovery?: DiscoveryMetadata) => defaults({ family, slug, name, component, description, tags, usage, builtOn, discovery });
 
 export const feedbackSystems = [
   item("feedback", "morph-toast", "Morph Toast", "ToastProvider", "A capped, pausable notification stack with action and swipe dismissal.", ["toast", "notification", "undo"], `<ToastProvider>{children}</ToastProvider>`, ["AnimatePresence", "live regions"]),
@@ -52,13 +53,13 @@ export const searchSystems = [
 export const loadingSystems = [
   item("loading", "skeleton-morph", "Skeleton Morph", "SkeletonMorph", "A quiet loading placeholder that resolves into the loaded content geometry.", ["skeleton", "loading", "content"], `<SkeletonMorph loading={loading} skeleton={<CardSkeleton />}>{content}</SkeletonMorph>`),
   item("loading", "shimmer-surface", "Shimmer Surface", "ShimmerSurface", "A low-contrast optional shimmer with a static reduced-motion fallback.", ["shimmer", "skeleton", "performance"], `<ShimmerSurface className="h-20 rounded-2xl" />`),
-  item("loading", "multi-step-progress", "Multi-Step Progress", "MultiStepProgress", "Clear completed, current, upcoming and error states for staged workflows.", ["progress", "steps", "checkout"], `<MultiStepProgress steps={steps} />`),
+  item("loading", "multi-step-progress", "Multi-Step Progress", "MultiStepProgress", "A visual progress preset for completed, current, upcoming and error states in a staged workflow.", ["progress", "steps", "checkout"], `<MultiStepProgress steps={steps} />`, undefined, { role: "preset", canonicalSlug: "progressive-step-workflow", note: "Use Progressive Step Workflow when completed decisions and the active task need to remain in one product surface." }),
   item("loading", "circular-progress-morph", "Circular Progress Morph", "CircularProgressMorph", "A compact spinner-to-percentage-to-check task indicator.", ["progress", "upload", "status"], `<CircularProgressMorph value={72} state="progress" />`),
   item("loading", "async-button", "Async Button", "AsyncButton", "A width-preserving idle, loading, success and error action pattern.", ["button", "async", "action"], `<AsyncButton onAction={save}>Save changes</AsyncButton>`, ["PressSpring", "stable width"]),
 ];
 export const listSystems = [
   item("lists", "reorderable-list", "Reorderable List", "ReorderableList", "A controlled list with pointer drag handles, arrow-key moves and announcements.", ["list", "reorder", "keyboard"], `<ReorderableList items={items} onReorder={setItems} />`, ["Motion Reorder", "live region"]),
-  item("lists", "expandable-list-row", "Expandable List Row", "ExpandableListRow", "An in-place row disclosure for secondary settings, files or task details.", ["list", "disclosure", "details"], `<ExpandableListRow summary="Invoice · #1042">{details}</ExpandableListRow>`),
+  item("lists", "expandable-list-row", "Expandable List Row", "ExpandableListRow", "A lightweight list or feed row disclosure for secondary settings, files or task details.", ["list", "disclosure", "details"], `<ExpandableListRow summary="Invoice · #1042">{details}</ExpandableListRow>`, undefined, { role: "solid", note: "Independent list/feed semantics; Expandable Data Row is the structured table pattern." }),
   item("lists", "swipe-action-row", "Swipe Action Row", "SwipeActionRow", "A mobile row that reveals actions while keeping an explicit actions button.", ["swipe", "mobile", "actions"], `<SwipeActionRow actions={actions}>{row}</SwipeActionRow>`, ["touch gesture", "button alternative"]),
   item("lists", "sticky-data-header", "Sticky Data Header", "StickyDataHeader", "A small sticky header surface that preserves list or table context.", ["sticky", "table", "scroll"], `<StickyDataHeader>Project · Owner · Status</StickyDataHeader>`),
   item("lists", "row-spotlight", "Row Spotlight", "RowSpotlight", "A hover and focus state that connects related values without hiding information.", ["table", "focus", "comparison"], `<RowSpotlight><span>Plan · $24 · Active</span></RowSpotlight>`),
@@ -73,7 +74,7 @@ export const dragSystems = [
   item("drag", "sortable-chips", "Sortable Chips", "SortableChips", "A compact tag collection with reorder, remove and add hooks.", ["chips", "tags", "reorder"], `<SortableChips items={tags} onReorder={setTags} onRemove={removeTag} />`),
 ];
 export const onboardingSystems = [
-  item("onboarding", "stepper", "Stepper", "Stepper", "A horizontal, vertical or compact accessible workflow stepper.", ["steps", "workflow", "progress"], `<Stepper steps={steps} active={active} />`),
+  item("onboarding", "stepper", "Stepper", "Stepper", "A basic horizontal, vertical or compact accessible workflow stepper for explicit progress.", ["steps", "workflow", "progress"], `<Stepper steps={steps} active={active} />`, undefined, { role: "solid", note: "Use Progressive Step Workflow when completed decisions should remain editable context." }),
   item("onboarding", "spotlight-tour", "Spotlight Tour", "SpotlightTour", "A skippable, focus-managed target tour with next, back and Escape paths.", ["tour", "onboarding", "focus"], `<SpotlightTour steps={tourSteps} open={open} onOpenChange={setOpen} />`),
   item("onboarding", "coach-mark", "Coach Mark", "CoachMark", "A single attached teaching surface for a new contextual feature.", ["coach", "teaching", "context"], `<CoachMark target="#new-filter" title="New filters">Try saved views here.</CoachMark>`),
   item("onboarding", "progressive-disclosure", "Progressive Disclosure", "ProgressiveDisclosure", "A small pattern for revealing advanced controls only when requested.", ["disclosure", "settings", "forms"], `<ProgressiveDisclosure>{advancedOptions}</ProgressiveDisclosure>`),
@@ -87,7 +88,7 @@ export const mobileSystems = [
 ];
 
 export const productWorkflowSystems = [
-  defaults({ family: "onboarding", slug: "progressive-step-workflow", name: "Progressive Step Workflow", component: "ProgressiveStepWorkflow", description: "A staged product workflow keeps completed decisions compact, the active decision large and the next context visible.", tags: ["workflow", "steps", "progressive"], usage: `<ProgressiveStepWorkflow steps={steps} onActiveIdChange={setActive} />`, builtOn: ["controlled state", "Motion layout"], accessibility: ["The current task uses aria-current while completed decisions remain explicit edit buttons.", "Continue, Back and blocked states use text labels, and state changes are announced only after an action."], reducedMotion: "Removes layout travel while completed, current, blocked and upcoming structure stays visible.", performance: ["Only the current task content renders; updates are discrete and host controlled."], whenToUse: ["Short product workflows where completed decisions should remain editable context."], whenNotToUse: ["Long branching processes that need routing, persistence or a dedicated review screen."], related: ["stepper", "progressive-disclosure"] }),
+  defaults({ family: "onboarding", slug: "progressive-step-workflow", name: "Progressive Step Workflow", component: "ProgressiveStepWorkflow", description: "A staged product workflow keeps completed decisions compact, the active decision large and the next context visible.", tags: ["workflow", "steps", "progressive"], usage: `<ProgressiveStepWorkflow steps={steps} onActiveIdChange={setActive} />`, builtOn: ["controlled state", "Motion layout"], accessibility: ["The current task uses aria-current while completed decisions remain explicit edit buttons.", "Continue, Back and blocked states use text labels, and state changes are announced only after an action."], reducedMotion: "Removes layout travel while completed, current, blocked and upcoming structure stays visible.", performance: ["Only the current task content renders; updates are discrete and host controlled."], whenToUse: ["Short product workflows where completed decisions should remain editable context."], whenNotToUse: ["Long branching processes that need routing, persistence or a dedicated review screen."], related: ["stepper", "progressive-disclosure"], discovery: { role: "canonical", note: "Canonical product workflow for progressive decision continuity." } }),
   defaults({ family: "feedback", slug: "status-pipeline", name: "Status Pipeline", component: "StatusPipeline", description: "A queued-to-active-to-complete status path keeps failure and retry on the same spatial track.", tags: ["status", "pipeline", "progress"], usage: `<StatusPipeline stages={stages} failedId={failedId} onRetry={retry} />`, builtOn: ["Motion layout", "semantic state"], accessibility: ["Every stage exposes its named state and the current stage uses aria-current.", "Failure, retry and completion are written as text as well as shown through color and symbols."], reducedMotion: "Keeps the complete status track and swaps state immediately without animated travel.", performance: ["A small fixed stage list updates on explicit actions without timers or continuous work."], whenToUse: ["Operational flows where queued, active, failed and completed states need spatial continuity."], whenNotToUse: ["A single indeterminate task or decorative percentage meter."], related: ["multi-step-progress", "status-pill"] }),
 ];
 

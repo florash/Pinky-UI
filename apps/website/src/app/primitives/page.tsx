@@ -1,5 +1,6 @@
 import { primitives } from "@pinky/registry";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { CodeBlock } from "@/components/site/code-block";
 import { Container, Halo } from "@/components/site/layout";
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default function PrimitivesPage() {
+  const primitiveBySlug = new Map(primitives.map((primitive) => [primitive.slug, primitive]));
   return (
     <div className="relative overflow-hidden pt-16 pb-20 sm:pt-20">
       <Halo className="-top-40 left-[-10rem] size-[28rem]" />
@@ -24,12 +26,21 @@ export default function PrimitivesPage() {
 
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {primitives.map((primitive) => (
-            <article key={primitive.slug} className="rounded-[24px] border border-line bg-white/75 p-5 shadow-soft">
+            <article id={primitive.slug} key={primitive.slug} className="rounded-[24px] border border-line bg-white/75 p-5 shadow-soft">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="font-display text-lg font-semibold tracking-tight">{primitive.name}</h2>
                 <span className="rounded-pill border border-line px-2 py-1 font-mono text-[0.6rem] text-ink-500">{primitive.status}</span>
               </div>
               <p className="mt-3 text-sm leading-relaxed text-ink-700">{primitive.description}</p>
+              {primitive.discovery && primitive.discovery.role !== "canonical" ? (
+                <p className="mt-3 text-xs leading-relaxed text-ink-500">
+                  {primitive.discovery.note}
+                  {primitive.discovery.canonicalSlug ? (() => {
+                    const canonical = primitiveBySlug.get(primitive.discovery.canonicalSlug);
+                    return canonical ? <>{" "}<Link href={`#${canonical.slug}`} className="font-medium text-ink-700 underline underline-offset-4">See {canonical.name}</Link></> : null;
+                  })() : null}
+                </p>
+              ) : null}
               <CodeBlock className="mt-5" code={primitive.usage} label="usage" />
             </article>
           ))}

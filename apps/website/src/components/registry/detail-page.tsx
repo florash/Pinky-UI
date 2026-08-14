@@ -30,6 +30,11 @@ export type RegistryDetailRecord = {
   whenToUse: string[];
   whenNotToUse: string[];
   related: Array<{ slug: string; name: string; href: string }>;
+  discovery?: {
+    role: "canonical" | "solid" | "preset" | "secondary" | "legacy";
+    note?: string;
+    canonical?: { name: string; href: string };
+  };
   skill?: { kind: SkillKind; slug: string; body: string } | null;
 };
 
@@ -70,6 +75,24 @@ export function RegistryDetailPage({ entry }: { entry: RegistryDetailRecord }) {
               </li>
             ))}
           </ul>
+          {entry.discovery && (entry.discovery.role !== "canonical" || entry.discovery.note) ? (
+            <div className="mt-6 rounded-2xl border border-line bg-white/70 px-4 py-3 text-sm leading-relaxed text-ink-700">
+              <span className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">
+                {entry.discovery.role === "preset" ? "Variation of" : entry.discovery.role === "legacy" ? "Earlier route" : "Related pattern"}
+              </span>
+              <p className="mt-1">
+                {entry.discovery.note ?? `${entry.name} remains available as a ${entry.discovery.role} entry.`}
+                {entry.discovery.canonical ? (
+                  <>
+                    {" "}
+                    <Link href={entry.discovery.canonical.href} className="font-medium text-ink-900 underline decoration-line-strong underline-offset-4">
+                      Open {entry.discovery.canonical.name}
+                    </Link>
+                  </>
+                ) : null}
+              </p>
+            </div>
+          ) : null}
         </header>
 
         {hasExplorePreview(entry.slug) ? (
@@ -80,6 +103,12 @@ export function RegistryDetailPage({ entry }: { entry: RegistryDetailRecord }) {
             </div>
           </section>
         ) : null}
+
+        <div className="mt-10 max-w-3xl">
+          <Block title="Quick usage" id="usage">
+            <CodeBlock code={entry.importPath + "\n\n" + entry.usage} label="usage" />
+          </Block>
+        </div>
 
         <div className="mt-20 grid gap-16 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-12">
             <div className="flex flex-col gap-16">
@@ -99,24 +128,18 @@ export function RegistryDetailPage({ entry }: { entry: RegistryDetailRecord }) {
                 </Block>
               ) : null}
 
-              <Block title="Installation" id="installation">
+              <Block title="Install from source" id="installation">
                 <p className="text-sm leading-relaxed text-ink-700">
-                  Copy the registry item and the primitives it is built on into your project — they
-                  depend only on React and Motion.
+                  The <code className="font-mono text-xs">@pinky/*</code> packages are private workspace packages today,
+                  not published npm packages. Clone this repository to run the examples, or copy
+                  the component and its built-on source files into your own app.
                 </p>
                 <CodeBlock
                   className="mt-4"
                   copy={false}
-                  label="files"
-                  code={[
-                    entry.importPath,
-                    ...entry.builtOn.map((name) => `packages/primitives/src/${name}/`),
-                  ].join("\n")}
+                  label="repository"
+                  code={"git clone https://github.com/florash/Pinky-UI.git\ncd Pinky-UI\nnpm install\nnpm run dev"}
                 />
-              </Block>
-
-              <Block title="Usage" id="usage">
-                <CodeBlock code={`${entry.importPath}\n\n${entry.usage}`} label="usage" />
               </Block>
 
               {entry.props.length > 0 ? (

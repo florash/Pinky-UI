@@ -1,6 +1,6 @@
 "use client";
 
-import { allEffects, allExperiences, allProductSystems, allWorkflowSystems, components, layouts } from "@pinky/registry";
+import { allEffects, allExperiences, allProductSystems, allWorkflowSystems, components, layouts, type DiscoveryRole, type DiscoveryMetadata } from "@pinky/registry";
 import { cn } from "@pinky/components";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -18,6 +18,9 @@ type DiscoveryItem = {
   family: string;
   href: string;
   tags: string[];
+  discovery?: DiscoveryMetadata;
+  canonicalName?: string;
+  canonicalHref?: string;
 };
 
 const PUBLIC_SECTIONS: Array<{ id: DiscoveryGroup; description: string }> = [
@@ -83,6 +86,7 @@ const ITEMS: DiscoveryItem[] = [
     family: title(item.category),
     href: `/components/${item.slug}`,
     tags: [...item.tags, ...item.interactions],
+    discovery: item.discovery,
   })),
   ...layouts.map((item) => ({
     slug: item.slug,
@@ -101,6 +105,7 @@ const ITEMS: DiscoveryItem[] = [
     family: title(item.family),
     href: `/effects/${item.slug}`,
     tags: [item.family],
+    discovery: item.discovery,
   })),
   ...allExperiences.map((item) => ({
     slug: item.slug,
@@ -119,6 +124,7 @@ const ITEMS: DiscoveryItem[] = [
     family: title(item.family),
     href: `/systems/${item.slug}`,
     tags: item.tags,
+    discovery: item.discovery,
   })),
   ...allWorkflowSystems.map((item) => ({
     slug: item.slug,
@@ -128,10 +134,46 @@ const ITEMS: DiscoveryItem[] = [
     family: "Workflows",
     href: `/workflows/${item.slug}`,
     tags: [item.family, ...item.tags],
+    discovery: item.discovery,
   })),
 ];
 
-const PUBLIC_ITEMS = ITEMS.filter((item) => hasExplorePreview(item.slug));
+const ITEM_BY_SLUG = new Map(ITEMS.map((item) => [item.slug, item]));
+const PUBLIC_ITEMS = ITEMS.filter((item) => hasExplorePreview(item.slug)).map((item) => {
+  const canonical = item.discovery?.canonicalSlug ? ITEM_BY_SLUG.get(item.discovery.canonicalSlug) : undefined;
+  return {
+    ...item,
+    canonicalName: canonical?.name,
+    canonicalHref: canonical?.href,
+  };
+});
+
+const ROLE_ORDER: Record<DiscoveryRole, number> = {
+  canonical: 0,
+  solid: 1,
+  preset: 2,
+  secondary: 3,
+  legacy: 4,
+};
+
+function discoveryRole(item: DiscoveryItem) {
+  return item.discovery?.role ?? "solid";
+}
+
+function relationshipLabel(item: DiscoveryItem) {
+  const canonicalName = item.canonicalName;
+  if (item.discovery?.role === "preset" && canonicalName) return "Variation of " + canonicalName;
+  if (item.discovery?.role === "secondary" && canonicalName) return "Related to " + canonicalName;
+  if (item.discovery?.role === "solid") return "Independent pattern";
+  if (item.discovery?.role === "legacy") return "Earlier route";
+  return item.discovery?.role ?? "";
+}
+
+function compareDiscoveryItems(a: DiscoveryItem, b: DiscoveryItem) {
+  const roleDelta = ROLE_ORDER[discoveryRole(a)] - ROLE_ORDER[discoveryRole(b)];
+  if (roleDelta !== 0) return roleDelta;
+  return Number(CURATED_SLUGS.has(b.slug)) - Number(CURATED_SLUGS.has(a.slug));
+}
 
 const ORDERED = [...PUBLIC_ITEMS].sort((a, b) => {
   const groupOrder = PUBLIC_SECTIONS.map((section) => section.id);
@@ -139,19 +181,18 @@ const ORDERED = [...PUBLIC_ITEMS].sort((a, b) => {
   if (groupDelta !== 0) return groupDelta;
   const experimentalDelta = Number(EXPERIMENTAL_SLUGS.has(a.slug)) - Number(EXPERIMENTAL_SLUGS.has(b.slug));
   if (experimentalDelta !== 0) return experimentalDelta;
-  return Number(CURATED_SLUGS.has(b.slug)) - Number(CURATED_SLUGS.has(a.slug));
+  return compareDiscoveryItems(a, b);
 });
 
 /** Keep the default wall editorial: sample across families instead of letting
  * the largest registry family consume the whole section. Featured items are
  * already running above, so complementary pieces get the first look here. */
 function curateSection(items: DiscoveryItem[], limit = 4) {
-  const ordered = [
-    ...items.filter((item) => !CURATED_SLUGS.has(item.slug)),
-    ...items.filter((item) => CURATED_SLUGS.has(item.slug)),
-  ];
-  const families = [...new Set(ordered.map((item) => item.family))];
-  const buckets = new Map(families.map((family) => [family, ordered.filter((item) => item.family === family)]));
+  const ordered = [...items].sort(compareDiscoveryItems);
+  const preferred = ordered.filter((item) => !["preset", "legacy"].includes(discoveryRole(item)));
+  const source = preferred.length >= limit ? preferred : ordered;
+  const families = [...new Set(source.map((item) => item.family))];
+  const buckets = new Map(families.map((family) => [family, source.filter((item) => item.family === family)]));
   const curated: DiscoveryItem[] = [];
 
   while (curated.length < limit && [...buckets.values()].some((bucket) => bucket.length > 0)) {
@@ -323,7 +364,18 @@ function DiscoveryCard({ item, experimental = false, className }: { item: Discov
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-center justify-between gap-3">
           <span className="font-mono text-[0.65rem] tracking-[0.15em] text-ink-500 uppercase">{item.family}</span>
-          {experimental ? <span className="rounded-pill border border-line px-2 py-1 font-mono text-[0.55rem] tracking-[0.1em] text-ink-500 uppercase">experimental</span> : null}
+          <div className="flex flex-wrap justify-end gap-1.5">
+            {item.discovery && item.discovery.role !== "canonical" ? (
+              item.canonicalName && item.canonicalHref ? (
+                <Link href={item.canonicalHref} className="rounded-pill border border-line px-2 py-1 font-mono text-[0.55rem] tracking-[0.1em] text-ink-500 uppercase hover:border-line-strong">
+                  {relationshipLabel(item)}
+                </Link>
+              ) : (
+                <span className="rounded-pill border border-line px-2 py-1 font-mono text-[0.55rem] tracking-[0.1em] text-ink-500 uppercase">{relationshipLabel(item)}</span>
+              )
+            ) : null}
+            {experimental ? <span className="rounded-pill border border-line px-2 py-1 font-mono text-[0.55rem] tracking-[0.1em] text-ink-500 uppercase">experimental</span> : null}
+          </div>
         </div>
         <h4 className="mt-2 text-lg">
           <Link href={item.href} className="rounded-sm outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ink-900">{item.name}</Link>

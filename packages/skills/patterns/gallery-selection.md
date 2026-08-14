@@ -35,4 +35,4 @@ the content be the interest.
   comparability that a product grid exists for.
 - Using Card Fan for content people need to read. Overlap hides text.
 - Putting a heavy card component inside a large gallery. See
-  [image-heavy-performance](image-heavy-performance).
+  [image-heavy-performance](/skills/patterns/image-heavy-performance).

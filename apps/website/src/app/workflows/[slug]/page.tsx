@@ -27,6 +27,9 @@ export default async function WorkflowDetailPage({ params }: PageProps) {
     .filter((item) => item.family === entry.family && item.slug !== entry.slug)
     .slice(0, 4)
     .map((item) => ({ slug: item.slug, name: item.name, href: `/workflows/${item.slug}` }));
+  const canonical = entry.discovery?.canonicalSlug
+    ? allWorkflowSystems.find((item) => item.slug === entry.discovery?.canonicalSlug)
+    : undefined;
 
   const detail: RegistryDetailRecord = {
     slug: entry.slug,
@@ -48,6 +51,11 @@ export default async function WorkflowDetailPage({ params }: PageProps) {
     whenToUse: entry.whenToUse,
     whenNotToUse: entry.whenNotToUse,
     related,
+    discovery: entry.discovery ? {
+      role: entry.discovery.role,
+      note: entry.discovery.note,
+      canonical: canonical ? { name: canonical.name, href: `/workflows/${canonical.slug}` } : undefined,
+    } : undefined,
     skill: skill ? { kind: entry.family, slug: skill.slug, body: skill.body } : null,
   };
 

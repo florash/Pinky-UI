@@ -27,6 +27,9 @@ export default async function SystemDetailPage({ params }: PageProps) {
     .map((relatedSlug) => getProductSystem(relatedSlug))
     .filter((item) => item !== undefined)
     .map((item) => ({ slug: item.slug, name: item.name, href: `/systems/${item.slug}` }));
+  const canonical = entry.discovery?.canonicalSlug
+    ? allProductSystems.find((item) => item.slug === entry.discovery?.canonicalSlug)
+    : undefined;
 
   const detail: RegistryDetailRecord = {
     slug: entry.slug,
@@ -48,6 +51,11 @@ export default async function SystemDetailPage({ params }: PageProps) {
     whenToUse: entry.whenToUse,
     whenNotToUse: entry.whenNotToUse,
     related,
+    discovery: entry.discovery ? {
+      role: entry.discovery.role,
+      note: entry.discovery.note,
+      canonical: canonical ? { name: canonical.name, href: `/systems/${canonical.slug}` } : undefined,
+    } : undefined,
     skill: skill ? { kind: entry.family, slug: skill.slug, body: skill.body } : null,
   };
 

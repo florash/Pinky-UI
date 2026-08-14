@@ -1,7 +1,7 @@
 # Multi-Step Progress
 
 ## Purpose
-Use for a finite workflow whose completed, current, upcoming, and error steps matter.
+Use for a compact visual progress view whose completed, current, upcoming, and error steps matter. For a product workflow that keeps the active decision open and completed context editable, use `ProgressiveStepWorkflow` instead.
 
 ## Use when
 Checkout, setup, onboarding, or upload pipelines have a meaningful sequence.

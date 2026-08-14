@@ -5,14 +5,29 @@
 Pinky UI is an open-source collection of expressive React components and motion primitives built for interfaces that feel responsive, playful and alive.
 
 Explore jelly, liquid, magnetic, morph, glow, depth, elastic and proximity interactions —
-**139 implemented items across 12 primitives, 12 components, 21 layouts, 27 effects, 19
-experiences and 48 product and workflow systems** — designed to stay composable, accessible
+**180 implemented items across 12 primitives, 12 components, 27 layouts, 32 effects, 31
+experiences and 66 product and workflow systems** — designed to stay composable, accessible
 and practical to use.
 
-Every item listed on the site is implemented and importable. Nothing is documented before it
-exists, and the registry in `packages/registry` is the single source of the counts above.
+Every item listed on the site has an implemented source entry and an import path. Nothing is
+documented before it exists, and the registry in `packages/registry` is the single source of
+the counts above.
 
 React · TypeScript · Tailwind CSS · Motion · Accessible · Open Source
+
+## Get started
+
+Pinky UI is currently distributed from source; the @pinky/* packages are private workspace
+packages, not published npm packages yet.
+
+```bash
+git clone https://github.com/florash/Pinky-UI.git
+cd Pinky-UI
+npm install
+npm run dev
+```
+
+Open http://localhost:3000 for the interaction wall or /docs for the usage guide.
 
 ## Why Pinky UI?
 
@@ -57,8 +72,9 @@ React · TypeScript · Tailwind CSS · Motion · Accessible · Open Source
 - Elastic Toggle
 
 ```tsx
-import { JellyCard, MagneticButton } from "@pinky/components";
-import { Magnetic } from "@pinky/primitives";
+import { MagneticButton } from "@pinky/components";
+
+<MagneticButton strength={0.4}>Explore components</MagneticButton>
 ```
 
 ## Layouts
@@ -76,12 +92,12 @@ Ways to arrange many things, where the arrangement itself is the interaction.
 import { PolaroidWall, StackGrid } from "@pinky/layouts";
 ```
 
-Since this list was written the layouts package has grown an editorial family
+The layouts package also includes an editorial family
 (Editorial Mosaic, Gallery ↔ List Morph, Split-Screen Gallery, Cinematic
 Horizontal Gallery, Broken / Offset Grid, Layered Editorial, Floating Columns)
 and a spatial family (Perspective Bento, Curved 3D Grid, Helix Gallery, Cylinder
 Gallery, Depth Scroll Gallery, Spatial Card Tunnel, Stack → Spatial, Infinite
-Spatial Canvas). All 21 layouts are implemented; see `packages/registry/src/layouts.ts`.
+Spatial Canvas). All 27 layouts are implemented; see `packages/registry/src/layouts.ts`.
 
 The spatial layouts use CSS 3D transforms and Motion only — there is no WebGL,
 Three.js or React Three Fiber anywhere in this repository. The full runtime
@@ -89,11 +105,9 @@ dependency list is `motion`, `next`, `react` and `react-dom`.
 
 ## Skills
 
-Pinky UI ships **agent-readable interaction Skills**: 174 markdown files in
-`packages/skills` — 134 covering individual items (what each one is for, when it
-is the wrong choice, recommended defaults, accessibility constraints) and 40
-system-level patterns on interaction density, reduced motion, landing-page
-motion, choosing a card, and composition.
+Pinky UI ships **agent-readable interaction Skills**: 197 public markdown recipes in
+`packages/skills`, covering individual items and system-level guidance on interaction
+density, reduced motion, landing-page motion, choosing a card, and composition.
 
 Five primitives (`spring`, `parallax`, `press-spring`, `cursor`, `glow`) do not
 have skills yet. They are public API, not internals.
@@ -118,9 +132,8 @@ examples/            Small standalone compositions
 
 The website compiles `packages/*` straight from TypeScript source through the
 path aliases in `apps/website/tsconfig.json`, so editing a primitive shows up on
-the site with no build step in between. The packages are internal to this
-repository and are not published to npm yet — there is also no CLI, despite what
-`packages/registry` is eventually designed to support.
+the site with no build step in between. There is no npm distribution or CLI yet;
+the repository is the current source and documentation surface.
 
 ## Local development
 

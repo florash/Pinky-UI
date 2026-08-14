@@ -1,7 +1,7 @@
 # Expandable List Row
 
 ## Purpose
-Use in-place disclosure when secondary information belongs to the row.
+Use in-place disclosure when secondary information belongs to a list or feed row. For structured table columns and record identity, use `ExpandableDataRow` instead.
 
 ## Use when
 Settings, invoices, messages, or task details can be scanned progressively.

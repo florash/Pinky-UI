@@ -36,9 +36,11 @@ import {
   TextScramble,
   WordStagger,
 } from "@pinky/effects";
+import { allEffects } from "@pinky/registry";
 import { useState } from "react";
 
 import { LazyMount } from "@/components/site/lazy-mount";
+import { RegistryCatalogue } from "@/components/site/registry-catalogue";
 import { SOFT_MEDIA_SOURCES } from "@/components/previews/soft-surface";
 
 /**
@@ -120,11 +122,14 @@ export function EffectsShowcase() {
                 Explore effects
               </a>
             </MagneticCursorTarget>
-            <KineticUnderline href="#scroll" className="px-2 py-3 text-sm text-ink-700">
+            <KineticUnderline as="a" href="#scroll" className="px-2 py-3 text-sm text-ink-700">
               Jump to scroll stories
             </KineticUnderline>
-            <KineticUnderline href="/experiences" className="px-2 py-3 text-sm text-ink-700">
+            <KineticUnderline as="a" href="/experiences" className="px-2 py-3 text-sm text-ink-700">
               Explore experience-level UI →
+            </KineticUnderline>
+            <KineticUnderline as="a" href="#browse-all" className="px-2 py-3 text-sm text-ink-700">
+              Browse all {allEffects.length} effects →
             </KineticUnderline>
           </div>
 
@@ -242,9 +247,9 @@ export function EffectsShowcase() {
             </BlurReveal>
             <SpringReveal direction="right">
               <div style={panelStyle}>
-                <p className="font-mono text-xs tracking-[0.16em] text-ink-500 uppercase">Spring Reveal</p>
+                <p className="font-mono text-xs tracking-[0.16em] text-ink-500 uppercase">Spring Reveal · Blur preset</p>
                 <h3 className="mt-3 text-2xl">A small physical settle.</h3>
-                <p className="mt-4 leading-relaxed text-ink-700">One shared spring vocabulary keeps distant sections related.</p>
+                <p className="mt-4 leading-relaxed text-ink-700">The same readable entrance with a spring settle; use Blur Reveal when the spring itself is not the point.</p>
               </div>
             </SpringReveal>
           </div>
@@ -324,11 +329,11 @@ export function EffectsShowcase() {
             </SplitTextReveal>
             <div className="mt-10 grid gap-6 border-t border-line pt-7 text-sm sm:grid-cols-2">
               <div>
-                <p className="text-ink-500">Word Stagger</p>
+                <p className="text-ink-500">Word Stagger · Split Text preset</p>
                 <WordStagger className="mt-3 block text-2xl">A word at a time.</WordStagger>
               </div>
               <div>
-                <p className="text-ink-500">Character Stagger</p>
+                <p className="text-ink-500">Character Stagger · Split Text preset</p>
                 <CharacterStagger className="mt-3 block text-2xl">Short titles only.</CharacterStagger>
               </div>
               <div>
@@ -372,6 +377,8 @@ export function EffectsShowcase() {
           ))} />
           </LazyMount>
         </section>
+
+        <RegistryCatalogue id="browse-all" items={allEffects} hrefPrefix="/effects" label="effects" />
       </div>
     </CursorProvider>
   );

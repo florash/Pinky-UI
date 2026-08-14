@@ -21,35 +21,34 @@ import {
 import { Proximity } from "@pinky/primitives";
 import { useState, type ReactNode } from "react";
 
-const TRIGGERS = [
+const SIGNATURE_TRIGGERS = [
   { id: "floating-lines", name: "Floating Lines", signature: "depth separation → offset cross" },
-  { id: "split-rail", name: "Split Rail", signature: "counter-slide → recombine" },
-  { id: "inset-menu", name: "Inset Menu", signature: "opposing depths → minus + dot" },
   { id: "bracket-menu", name: "Bracket Menu", signature: "convergence → framed cross" },
-  { id: "sliding-stack", name: "Sliding Stack", signature: "shear → parallel diagonals" },
+  { id: "split-rail", name: "Split Rail", signature: "counter-slide → recombine" },
+  { id: "text-menu", name: "Text Menu", signature: "rule draws, word travels" },
+  { id: "bento", name: "Bento Menu", signature: "gutter breathes → block turns", origin: "waffle · Microsoft" },
+  { id: "inset-menu", name: "Inset Menu", signature: "opposing depths → minus + dot" },
   { id: "expandable-menu", name: "Expandable Menu", signature: "silhouette → word travel" },
-  { id: "double-line-ring", name: "Double-Line Ring", signature: "staged: ring, then lines" },
-  { id: "elastic-lines", name: "Elastic Lines", signature: "length in place" },
+  { id: "panel-toggle", name: "Panel Toggle", signature: "rail redraws the layout", origin: "sidebar · VS Code / Linear" },
 ] as const;
 
-const NON_LINE = [
+const SECONDARY_TRIGGERS = [
+  { id: "sliding-stack", name: "Sliding Stack", signature: "shear → parallel diagonals" },
+  { id: "double-line-ring", name: "Double-Line Ring", signature: "staged: ring, then lines" },
+  { id: "elastic-lines", name: "Elastic Lines", signature: "length in place" },
   { id: "dot-grid", name: "Dot Grid", signature: "radial stagger → cross", origin: "app launcher · Google" },
   { id: "meatball", name: "Meatball", signature: "spread → diagonal fold", origin: "overflow · iOS / Notion" },
   { id: "kebab", name: "Kebab", signature: "column merges to a bar", origin: "overflow · Material" },
-  { id: "bento", name: "Bento", signature: "gutter breathes → block turns", origin: "waffle · Microsoft" },
-  { id: "panel-toggle", name: "Panel Toggle", signature: "rail redraws the layout", origin: "sidebar · VS Code / Linear" },
   { id: "plus-rotate", name: "Plus", signature: "arms extend → 45°", origin: "create · Notion / Linear" },
-  { id: "text-menu", name: "Text", signature: "rule draws, word travels", origin: "editorial / fashion" },
   { id: "avatar-menu", name: "Avatar", signature: "ring opens, caret turns", origin: "account menu" },
 ] as const;
 
 /**
  * The menu-trigger wall.
  *
- * Every trigger is mounted, interactive and independently stateful on arrival —
- * no tabs, no cards to open, no playground. Each keeps its own open state so
- * the whole row can be left open at once and the eight close marks compared
- * side by side, which is the comparison that actually matters here.
+ * Every trigger is mounted, interactive and independently stateful on arrival.
+ * The first wall is the public signature set; the second keeps useful presets
+ * and familiar marks available without giving them equal discovery weight.
  */
 export function MenuWall() {
   const [open, setOpen] = useState<Record<string, boolean>>({});
@@ -59,16 +58,16 @@ export function MenuWall() {
     controls: `${id}-surface`,
   });
 
-  const everything = [...TRIGGERS, ...NON_LINE];
+  const everything = [...SIGNATURE_TRIGGERS, ...SECONDARY_TRIGGERS];
   const allOpen = everything.every((t) => open[t.id]);
 
   return (
     <section className="mt-16 border-t border-line pt-9">
       <div className="flex flex-wrap items-baseline justify-between gap-4">
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <h2 className="font-display text-base font-semibold tracking-tight">Menu triggers · Lines</h2>
+          <h2 className="font-display text-base font-semibold tracking-tight">Menu triggers · Signatures</h2>
           <p className="text-sm text-ink-500">
-Eight constructions built from two strokes. Not one of them rotates into an X.
+            The clearest Pinky constructions: each has a different close-mark signature and a direct action path.
           </p>
         </div>
         <button
@@ -83,58 +82,57 @@ Eight constructions built from two strokes. Not one of them rotates into an X.
       </div>
 
       <div className="mt-10 grid grid-cols-2 items-start gap-x-6 gap-y-10 sm:grid-cols-4 sm:gap-x-10">
-        <Cell trigger={TRIGGERS[0]}>
+        <Cell trigger={SIGNATURE_TRIGGERS[0]}>
           <FloatingLines {...bind("floating-lines")} />
         </Cell>
-        <Cell trigger={TRIGGERS[1]}>
-          <SplitRail {...bind("split-rail")} />
-        </Cell>
-        <Cell trigger={TRIGGERS[2]}>
-          <InsetMenu {...bind("inset-menu")} />
-        </Cell>
-        <Cell trigger={TRIGGERS[3]}>
+        <Cell trigger={SIGNATURE_TRIGGERS[1]}>
           <BracketMenu {...bind("bracket-menu")} />
         </Cell>
-        <Cell trigger={TRIGGERS[4]}>
-          <SlidingStack {...bind("sliding-stack")} />
+        <Cell trigger={SIGNATURE_TRIGGERS[2]}>
+          <SplitRail {...bind("split-rail")} />
         </Cell>
-        <Cell trigger={TRIGGERS[5]}>
+        <Cell trigger={SIGNATURE_TRIGGERS[3]}>
+          <TextMenu {...bind("text-menu")} className="min-h-12 min-w-16 px-2" />
+        </Cell>
+        <Cell trigger={SIGNATURE_TRIGGERS[4]}>
+          <BentoMenu {...bind("bento")} />
+        </Cell>
+        <Cell trigger={SIGNATURE_TRIGGERS[5]}>
+          <InsetMenu {...bind("inset-menu")} />
+        </Cell>
+        <Cell trigger={SIGNATURE_TRIGGERS[6]}>
           <ExpandableMenu {...bind("expandable-menu")} />
         </Cell>
-        {/* Proximity is the enhancement layer; the ring is complete without it. */}
-        <Proximity distance={150} axis="both">
-          <Cell trigger={TRIGGERS[6]}>
-            <DoubleLineRing {...bind("double-line-ring")} />
-          </Cell>
-        </Proximity>
-        <Cell trigger={TRIGGERS[7]}>
-          <ElasticLines {...bind("elastic-lines")} />
+        <Cell trigger={SIGNATURE_TRIGGERS[7]}>
+          <PanelToggle {...bind("panel-toggle")} />
         </Cell>
       </div>
 
 
       <div className="mt-14 border-t border-line pt-9">
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <h2 className="font-display text-base font-semibold tracking-tight">Menu triggers · Marks</h2>
+          <h2 className="font-display text-base font-semibold tracking-tight">Menu triggers · Presets & utility marks</h2>
           <p className="text-sm text-ink-500">
-Dots, squares, a layout diagram, a plus, a word, a face — the archetypes the
-            industry settled on when it stopped drawing lines.
+            Familiar marks and secondary variants remain live for comparison, but do not compete with the signature set above.
           </p>
         </div>
 
         <div className="mt-10 grid grid-cols-2 items-start gap-x-6 gap-y-10 sm:grid-cols-4 sm:gap-x-10">
-          <Cell trigger={NON_LINE[0]}><DotGrid {...bind("dot-grid")} /></Cell>
-          <Cell trigger={NON_LINE[1]}><MeatballMenu {...bind("meatball")} /></Cell>
-          <Cell trigger={NON_LINE[2]}><KebabMenu {...bind("kebab")} /></Cell>
-          <Cell trigger={NON_LINE[3]}><BentoMenu {...bind("bento")} /></Cell>
-          <Cell trigger={NON_LINE[4]}><PanelToggle {...bind("panel-toggle")} /></Cell>
-          <Cell trigger={NON_LINE[5]}><PlusRotate {...bind("plus-rotate")} /></Cell>
-          <Cell trigger={NON_LINE[6]}><TextMenu {...bind("text-menu")} className="min-h-12 min-w-16 px-2" /></Cell>
-          <Cell trigger={NON_LINE[7]}><AvatarMenu {...bind("avatar-menu")} /></Cell>
+          <Cell trigger={SECONDARY_TRIGGERS[0]}><SlidingStack {...bind("sliding-stack")} /></Cell>
+          {/* Proximity is the enhancement layer; the ring is complete without it. */}
+          <Proximity distance={150} axis="both">
+            <Cell trigger={SECONDARY_TRIGGERS[1]}><DoubleLineRing {...bind("double-line-ring")} /></Cell>
+          </Proximity>
+          <Cell trigger={SECONDARY_TRIGGERS[2]}><ElasticLines {...bind("elastic-lines")} /></Cell>
+          <Cell trigger={SECONDARY_TRIGGERS[3]}><DotGrid {...bind("dot-grid")} /></Cell>
+          <Cell trigger={SECONDARY_TRIGGERS[4]}><MeatballMenu {...bind("meatball")} /></Cell>
+          <Cell trigger={SECONDARY_TRIGGERS[5]}><KebabMenu {...bind("kebab")} /></Cell>
+          <Cell trigger={SECONDARY_TRIGGERS[6]}><PlusRotate {...bind("plus-rotate")} /></Cell>
+          <Cell trigger={SECONDARY_TRIGGERS[7]}><AvatarMenu {...bind("avatar-menu")} /></Cell>
         </div>
 
         <div className="sr-only">
-          {NON_LINE.map((t) => (
+          {SECONDARY_TRIGGERS.map((t) => (
             <div key={t.id} id={`${t.id}-surface`} hidden={!open[t.id]}>
               {t.name} navigation
             </div>
@@ -144,7 +142,7 @@ Dots, squares, a layout diagram, a plus, a word, a face — the archetypes the
 
       {/* Each trigger owns a real surface, so aria-controls points somewhere. */}
       <div className="sr-only">
-        {TRIGGERS.map((t) => (
+        {SIGNATURE_TRIGGERS.map((t) => (
           <div key={t.id} id={`${t.id}-surface`} hidden={!open[t.id]}>
             {t.name} navigation
           </div>

@@ -34,7 +34,7 @@ const COMPOSITION = `import { Magnetic, Jelly } from "@pinky/primitives";
 
 <Magnetic strength={0.4}>
   <Jelly elasticity={0.35}>
-    <Card />
+    <button type="button">Explore</button>
   </Jelly>
 </Magnetic>`;
 
@@ -89,16 +89,15 @@ export default function DocsPage() {
           <div className="flex min-w-0 flex-col gap-16">
             <Section title="Installation" id="installation">
               <p className="text-sm leading-relaxed text-ink-700">
-                To use a component, copy its file and the primitives it is built on into your
-                project — they depend only on React 19 and Motion 12.
+                Pinky UI is source-first today: the <code className="font-mono text-xs">@pinky/*</code> namespaces are
+                private workspace packages, not published npm packages. Clone the repository to
+                run the live site and copy a pattern into an application when you are ready.
               </p>
               <CodeBlock
                 className="mt-5"
                 copy={false}
-                label="requirements"
-                code={`react       >= 19
-motion      >= 12
-tailwindcss >= 4   // for the shipped class names`}
+                label="start here"
+                code={"git clone https://github.com/florash/Pinky-UI.git\ncd Pinky-UI\nnpm install\nnpm run dev\n# open http://localhost:3000"}
               />
             </Section>
 
@@ -155,8 +154,9 @@ tailwindcss >= 4   // for the shipped class names`}
                 {primitives.filter((entry) => entry.status === "ready").length} primitives,{" "}
                 {layouts.length} layouts, {allEffects.length} effects, {allExperiences.length}{" "}
                 experiences and {allProductSystems.length + allWorkflowSystems.length} product and
-                workflow systems — {TOTAL_ITEMS} in all. Everything listed on this site is
-                implemented and importable; nothing is documented before it exists.
+                workflow systems — {TOTAL_ITEMS} in all. Everything listed on this site has an
+                implemented source entry and a documented import path; the workspace is the
+                current distribution surface.
               </p>
             </Section>
           </div>

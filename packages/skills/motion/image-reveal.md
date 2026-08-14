@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`ImageReveal` combines a restrained mask, scale and blur for image-led entrances. It is a useful default for a gallery, project cover or editorial media block.
+`ImageReveal` is the media-specific preset of `MaskReveal`, combining a restrained mask, scale and blur for image-led entrances. It is a useful choice for a gallery, project cover or editorial media block; use `MaskReveal` for non-image surfaces.
 
 Use a small scale difference (about 1.02–1.08), low blur and one overlay sweep. Do not hide a critical image indefinitely, stack it with several other reveals, or use it for tiny icons.
 

@@ -104,6 +104,7 @@ export const primitives: PrimitiveEntry[] = [
     usage: `<CursorGlow size={420}>
   <section>…</section>
 </CursorGlow>`,
+    discovery: { role: "canonical", note: "Complete region wrapper for pointer-following light." },
   },
   {
     slug: "glow",
@@ -112,5 +113,10 @@ export const primitives: PrimitiveEntry[] = [
       "The hook underneath the light: writes pointer position into CSS variables so lighting stays pure CSS.",
     status: "ready",
     usage: `const ref = usePointerGlow<HTMLDivElement>({ range: 80 });`,
+    discovery: {
+      role: "secondary",
+      canonicalSlug: "cursor",
+      note: "Low-level hook for custom surfaces; Cursor Glow is the complete wrapper.",
+    },
   },
 ];

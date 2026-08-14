@@ -100,6 +100,12 @@ export default async function ComponentDetailPage({ params }: PageProps) {
           />
         </div>
 
+        <div className="mt-10 max-w-3xl">
+          <Block title="Quick usage" id="usage">
+            <CodeBlock code={entry.importPath + "\n\n" + entry.usage} label="usage" />
+          </Block>
+        </div>
+
         <div className="mt-20 grid gap-16 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-12">
             <div className="flex flex-col gap-16">
               {entry.presets.length > 0 ? (
@@ -122,24 +128,18 @@ export default async function ComponentDetailPage({ params }: PageProps) {
                 </Block>
               ) : null}
 
-              <Block title="Installation" id="installation">
+              <Block title="Install from source" id="installation">
                 <p className="text-sm leading-relaxed text-ink-700">
-                  Copy the component and the primitives it is built on into your project — they
-                  depend only on React and Motion.
+                  The <code className="font-mono text-xs">@pinky/*</code> packages are private workspace packages today,
+                  not published npm packages. Clone this repository to run the examples, or copy
+                  the component and its built-on source files into your own app.
                 </p>
                 <CodeBlock
                   className="mt-4"
                   copy={false}
-                  label="files"
-                  code={[
-                    `packages/components/src/${entry.category}/${entry.slug}.tsx`,
-                    ...entry.builtOn.map((name) => `packages/primitives/src/${name}/`),
-                  ].join("\n")}
+                  label="repository"
+                  code={"git clone https://github.com/florash/Pinky-UI.git\ncd Pinky-UI\nnpm install\nnpm run dev"}
                 />
-              </Block>
-
-              <Block title="Usage" id="usage">
-                <CodeBlock code={`${entry.importPath}\n\n${entry.usage}`} label="usage" />
               </Block>
 
               <Block title="Props" id="props">

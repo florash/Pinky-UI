@@ -381,6 +381,10 @@ export const components: RegistryEntry[] = [
       "Navigation between pages — use links",
     ],
     related: ["magnetic-button", "gooey-menu"],
+    discovery: {
+      role: "canonical",
+      note: "Canonical tab navigation with tablist and tabpanel semantics.",
+    },
     skill: "fluid-tabs",
   },
   {
