@@ -60,6 +60,7 @@ export const SKILL_KINDS = [
   "drag",
   "onboarding",
   "mobile",
+  "collections",
   "patterns",
 ] as const;
 export type SkillKind = (typeof SKILL_KINDS)[number];
@@ -115,6 +116,7 @@ export const KIND_LABEL: Record<SkillKind, string> = {
   drag: "Drag",
   onboarding: "Onboarding",
   mobile: "Mobile",
+  collections: "Collections",
   patterns: "Patterns",
 };
 
@@ -141,6 +143,7 @@ export const KIND_BLURB: Record<SkillKind, string> = {
   drag: "Reordering systems where pointer movement always has an accessible alternative.",
   onboarding: "Teaching surfaces that respect attention, skip paths and product context.",
   mobile: "Touch-first patterns with explicit controls and gesture etiquette.",
+  collections: "Content browsing systems where preview, focus, disclosure and spatial continuity carry the story.",
   patterns: "System-level guidance: density, restraint, reduced motion, composition.",
 };
 
@@ -148,7 +151,7 @@ export const SKILL_PUBLIC_GROUPS = [
   { label: "Components", description: "Pieces with a direct surface or control response.", kinds: ["components"] },
   { label: "Layouts", description: "Collection arrangements where geometry carries meaning.", kinds: ["layouts"] },
   { label: "Experiences", description: "Navigation, heroes, atmosphere and transitions.", kinds: ["navigation", "heroes", "backgrounds", "transitions", "spatial"] },
-  { label: "Systems", description: "Media, product controls and workflows with real state.", kinds: ["media", "forms", "data", "feedback", "search", "loading", "lists", "drag", "onboarding", "mobile"] },
+  { label: "Systems", description: "Media, product controls, collections and workflows with real state.", kinds: ["media", "forms", "data", "feedback", "search", "loading", "lists", "drag", "onboarding", "mobile", "collections"] },
   { label: "Effects", description: "Cursor, motion, text and scroll as expressive layers.", kinds: ["cursor", "motion", "text", "scroll"] },
   { label: "Primitives", description: "One reusable behaviour at a time.", kinds: ["primitives"] },
   { label: "Patterns", description: "Restraint, composition and accessibility guidance.", kinds: ["patterns"] },

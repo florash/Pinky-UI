@@ -28,7 +28,7 @@ const PUBLIC_SECTIONS: Array<{ id: DiscoveryGroup; description: string }> = [
   { id: "Collections", description: "Stacks, grids and galleries for a collection that wants a point of view." },
   { id: "Editorial", description: "Composed arrangements where rhythm and whitespace are part of the interface." },
   { id: "Experiences", description: "Navigation, Heroes, backgrounds and transitions that shape the whole page." },
-  { id: "Systems", description: "Media, forms, data and workflows for product moments that need a state." },
+  { id: "Systems", description: "Media, forms, data, collections and workflows for product moments that need a state." },
   { id: "Effects", description: "Cursor, motion, text and scroll — the smallest layer of expression." },
   { id: "Spatial", description: "High-risk depth experiments, kept discoverable but deliberately later." },
 ];

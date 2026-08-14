@@ -2,7 +2,7 @@
   "name": "@pinky/systems",
   "version": "0.1.0",
   "private": true,
-  "description": "Media, form and lightweight data interaction systems for Pinky UI.",
+  "description": "Media, form, data and content browsing systems for Pinky UI.",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
