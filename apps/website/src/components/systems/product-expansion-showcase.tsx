@@ -15,6 +15,8 @@ import {
 } from "@pinky/systems";
 import { useState, type ReactNode } from "react";
 
+import { FormsInteractionShowcase } from "./forms-interaction-showcase";
+
 const filterGroups = [
   { id: "status", label: "Status", options: [{ id: "ready", label: "Ready", count: 12 }, { id: "review", label: "In review", count: 4 }] },
   { id: "owner", label: "Owner", options: [{ id: "flora", label: "Flora", count: 7 }, { id: "team", label: "Team", count: 9 }] },
@@ -32,12 +34,15 @@ function FormsExpansion() {
   const [savedName, setSavedName] = useState("Pinky workspace");
   const results = searchItems.filter((item) => item.toLowerCase().includes(query.toLowerCase()));
   return (
-    <div className="mt-8 grid gap-5 lg:grid-cols-2">
+    <>
+      <div className="mt-8 grid gap-5 lg:grid-cols-2">
       <ExpansionDemo id="inline-edit-field" title="Inline Edit Field" copy="The value, help text and save path stay attached to one product field."><InlineEditField label="Workspace name" value={savedName} onValueChange={setSavedName} description="Shown to collaborators in the workspace switcher." validate={(value) => value.trim().length < 3 ? "Use at least three characters." : null} /></ExpansionDemo>
       <ExpansionDemo id="expanding-search" title="Expanding Search" copy="A compact intent trigger opens a focused query without sending the user to another page."><ExpandingSearch value={query} onValueChange={setQuery} results={<div className="space-y-1">{results.length ? results.map((item) => <button key={item} type="button" className="block w-full rounded-xl px-3 py-2 text-left text-sm hover:bg-cloud-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">{item}</button>) : <p className="px-3 py-2 text-xs text-ink-500">No matching workspace items.</p>}</div>} /></ExpansionDemo>
       <ExpansionDemo id="validation-field" title="Validation Field" copy="Invalid, correcting and valid are readable states with the field still in place."><ValidationField label="Project email" type="email" value={email} onValueChange={setEmail} placeholder="name@studio.com" description="A local example; no request is sent." validate={(value) => !value ? null : value.includes("@") ? { status: "valid", message: "Looks ready." } : { status: "invalid", message: "Add an @ and a domain." }} /></ExpansionDemo>
       <ExpansionDemo id="progressive-form" title="Progressive Form" copy="Completed sections condense into context while the next useful decision opens."><ProgressiveForm steps={[{ id: "identity", label: "Identity", description: "Name the project.", summary: "North star refresh", content: <label className="block text-sm">Project name<input className="mt-2 w-full rounded-xl border border-line bg-milk px-3 py-2.5" defaultValue="North star refresh" /></label> }, { id: "audience", label: "Audience", description: "Choose who sees it next.", content: <div className="flex flex-wrap gap-2"><button type="button" className="rounded-full bg-ink-900 px-3 py-2 text-xs text-milk">Design team</button><button type="button" className="rounded-full border border-line px-3 py-2 text-xs">Whole studio</button></div> }, { id: "review", label: "Review", description: "Check the handoff.", content: <p className="rounded-xl bg-cloud-50 p-3 text-sm text-ink-700">The project is ready for a final review.</p> }]} /></ExpansionDemo>
-    </div>
+      </div>
+      <FormsInteractionShowcase />
+    </>
   );
 }
 

@@ -12,6 +12,16 @@ import { MorphSelect } from "./morph-select";
 import { ProgressiveForm } from "./progressive-form";
 import { SmartDropzone } from "./smart-dropzone";
 import { ValidationField } from "./validation-field";
+import {
+  EditablePropertyRail,
+  InlineCommandField,
+  MorphingInput,
+  ProgressiveDisclosureField,
+  SegmentedInputComposer,
+  SmartSuggestionField,
+  TokenField,
+  UnitScrubber,
+} from "./input-expansion";
 
 describe("Form systems", () => {
   it("moves segmented radio selection and focus with arrows", async () => {
@@ -133,5 +143,89 @@ describe("Form systems", () => {
     render(<ExpandingSearch label="Search" />);
     await user.click(screen.getByRole("button", { name: "Search" }));
     expect(screen.getByRole("textbox", { name: "Search" })).toBeInTheDocument();
+  });
+
+  it("moves a MorphingInput into editing and restores focus on Escape", async () => {
+    const user = userEvent.setup();
+    render(<MorphingInput label="Release note" defaultValue="Draft" />);
+    const trigger = screen.getByRole("button", { name: "Edit Release note" });
+    await user.click(trigger);
+    await waitFor(() => expect(screen.getByRole("textbox", { name: "Release note" })).toHaveFocus());
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.getByRole("button", { name: "Edit Release note" })).toHaveFocus());
+  });
+
+  it("confirms and removes TokenField values with keyboard input", async () => {
+    const user = userEvent.setup();
+    const change = vi.fn();
+    render(<TokenField label="Topics" onTokensChange={change} />);
+    const input = screen.getByRole("textbox", { name: "Topics" });
+    await user.type(input, "Design{Enter}");
+    expect(screen.getByText("Design")).toBeInTheDocument();
+    expect(change).toHaveBeenCalledWith(["Design"]);
+    await user.click(screen.getByRole("button", { name: "Remove Design" }));
+    expect(screen.queryByText("Design")).not.toBeInTheDocument();
+  });
+
+  it("accepts an explicit SmartSuggestionField choice by keyboard", async () => {
+    const user = userEvent.setup();
+    const select = vi.fn();
+    render(<SmartSuggestionField label="City" options={["Canberra", "Cairns", "Sydney"]} onSelect={select} />);
+    const input = screen.getByRole("combobox", { name: "City" });
+    await user.type(input, "Canb");
+    await user.keyboard("{Enter}");
+    expect(input).toHaveValue("Canberra");
+    expect(select).toHaveBeenCalledWith("Canberra");
+  });
+
+  it("inserts an InlineCommandField token without opening navigation", async () => {
+    const user = userEvent.setup();
+    render(<InlineCommandField label="Brief" commands={[{ id: "date", label: "date", description: "Due date" }]} />);
+    const input = screen.getByRole("combobox", { name: "Brief" });
+    await user.type(input, "/");
+    expect(screen.getByRole("listbox", { name: "Inline commands" })).toBeInTheDocument();
+    await user.keyboard("{Enter}");
+    expect(screen.getByText("/ date")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Remove date command" })).toBeInTheDocument();
+  });
+
+  it("reveals and closes only the dependent ProgressiveDisclosureField inputs", async () => {
+    const user = userEvent.setup();
+    render(<ProgressiveDisclosureField label="Delivery" />);
+    await user.click(screen.getByRole("radio", { name: "Ship to an address" }));
+    expect(screen.getByRole("textbox", { name: "Address" })).toBeInTheDocument();
+    await user.click(screen.getByRole("radio", { name: "Pick up" }));
+    expect(screen.queryByRole("textbox", { name: "Address" })).not.toBeInTheDocument();
+  });
+
+  it("stops UnitScrubber pointer updates after pointer cleanup", () => {
+    const change = vi.fn();
+    render(<UnitScrubber label="Radius" defaultValue={20} min={0} max={100} onValueChange={change} />);
+    const target = screen.getByTestId("unit-scrubber-target");
+    vi.spyOn(target, "getBoundingClientRect").mockReturnValue({ left: 0, top: 0, width: 100, height: 50, right: 100, bottom: 50, x: 0, y: 0, toJSON: () => ({}) } as DOMRect);
+    fireEvent.pointerDown(target, { pointerId: 1, clientX: 50 });
+    fireEvent.pointerUp(target, { pointerId: 1, clientX: 50 });
+    const callsAfterUp = change.mock.calls.length;
+    fireEvent.pointerMove(target, { pointerId: 1, clientX: 90 });
+    expect(change.mock.calls.length).toBe(callsAfterUp);
+  });
+
+  it("keeps EditablePropertyRail to one active editor and saves its row", async () => {
+    const user = userEvent.setup();
+    render(<EditablePropertyRail items={[{ id: "status", label: "Status", value: "Review", options: ["Draft", "Review", "Ready"] }, { id: "owner", label: "Owner", value: "Flora" }]} />);
+    await user.click(screen.getByRole("button", { name: "Edit Status" }));
+    await user.selectOptions(screen.getByRole("combobox"), "Ready");
+    await user.click(screen.getByRole("button", { name: "Save" }));
+    expect(screen.getByText("Ready")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Edit Owner" })).toBeInTheDocument();
+  });
+
+  it("distributes pasted SegmentedInputComposer values across parts", () => {
+    render(<SegmentedInputComposer label="Release date" defaultSegments={["", "", ""]} />);
+    const year = screen.getByRole("textbox", { name: "Year" });
+    fireEvent.paste(year, { clipboardData: { getData: () => "20261122" } });
+    expect(screen.getByRole("textbox", { name: "Year" })).toHaveValue("2026");
+    expect(screen.getByRole("textbox", { name: "Month" })).toHaveValue("11");
+    expect(screen.getByRole("textbox", { name: "Day" })).toHaveValue("22");
   });
 });

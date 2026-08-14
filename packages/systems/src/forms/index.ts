@@ -8,3 +8,4 @@ export * from "./inline-edit-field";
 export * from "./expanding-search";
 export * from "./validation-field";
 export * from "./progressive-form";
+export * from "./input-expansion";
