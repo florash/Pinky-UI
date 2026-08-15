@@ -7,6 +7,8 @@ import {
   ExpandableDataRow,
   ExpandingSearch,
   FilterRail,
+  HoverVideoScrubber,
+  ImageSequence,
   InteractiveBarRanking,
   InteractiveLineChart,
   InlineEditField,
@@ -50,8 +52,18 @@ const PREVIEW_MULTIPLES = [
   { id: "retention", label: "Retention", data: PREVIEW_VIZ_DATA.map((point, index) => ({ ...point, value: 74 + index * 1.4 - (index === 2 ? 3 : 0) })), formatValue: (value: number) => `${Math.round(value)}%` },
   { id: "sessions", label: "Sessions", data: PREVIEW_VIZ_DATA.map((point, index) => ({ ...point, value: 18 + index * 3 + (index === 5 ? 4 : 0) })), formatValue: (value: number) => `${Math.round(value)}k` },
 ];
+const PREVIEW_IMAGE_FRAMES = [
+  "#f4c7d7",
+  "#d9effa",
+  "#f4fbff",
+  "#f8dbe6",
+].map((accent, index) => `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520"><rect width="800" height="520" fill="#ffffff"/><circle cx="${210 + index * 95}" cy="${180 + index * 18}" r="145" fill="${accent}"/><circle cx="590" cy="350" r="105" fill="#d9effa" fill-opacity=".86"/><path d="M110 420c120-90 230-90 350 0s235 90 330 0v100H110Z" fill="#f4fbff"/></svg>`)}`);
+const PREVIEW_VIDEO_SOURCE = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
+const PREVIEW_VIDEO_POSTER = `data:image/svg+xml,${encodeURIComponent("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 800 450\"><rect width=\"800\" height=\"450\" fill=\"#f4fbff\"/><circle cx=\"220\" cy=\"180\" r=\"150\" fill=\"#f4c7d7\" fill-opacity=\".86\"/><circle cx=\"610\" cy=\"300\" r=\"160\" fill=\"#d9effa\" fill-opacity=\".9\"/></svg>")}`;
 
 export const PRODUCT_EXPANSION_PREVIEWS: Record<string, ReactNode> = {
+  "hover-video-scrubber": <HoverVideoScrubber src={PREVIEW_VIDEO_SOURCE} poster={PREVIEW_VIDEO_POSTER} label="Product reel" preload="none" className="aspect-video w-full bg-cloud-50" />,
+  "image-sequence": <ImageSequence frames={PREVIEW_IMAGE_FRAMES} alt={(index) => `Product frame ${index + 1}`} interaction="drag" className="aspect-[4/3] w-full bg-cloud-50" />,
   "interactive-line-chart": <InteractiveLineChart data={PREVIEW_VIZ_DATA} label="Weekly usage" formatValue={(value) => `${value}k`} />,
   "range-brush-chart": <RangeBrushChart data={PREVIEW_VIZ_DATA} label="Usage history" formatValue={(value) => `${value}k`} defaultStartIndex={1} defaultEndIndex={5} />,
   "comparison-chart": <ComparisonChart labels={PREVIEW_VIZ_DATA.map((point) => point.label)} series={[{ id: "a", label: "Studio", values: [52, 58, 56, 64, 72, 70, 78], marker: "circle" }, { id: "b", label: "Team", values: [44, 51, 49, 60, 63, 66, 69], marker: "square" }]} label="Studio and team comparison" formatValue={(value) => `${value}`} />,

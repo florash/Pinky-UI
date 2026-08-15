@@ -90,7 +90,7 @@ export default function DocsPage() {
             <Section title="Installation" id="installation">
               <p className="text-sm leading-relaxed text-ink-700">
                 Pinky UI is source-first today: the <code className="font-mono text-xs">@pinky/*</code> namespaces are
-                private workspace packages, not published npm packages. Clone the repository to
+                private source packages in this repository, not published npm packages. Clone the repository to
                 run the live site and copy a pattern into an application when you are ready.
               </p>
               <CodeBlock
@@ -155,7 +155,7 @@ export default function DocsPage() {
                 {layouts.length} layouts, {allEffects.length} effects, {allExperiences.length}{" "}
                 experiences and {allProductSystems.length + allWorkflowSystems.length} product and
                 workflow systems — {TOTAL_ITEMS} in all. Everything listed on this site has an
-                implemented source entry and a documented import path; the workspace is the
+                implemented source entry and a documented import path; the repository is the
                 current distribution surface.
               </p>
             </Section>

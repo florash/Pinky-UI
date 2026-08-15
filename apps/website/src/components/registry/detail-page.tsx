@@ -130,7 +130,7 @@ export function RegistryDetailPage({ entry }: { entry: RegistryDetailRecord }) {
 
               <Block title="Install from source" id="installation">
                 <p className="text-sm leading-relaxed text-ink-700">
-                  The <code className="font-mono text-xs">@pinky/*</code> packages are private workspace packages today,
+                  The <code className="font-mono text-xs">@pinky/*</code> packages are private source packages in this repository today,
                   not published npm packages. Clone this repository to run the examples, or copy
                   the component and its built-on source files into your own app.
                 </p>

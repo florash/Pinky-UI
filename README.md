@@ -1,13 +1,14 @@
 # Pinky UI
 
-**Soft, fluid and interactive React components for modern interfaces.**
+**An open-source React interaction and UI system for modern interfaces.**
 
-Pinky UI is an open-source collection of expressive React components and motion primitives built for interfaces that feel responsive, playful and alive.
+Pinky UI is an open-source collection of expressive React components, product systems and motion primitives built for interfaces that feel responsive, tactile and alive.
 
 Explore jelly, liquid, magnetic, morph, glow, depth, elastic and proximity interactions —
 **243 implemented items across 12 primitives, 12 components, 27 layouts, 32 effects, 31
 experiences and 129 product and workflow systems** — designed to stay composable, accessible
-and practical to use.
+and practical to use. The website puts those interactions directly in front of you as live
+previews instead of hiding the work behind a documentation-first catalogue.
 
 Every item listed on the site has an implemented source entry and an import path. Nothing is
 documented before it exists, and the registry in `packages/registry` is the single source of
@@ -17,8 +18,9 @@ React · TypeScript · Tailwind CSS · Motion · Accessible · Open Source
 
 ## Get started
 
-Pinky UI is currently distributed from source; the @pinky/* packages are private workspace
-packages, not published npm packages yet.
+Pinky UI is currently distributed from source; the `@pinky/*` packages are private source
+packages in this repository, not published npm packages yet. This release-preparation checkpoint does not publish
+packages automatically.
 
 ```bash
 git clone https://github.com/florash/Pinky-UI.git
@@ -28,6 +30,13 @@ npm run dev
 ```
 
 Open http://localhost:3000 for the interaction wall or /docs for the usage guide.
+
+## Styling
+
+The website owns the Tailwind CSS configuration and Pinky design tokens in
+`apps/website/src/app/globals.css`; the source packages do not currently publish a standalone
+CSS or token entrypoint. The site loads Montserrat and Geist through `next/font`; the packages do
+not bundle font files.
 
 ## Why Pinky UI?
 
@@ -105,8 +114,9 @@ dependency list is `motion`, `next`, `react` and `react-dom`.
 
 ## Skills
 
-Pinky UI ships **agent-readable interaction Skills**: 260 public markdown recipes in
-`packages/skills`, covering individual items and system-level guidance on interaction
+Pinky UI ships **agent-readable interaction Skills**: **283 canonical Markdown recipes across
+284 public Skill routes** in `packages/skills`. One route is an intentional legacy alias kept
+for compatibility. The recipes cover individual items and system-level guidance on interaction
 density, reduced motion, landing-page motion, choosing a card, and composition.
 
 Five primitives (`spring`, `parallax`, `press-spring`, `cursor`, `glow`) do not
@@ -157,6 +167,17 @@ on Vitest with Testing Library.
 Every primitive reads `prefers-reduced-motion` and renders a complete, usable UI
 when motion is disabled. Interactive components remain keyboard operable and
 carry their own focus and ARIA semantics.
+
+## Mobile and touch
+
+Mobile is treated as an interaction input, not a narrower desktop layout. Touch-first systems
+use thumb-sized targets, visible non-hover fallbacks, contained gestures and safe-area-aware
+bottom surfaces. The `/mobile` wall and the Mobile family in `/workflows` show the live examples.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the local checks, Skill recipe workflow and
+accessibility expectations.
 
 ## License
 

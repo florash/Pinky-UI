@@ -91,6 +91,8 @@ export const EXPLORE_PREVIEW_SLUGS = [
   "liquid-wipe-transition",
   "blur-route-transition",
   "morph-lightbox",
+  "hover-video-scrubber",
+  "image-sequence",
   "before-after",
   "expandable-media",
   "floating-media-player",
