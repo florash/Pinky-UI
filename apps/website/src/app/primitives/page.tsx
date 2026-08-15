@@ -4,11 +4,13 @@ import Link from "next/link";
 
 import { CodeBlock } from "@/components/site/code-block";
 import { Container, Halo } from "@/components/site/layout";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Primitives",
-  description: "The small reusable behaviours underneath Pinky UI's components and systems.",
-};
+export const metadata: Metadata = pageMetadata(
+  "Primitives",
+  "The small reusable behaviours underneath Pinky UI's components and systems.",
+  "/primitives",
+);
 
 export default function PrimitivesPage() {
   const primitiveBySlug = new Map(primitives.map((primitive) => [primitive.slug, primitive]));

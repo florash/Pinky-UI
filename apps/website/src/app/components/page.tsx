@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 
 import { ComponentGallery } from "@/components/gallery/component-gallery";
 import { Container, Halo } from "@/components/site/layout";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Components",
-  description: "Browse Pinky UI's interactive components and interaction primitives.",
-};
+export const metadata: Metadata = pageMetadata(
+  "Components",
+  "Browse Pinky UI's interactive components and interaction primitives.",
+  "/components",
+);
 
 export default function ComponentsPage() {
   return (

@@ -10,6 +10,7 @@ import { getSkill } from "@/lib/skills";
 import { Playground } from "@/components/playground/playground";
 import { CodeBlock } from "@/components/site/code-block";
 import { Container, Halo } from "@/components/site/layout";
+import { pageMetadata } from "@/lib/site";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const entry = getComponent(slug);
   if (!entry) return {};
 
-  return { title: entry.name, description: entry.description };
+  return pageMetadata(entry.name, entry.description, `/components/${entry.slug}`);
 }
 
 export default async function ComponentDetailPage({ params }: PageProps) {

@@ -26,12 +26,11 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const description =
-  "Open-source React components and motion primitives for jelly, liquid, magnetic, glow, morph and depth interactions.";
+const description = SITE.description;
 
 export const metadata: Metadata = {
-  // No production domain yet — set NEXT_PUBLIC_SITE_URL once the site is deployed.
   metadataBase: new URL(SITE.url),
+  applicationName: SITE.name,
   title: {
     default: "Pinky UI — Soft, fluid and interactive React components",
     template: "%s — Pinky UI",

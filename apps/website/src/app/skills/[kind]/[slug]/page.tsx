@@ -7,6 +7,7 @@ import { CataloguePreview } from "@/components/skills/catalogue-preview";
 import { Markdown } from "@/components/skills/markdown";
 import { Container, Halo } from "@/components/site/layout";
 import { KIND_LABEL, SKILL_KINDS, classifySkillPreview, getSkill, listSkills, skillPublicGroup, skillRouteAlias, type SkillKind } from "@/lib/skills";
+import { pageMetadata } from "@/lib/site";
 
 type PageProps = { params: Promise<{ kind: string; slug: string }> };
 
@@ -31,10 +32,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { kind, slug } = await params;
   if (!isKind(kind)) return {};
 
+  const alias = skillRouteAlias(kind, slug);
+  if (alias) {
+    const canonicalSkill = await getSkill(alias.kind, alias.slug);
+    return canonicalSkill
+      ? pageMetadata(`${canonicalSkill.title} — Skill`, canonicalSkill.summary, alias.to)
+      : { alternates: { canonical: alias.to }, robots: { index: false, follow: false } };
+  }
+
   const skill = await getSkill(kind, slug);
   if (!skill) return {};
 
-  return { title: `${skill.title} — Skill`, description: skill.summary };
+  return pageMetadata(`${skill.title} — Skill`, skill.summary, `/skills/${kind}/${skill.slug}`);
 }
 
 export default async function SkillPage({ params }: PageProps) {

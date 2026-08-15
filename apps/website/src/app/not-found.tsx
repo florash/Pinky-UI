@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
+
 import { Container } from "@/components/site/layout";
 import { MagneticLink } from "@/components/site/magnetic-link";
+
+export const metadata: Metadata = {
+  title: "Page not found",
+  robots: { index: false, follow: false },
+};
 
 export default function NotFound() {
   return (

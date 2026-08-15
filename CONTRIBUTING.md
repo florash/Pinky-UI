@@ -25,6 +25,16 @@ npm run build
 git diff --check
 ```
 
+Production metadata uses the `NEXT_PUBLIC_SITE_URL` origin. Local development falls back to
+`http://localhost:3000`; release verification uses a non-local origin explicitly:
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://pinky-ui.example.test npm run verify:release
+```
+
+Set the real public deployment origin in the hosting environment before publishing. The value
+must be an `http` or `https` origin without credentials, a path, query string or fragment.
+
 When changing a public package or preparing a release checkpoint, run the complete gate:
 
 ```bash

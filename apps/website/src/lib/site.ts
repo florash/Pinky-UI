@@ -1,12 +1,102 @@
+import type { Metadata } from "next";
+
+const LOCAL_SITE_URL = "http://localhost:3000";
+
+/** Normalize the public origin once so metadata never grows competing URL logic. */
+export function normalizeSiteUrl(value?: string) {
+  const raw = value?.trim() || LOCAL_SITE_URL;
+  const candidate = /^[a-z][a-z\d+.-]*:\/\//i.test(raw) ? raw : `https://${raw}`;
+  const url = new URL(candidate);
+
+  if (url.protocol !== "http:" && url.protocol !== "https:") {
+    throw new Error("NEXT_PUBLIC_SITE_URL must use http or https");
+  }
+  if (url.username || url.password) {
+    throw new Error("NEXT_PUBLIC_SITE_URL must not contain credentials");
+  }
+  if (url.pathname !== "/" && url.pathname !== "") {
+    throw new Error("NEXT_PUBLIC_SITE_URL must be an origin without a path");
+  }
+  if (url.search || url.hash) {
+    throw new Error("NEXT_PUBLIC_SITE_URL must be an origin without a query or fragment");
+  }
+
+  url.pathname = "/";
+  return url.toString().replace(/\/$/, "");
+}
+
 /** Single place for site-wide constants. */
 export const SITE = {
   name: "Pinky UI",
   tagline: "Soft, fluid and interactive React components for modern interfaces.",
+  description:
+    "Open-source React components and motion primitives for tactile, fluid interfaces and thoughtful interaction design.",
   short: "UI that likes to move.",
   github: "https://github.com/florash/Pinky-UI",
-  /** No production domain yet — set NEXT_PUBLIC_SITE_URL once the site is deployed. */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  /** Set NEXT_PUBLIC_SITE_URL in the deployment environment; localhost is local-only fallback. */
+  url: normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
 } as const;
+
+export function absoluteSiteUrl(pathname = "/") {
+  const path = pathname.startsWith("/") ? pathname : `/${pathname}`;
+  return new URL(path, `${SITE.url}/`).toString();
+}
+
+export function pageMetadata(
+  title: string,
+  description: string,
+  pathname: string,
+  options?: { absoluteTitle?: boolean },
+): Metadata {
+  const socialTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}`;
+
+  return {
+    title: options?.absoluteTitle ? { absolute: title } : title,
+    description,
+    alternates: { canonical: pathname },
+    openGraph: {
+      title: socialTitle,
+      description,
+      url: pathname,
+      siteName: SITE.name,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: socialTitle,
+      description,
+    },
+  };
+}
+
+/** Top-level pages that are public documents, not implementation-only routes. */
+export const PUBLIC_INDEXABLE_ROUTES = [
+  "/",
+  "/explore",
+  "/components",
+  "/controls",
+  "/layouts",
+  "/experiences",
+  "/navigation",
+  "/heroes",
+  "/backgrounds",
+  "/transitions",
+  "/systems",
+  "/media",
+  "/collections",
+  "/forms",
+  "/data",
+  "/workflows",
+  "/overlays",
+  "/mobile",
+  "/effects",
+  "/primitives",
+  "/skills",
+  "/docs",
+  "/showcase",
+  "/playground",
+  "/spatial",
+] as const;
 
 export const NAV_LINKS = [
   { href: "/explore", label: "Explore", matchPrefixes: [] },

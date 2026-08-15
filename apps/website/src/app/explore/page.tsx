@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 
 import { DiscoveryBrowser } from "@/components/explore/discovery-browser";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Explore",
-  description: "A curated wall of Pinky UI interactions, followed by the complete reference.",
-};
+export const metadata: Metadata = pageMetadata(
+  "Explore",
+  "A curated wall of Pinky UI interactions, followed by the complete reference.",
+  "/explore",
+);
 
 export default function ExplorePage() {
   return (

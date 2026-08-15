@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 
 import { LayoutGallery } from "@/components/gallery/layout-gallery";
 import { Container, Halo } from "@/components/site/layout";
-import { resolveLayoutFamily, type PublicLayoutFamily } from "@/lib/site";
+import { pageMetadata, resolveLayoutFamily, type PublicLayoutFamily } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Layouts",
-  description:
-    "Galleries, grids, stacks and carousels where the arrangement itself is the interaction.",
-};
+export const metadata: Metadata = pageMetadata(
+  "Layouts",
+  "Galleries, grids, stacks and carousels where the arrangement itself is the interaction.",
+  "/layouts",
+);
 
 type LayoutsPageProps = {
   searchParams: Promise<{ family?: string | string[] }>;

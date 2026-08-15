@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 
 import { Playground } from "@/components/playground/playground";
 import { Container, Halo } from "@/components/site/layout";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Playground",
-  description: "Tune Pinky UI interactions and take the generated code with you.",
-};
+export const metadata: Metadata = pageMetadata(
+  "Playground",
+  "Tune Pinky UI interactions and take the generated code with you.",
+  "/playground",
+);
 
 export default function PlaygroundPage() {
   return (

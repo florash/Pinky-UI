@@ -9,6 +9,7 @@ import { Markdown } from "@/components/skills/markdown";
 import { CodeBlock } from "@/components/site/code-block";
 import { Container, Halo } from "@/components/site/layout";
 import { getSkill } from "@/lib/skills";
+import { pageMetadata } from "@/lib/site";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const entry = getLayout(slug);
   if (!entry) return {};
-  return { title: entry.name, description: entry.description };
+  return pageMetadata(entry.name, entry.description, `/layouts/${entry.slug}`);
 }
 
 export default async function LayoutDetailPage({ params }: PageProps) {

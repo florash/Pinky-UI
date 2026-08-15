@@ -13,8 +13,10 @@ const EXPECTED = {
   publicSkillRoutes: 284,
   canonicalRecipes: 283,
   legacyAliases: 1,
-  generatedPages: 567,
+  minimumProductPages: 567,
 };
+const RELEASE_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://pinky-ui.example.test";
+const RELEASE_ENV = { ...process.env, NEXT_PUBLIC_SITE_URL: RELEASE_SITE_URL };
 
 const PUBLIC_PACKAGES = [
   "primitives",
@@ -416,11 +418,13 @@ async function runReleaseVerification() {
   await run(npmCommand, ["run", "lint"]);
   await run(npmCommand, ["test"]);
 
-  const websiteBuildOutput = await runCaptured(npmCommand, ["run", "build"]);
-  const marker = `Generating static pages (${EXPECTED.generatedPages}/${EXPECTED.generatedPages})`;
-  if (!stripAnsi(websiteBuildOutput).includes(marker)) {
-    fail(`website build did not report the expected ${EXPECTED.generatedPages} generated pages`);
+  const websiteBuildOutput = await runCaptured(npmCommand, ["run", "build"], { env: RELEASE_ENV });
+  const pageCount = Number(stripAnsi(websiteBuildOutput).match(/Generating static pages \(\d+\/(\d+)\)/)?.[1]);
+  if (!Number.isInteger(pageCount) || pageCount < EXPECTED.minimumProductPages) {
+    fail(`website build generated ${Number.isInteger(pageCount) ? pageCount : "an unknown number of"} pages; expected at least ${EXPECTED.minimumProductPages} product pages`);
   }
+  console.log(`[release] website build: PASS (${pageCount} generated pages; metadata routes are not frozen)`);
+  await run(npmCommand, ["run", "verify:metadata"], { env: RELEASE_ENV });
   await run("git", ["diff", "--check"]);
   await assertTrackedHygiene();
   await assertSkillInvariants();
@@ -441,7 +445,7 @@ async function runReleaseVerification() {
     }
   }
 
-  console.log("PINKY UI 3.0B — CI & RELEASE GATES PASS");
+  console.log("PINKY UI 3.0C — PRODUCTION SEO & METADATA PASS");
 }
 
 try {

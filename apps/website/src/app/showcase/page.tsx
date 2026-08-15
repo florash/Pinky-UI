@@ -3,11 +3,13 @@ import type { Metadata } from "next";
 import { Container, Halo } from "@/components/site/layout";
 import { InteractionStudyWall } from "@/components/home/featured-interaction-wall";
 import { ShowcaseGrid } from "@/components/showcase/showcase-grid";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Showcase",
-  description: "Compositions built by stacking Pinky UI primitives and components.",
-};
+export const metadata: Metadata = pageMetadata(
+  "Showcase",
+  "Compositions built by stacking Pinky UI primitives and components.",
+  "/showcase",
+);
 
 export default function ShowcasePage() {
   return (

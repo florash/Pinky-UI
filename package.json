@@ -32,6 +32,7 @@
     "dev": "next dev apps/website",
     "build": "next build apps/website",
     "build:packages": "node scripts/build-packages.mjs",
+    "verify:metadata": "node scripts/verify-metadata.mjs",
     "verify:release": "node scripts/verify-release.mjs",
     "start": "next start apps/website",
     "lint": "eslint apps packages examples",

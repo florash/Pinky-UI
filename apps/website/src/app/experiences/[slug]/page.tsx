@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { RegistryDetailPage, type RegistryDetailRecord } from "@/components/registry/detail-page";
 import { getSkill } from "@/lib/skills";
+import { pageMetadata } from "@/lib/site";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -14,7 +15,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const entry = getExperience(slug);
-  return entry ? { title: entry.name, description: entry.description } : {};
+  return entry ? pageMetadata(entry.name, entry.description, `/experiences/${entry.slug}`) : {};
 }
 
 export default async function ExperienceDetailPage({ params }: PageProps) {

@@ -31,6 +31,9 @@ npm run dev
 
 Open http://localhost:3000 for the interaction wall or /docs for the usage guide.
 
+For a production build, set `NEXT_PUBLIC_SITE_URL` to the public `http` or `https` origin so
+canonical URLs, Open Graph metadata, sitemap and robots output point at the deployed site.
+
 ## Styling
 
 The website owns the Tailwind CSS configuration and Pinky design tokens in

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { CatalogueBrowser } from "@/components/skills/catalogue-browser";
 import { SkillPreviewWall } from "@/components/skills/skill-preview-wall";
 import { Container, Halo } from "@/components/site/layout";
+import { pageMetadata } from "@/lib/site";
 import {
   DIRECT_PREVIEW_SKILLS,
   KIND_BLURB,
@@ -12,11 +13,11 @@ import {
   listAllSkills,
 } from "@/lib/skills";
 
-export const metadata: Metadata = {
-  title: "Skills",
-  description:
-    "Pinky UI interaction recipes help people and coding agents choose, tune and ship motion responsibly.",
-};
+export const metadata: Metadata = pageMetadata(
+  "Skills",
+  "Pinky UI interaction recipes help people and coding agents choose, tune and ship motion responsibly.",
+  "/skills",
+);
 
 export default async function SkillsPage() {
   const skills = await listAllSkills();

@@ -14,6 +14,7 @@ import Link from "next/link";
 import { DocsLivePreview } from "@/components/docs/docs-live-preview";
 import { CodeBlock } from "@/components/site/code-block";
 import { Container, Halo } from "@/components/site/layout";
+import { pageMetadata } from "@/lib/site";
 
 /** Derived, never hand-counted — stale totals are how a catalogue starts lying. */
 const TOTAL_ITEMS =
@@ -25,10 +26,11 @@ const TOTAL_ITEMS =
   allProductSystems.length +
   allWorkflowSystems.length;
 
-export const metadata: Metadata = {
-  title: "Docs",
-  description: "How Pinky UI is built, how to use it today, and the rules its motion follows.",
-};
+export const metadata: Metadata = pageMetadata(
+  "Docs",
+  "How Pinky UI is built, how to use it today, and the rules its motion follows.",
+  "/docs",
+);
 
 const COMPOSITION = `import { Magnetic, Jelly } from "@pinky/primitives";
 
