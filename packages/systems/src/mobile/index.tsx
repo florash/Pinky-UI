@@ -433,3 +433,5 @@ export function EdgeSwipePanel({
 }
 
 export function LongPressAction({ children, onLongPress, duration = 500, onClick, label, className }: { children: ReactNode; onLongPress: () => void; duration?: number; onClick?: () => void; label?: string; className?: string }) { const timer = useRef<number | null>(null); const fired = useRef(false); const clear = () => { if (timer.current) window.clearTimeout(timer.current); timer.current = null; }; useEffect(() => () => { if (timer.current) window.clearTimeout(timer.current); }, []); const start = () => { fired.current = false; clear(); timer.current = window.setTimeout(() => { fired.current = true; onLongPress(); }, duration); }; return <button type="button" aria-label={label} className={className} onPointerDown={start} onPointerUp={() => { clear(); if (!fired.current) onClick?.(); }} onPointerLeave={clear} onPointerCancel={clear} onContextMenu={(event) => { event.preventDefault(); clear(); onLongPress(); }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onClick?.(); } }}>{children}</button>; }
+
+export * from "./mobile-expansion";

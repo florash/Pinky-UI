@@ -3,11 +3,16 @@
 import { CardFan, GalleryListMorph } from "@pinky/layouts";
 import {
   AnchoredInspector,
+  BottomSearchSheet,
   CommandPalette,
   CompletionMorph,
+  DetentSheet,
+  LongPressSelection,
   MorphingInput,
   MorphLightbox,
+  MorphingBottomNavigation,
   SearchMorphHeader,
+  SwipeActions,
   useCommandShortcut,
 } from "@pinky/systems";
 import { useState, type ReactNode } from "react";
@@ -106,6 +111,16 @@ export function SignatureInteractions() {
 
             <Piece label="Command Palette">
               <CommandPaletteDemo />
+            </Piece>
+
+            <Piece label="Mobile touch signatures">
+              <div className="grid gap-4 rounded-[20px] bg-cloud-50 p-4 sm:grid-cols-2 xl:grid-cols-5">
+                <MobileSignatureMini label="Morphing nav"><MorphingBottomNavigation /></MobileSignatureMini>
+                <MobileSignatureMini label="Bottom search"><BottomSearchSheet /></MobileSignatureMini>
+                <MobileSignatureMini label="Detent sheet"><DetentSheet /></MobileSignatureMini>
+                <MobileSignatureMini label="Swipe actions"><SwipeActions /></MobileSignatureMini>
+                <MobileSignatureMini label="Long-press select"><LongPressSelection items={[{ id: "note", label: "North star", meta: "Hold or tap" }, { id: "brief", label: "Release brief", meta: "Ready" }]} /></MobileSignatureMini>
+              </div>
             </Piece>
           </div>
         </div>
@@ -217,6 +232,10 @@ function CommandPaletteDemo() {
       ) : null}
     </div>
   );
+}
+
+function MobileSignatureMini({ label, children }: { label: string; children: ReactNode }) {
+  return <div className="min-w-0"><p className="font-mono text-[0.56rem] tracking-[0.12em] text-ink-500 uppercase">{label}</p><div className="mt-3 min-w-0">{children}</div></div>;
 }
 
 function MorphingInputDemo() {

@@ -46,10 +46,17 @@ describe("public discovery canonicalization", () => {
       "mobile-selection-bar",
       "progressive-auth-surface",
       "auth-completion-morph",
+      "morphing-bottom-navigation",
+      "bottom-search-sheet",
+      "detent-sheet",
+      "long-press-selection",
+      "progressive-mobile-form",
+      "fullscreen-media-morph",
+      "quick-action-sheet",
     ];
     const mobile = allWorkflowSystems.filter((entry) => entry.family === "mobile");
-    expect(mobileSystems).toHaveLength(16);
-    expect(mobile).toHaveLength(16);
+    expect(mobileSystems).toHaveLength(40);
+    expect(mobile).toHaveLength(40);
     expect(expected.every((slug) => mobile.some((entry) => entry.slug === slug && entry.discovery?.role === "canonical"))).toBe(true);
   });
 });
