@@ -103,6 +103,7 @@ import { PRODUCT_EXPANSION_PREVIEWS, WORKFLOW_EXPANSION_PREVIEWS } from "./produ
 import { RESPONSE_EXPANSION_PREVIEWS } from "./response-previews";
 import { COLLECTION_PREVIEWS } from "./collection-previews";
 import { FORM_PREVIEWS } from "./forms-previews";
+import { OVERLAY_PREVIEWS } from "./overlay-previews";
 
 const SURFACE = "linear-gradient(150deg, var(--color-blush-100), var(--color-blush-200) 55%, var(--color-cloud-100))";
 
@@ -770,6 +771,7 @@ const ALL_PREVIEWS: Record<string, ReactNode> = {
   ...WORKFLOW_PREVIEWS,
   ...WORKFLOW_EXPANSION_PREVIEWS,
   ...RESPONSE_EXPANSION_PREVIEWS,
+  ...OVERLAY_PREVIEWS,
 };
 
 export { hasExplorePreview } from "./preview-manifest";

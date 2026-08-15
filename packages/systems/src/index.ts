@@ -10,3 +10,4 @@ export * from "./onboarding";
 export * from "./workflows";
 export * from "./mobile";
 export * from "./collections";
+export * from "./overlays";

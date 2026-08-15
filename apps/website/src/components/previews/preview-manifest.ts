@@ -190,6 +190,19 @@ export const EXPLORE_PREVIEW_SLUGS = [
   "connection-state",
   "resumable-progress",
   "delayed-feedback-escalation",
+  "anchored-inspector",
+  "adaptive-popover",
+  "context-menu-surface",
+  "selection-toolbar",
+  "peek-overlay",
+  "nested-surface-stack",
+  "spotlight-overlay",
+  "cursor-action-surface",
+  "edge-docked-panel",
+  "expanding-action-surface",
+  "follow-anchor-surface",
+  "shared-context-surface",
+  "morphing-context-surface",
 ] as const;
 
 export function hasComponentPreview(slug: string) {

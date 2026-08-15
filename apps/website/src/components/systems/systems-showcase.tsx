@@ -27,6 +27,7 @@ import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { ProductSystemsExpansion } from "./product-expansion-showcase";
 import { DataVisualizationShowcase } from "./data-visualization-showcase";
+import { OverlaysShowcase } from "./overlays-showcase";
 
 const IMAGES = [
   "linear-gradient(150deg, var(--color-blush-100), var(--color-blush-200) 55%, var(--color-cloud-100))",
@@ -47,10 +48,15 @@ const FAMILIES: Array<{ family: ProductFamily; label: string; href: string }> = 
   { family: "media", label: "Media", href: "/media" },
   { family: "forms", label: "Forms", href: "/forms" },
   { family: "data", label: "Data", href: "/data" },
+  { family: "overlays", label: "Overlays", href: "/overlays" },
 ];
 
 export function SystemsShowcase({ family = "media" }: { family?: ProductFamily }) {
-  return <div className="pb-28"><header className="border-b border-line bg-[linear-gradient(135deg,var(--color-blush-50),var(--color-cloud-50))]"><div className="mx-auto max-w-[76rem] px-5 py-12 sm:px-8 sm:py-16"><Eyebrow>{family}</Eyebrow><h1 className="mt-4 max-w-3xl text-section text-balance-tight">Interaction for real content and products.</h1><p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-700">Media inspection, tactile form controls and lightweight data interaction—without replacing native semantics or pulling in a platform-sized dependency.</p><nav aria-label="Product interaction families" className="mt-9 flex flex-wrap gap-2">{FAMILIES.map((item) => <Link key={item.family} href={item.href} className={chip(family === item.family)}>{item.label}</Link>)}<Link href="/explore" className={chip(false)}>Explore everything</Link></nav></div></header>{family === "media" ? <MediaSection /> : family === "forms" ? <FormsSection /> : <DataSection />}</div>;
+  return <div className="pb-28"><header className="border-b border-line bg-[linear-gradient(135deg,var(--color-blush-50),var(--color-cloud-50))]"><div className="mx-auto max-w-[76rem] px-5 py-12 sm:px-8 sm:py-16"><Eyebrow>{family}</Eyebrow><h1 className="mt-4 max-w-3xl text-section text-balance-tight">Interaction for real content and products.</h1><p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-700">Media inspection, tactile form controls, lightweight data interaction and anchored contextual surfaces—without replacing native semantics or pulling in a platform-sized dependency.</p><nav aria-label="Product interaction families" className="mt-9 flex flex-wrap gap-2">{FAMILIES.map((item) => <Link key={item.family} href={item.href} className={chip(family === item.family)}>{item.label}</Link>)}<Link href="/explore" className={chip(false)}>Explore everything</Link></nav></div></header>{family === "media" ? <MediaSection /> : family === "forms" ? <FormsSection /> : family === "data" ? <DataSection /> : <OverlaysSection />}</div>;
+}
+
+function OverlaysSection() {
+  return <Section eyebrow="04 · Overlays" title="Context should stay close to the thing it explains."><OverlaysShowcase /></Section>;
 }
 
 function MediaSection() {
