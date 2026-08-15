@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { ArrowRight } from "@/components/site/icons";
 import { Container } from "@/components/site/layout";
-import { SKILL_KINDS, listAllSkills } from "@/lib/skills";
+import { SKILL_KINDS, SKILL_ROUTE_ALIASES, listAllSkills } from "@/lib/skills";
 
 /**
  * One idea, one number, one way in.
@@ -21,7 +21,7 @@ const SAMPLE = `# Jelly Card
 
 export async function SkillsTeaser() {
   const skills = await listAllSkills();
-  const total = SKILL_KINDS.reduce((sum, kind) => sum + skills[kind].length, 0);
+  const total = SKILL_KINDS.reduce((sum, kind) => sum + skills[kind].length, 0) + SKILL_ROUTE_ALIASES.length;
 
   return (
     <section id="skills" className="relative py-20 sm:py-28">
@@ -32,7 +32,7 @@ export async function SkillsTeaser() {
               Written for developers — and coding agents.
             </h2>
             <p className="mt-5 max-w-md text-base leading-relaxed text-ink-700">
-              <span className="font-mono text-ink-900">{total}</span> skills in plain markdown: what
+              <span className="font-mono text-ink-900">{total}</span> public skill routes backed by plain markdown: what
               a component is for, when it is the wrong choice, and how much motion is too much.
             </p>
             <Link

@@ -37,41 +37,41 @@ export function FeaturedInteractionWall({ compact = false }: { compact?: boolean
         ) : null}
 
         <div className={`${compact ? "mt-0" : "mt-10"} grid gap-3 lg:grid-cols-12 lg:auto-rows-[minmax(10rem,auto)]`}>
-          <Exhibit label="Morphing Hero" note="scroll continuity" className="lg:col-span-7 lg:row-span-2">
+          <Exhibit compact={compact} label="Morphing Hero" note="scroll continuity" className="lg:col-span-7 lg:row-span-2">
             <MorphingHeroDemo compact={compact} />
           </Exhibit>
 
-          <Exhibit label="Surfaces" note="jelly · liquid · morph" className="lg:col-span-5">
+          <Exhibit compact={compact} label="Surfaces" note="jelly · liquid · morph" className="lg:col-span-5">
             <SurfaceSampler />
           </Exhibit>
 
-          {!compact ? <Exhibit label="Magnetic" note="move close, then press" className="lg:col-span-5">
+          {!compact ? <Exhibit compact={compact} label="Magnetic" note="move close, then press" className="lg:col-span-5">
             <div className="flex min-h-36 items-center justify-center"><MagneticButton size="lg" strength={0.45} range={150}>Move me</MagneticButton></div>
           </Exhibit> : null}
 
-          <Exhibit label="Gallery ↔ List Morph" note="same collection, two readings" className="lg:col-span-7">
+          <Exhibit compact={compact} label="Gallery ↔ List Morph" note="same collection, two readings" className="lg:col-span-7">
             <GalleryListDemo />
           </Exhibit>
 
-          <Exhibit label="Morph Lightbox" note="the thumbnail becomes the surface" className="lg:col-span-5">
+          <Exhibit compact={compact} label="Morph Lightbox" note="the thumbnail becomes the surface" className="lg:col-span-5">
             <MorphLightboxDemo />
           </Exhibit>
 
-          <Exhibit label="Editorial Mosaic" note="rhythm / focus / whitespace" className="lg:col-span-7">
+          <Exhibit compact={compact} label="Editorial Mosaic" note="rhythm / focus / whitespace" className="lg:col-span-7">
             <EditorialMosaicDemo />
           </Exhibit>
 
-          {!compact ? <Exhibit label="Tactile Buttons" note="recess / silhouette" className="lg:col-span-5"><TactileButtonSampler /></Exhibit> : null}
+          {!compact ? <Exhibit compact={compact} label="Tactile Buttons" note="recess / silhouette" className="lg:col-span-5"><TactileButtonSampler /></Exhibit> : null}
 
-          <Exhibit label="Command Palette" note="keyboard-first search" className={compact ? "lg:col-span-5" : "lg:col-span-4"}>
+          <Exhibit compact={compact} label="Command Palette" note="keyboard-first search" className={compact ? "lg:col-span-5" : "lg:col-span-4"}>
             <CommandPaletteDemo />
           </Exhibit>
 
-          {!compact ? <Exhibit label="Stack → Spatial" note="one collection, more depth" className="lg:col-span-8"><StackSpatialDemo /></Exhibit> : null}
+          {!compact ? <Exhibit compact={compact} label="Stack → Spatial" note="one collection, more depth" className="lg:col-span-8"><StackSpatialDemo /></Exhibit> : null}
 
-          {!compact ? <Exhibit label="Sticky Story" note="the visual follows the reading" clipContent={false} className="lg:col-span-7"><StickyStoryDemo compact={compact} /></Exhibit> : null}
+          {!compact ? <Exhibit compact={compact} label="Sticky Story" note="the visual follows the reading" clipContent={false} className="lg:col-span-7"><StickyStoryDemo compact={compact} /></Exhibit> : null}
 
-          {!compact ? <Exhibit label="Menu Triggers" note="three close marks, one trigger vocabulary" className="lg:col-span-5 lg:self-start"><MenuTriggerSampler idPrefix="home-menu" /></Exhibit> : null}
+          {!compact ? <Exhibit compact={compact} label="Menu Triggers" note="three close marks, one trigger vocabulary" className="lg:col-span-5 lg:self-start"><MenuTriggerSampler idPrefix="home-menu" /></Exhibit> : null}
         </div>
       </Container>
     </section>
@@ -217,14 +217,14 @@ function EdgeSwipeReview() {
   );
 }
 
-function Exhibit({ label, note, children, className = "", clipContent = true }: { label: string; note: string; children: ReactNode; className?: string; clipContent?: boolean }) {
+function Exhibit({ compact = false, label, note, children, className = "", clipContent = true }: { compact?: boolean; label: string; note: string; children: ReactNode; className?: string; clipContent?: boolean }) {
   return (
-    <div className={`relative rounded-[24px] border border-line bg-white/70 p-4 shadow-soft sm:rounded-[28px] sm:p-6 ${clipContent ? "overflow-hidden" : ""} ${className}`}>
+    <div className={`${compact ? "relative min-w-0 border-t border-line pt-3" : "relative rounded-[24px] border border-line bg-white/70 p-4 shadow-soft sm:rounded-[28px] sm:p-6"} ${clipContent ? "overflow-hidden" : ""} ${className}`}>
       <div className="flex items-baseline justify-between gap-4">
         <p className="font-mono text-[0.625rem] tracking-[0.15em] text-ink-500 uppercase">{label}</p>
         <span className="font-mono text-[0.6rem] text-ink-500">{note}</span>
       </div>
-      <div className="mt-5">{children}</div>
+      <div className={compact ? "mt-4" : "mt-5"}>{children}</div>
     </div>
   );
 }
@@ -326,21 +326,26 @@ function CommandPaletteDemo() {
   useCommandShortcut(() => setOpen(true));
 
   return (
-    <div className="flex min-h-36 flex-col justify-between gap-5">
+    <div className="flex min-h-36 flex-col justify-between gap-5 rounded-[20px] bg-cloud-50 px-5 py-6">
       <p className="max-w-xs text-sm leading-relaxed text-ink-700">Press the button or use ⌘K / Ctrl K. The command surface owns focus, filtering and Escape.</p>
       <button type="button" onClick={() => setOpen(true)} className="inline-flex w-fit items-center gap-3 rounded-pill bg-ink-900 px-4 py-2.5 text-sm text-milk">
         Open commands
         <kbd className="rounded border border-white/20 px-1.5 py-0.5 font-mono text-[0.625rem] text-milk/75">⌘K</kbd>
       </button>
-      <CommandPalette
-        open={open}
-        onOpenChange={setOpen}
-        items={[
-          { id: "explore", label: "Explore interactions", group: "Navigate", onSelect: () => { window.location.href = "/explore"; } },
-          { id: "components", label: "Browse components", group: "Navigate", onSelect: () => { window.location.href = "/components"; } },
-          { id: "copy", label: "Copy the current pattern", group: "Action", onSelect: () => undefined },
-        ]}
-      />
+      {open ? (
+        <CommandPalette
+          open={open}
+          onOpenChange={setOpen}
+          items={[
+            { id: "explore", label: "Explore interactions", group: "Navigate", onSelect: () => { window.location.href = "/explore"; } },
+            { id: "components", label: "Browse components", group: "Navigate", onSelect: () => { window.location.href = "/components"; } },
+            { id: "fluid-tabs", label: "Fluid Tabs", group: "Components · navigation", keywords: ["tabs", "segmented", "navigation"], onSelect: () => { window.location.href = "/components/fluid-tabs"; } },
+            { id: "progressive-workflow", label: "Progressive Step Workflow", group: "Systems · workflow", keywords: ["step", "workflow", "progress"], onSelect: () => { window.location.href = "/workflows/progressive-step-workflow"; } },
+            { id: "morph-lightbox", label: "Morph Lightbox", group: "Systems · media", keywords: ["lightbox", "gallery", "media"], onSelect: () => { window.location.href = "/systems/morph-lightbox"; } },
+            { id: "copy", label: "Copy the current pattern", group: "Action", onSelect: () => undefined },
+          ]}
+        />
+      ) : null}
     </div>
   );
 }
