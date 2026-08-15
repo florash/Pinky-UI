@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { Magnetic, springs } from "@pinky/primitives";
-import { useScrollSource } from "@pinky/effects/internal/scroll-motion";
+import { useScrollSource } from "@pinky/effects";
 import { useEffect } from "react";
 
 import { cn } from "../internal/cn";

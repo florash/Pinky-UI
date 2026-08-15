@@ -2,7 +2,7 @@
 
 import { motion, useSpring, useTransform } from "motion/react";
 import { springs, useMotionEnabled } from "@pinky/primitives";
-import { useViewportProgress } from "@pinky/effects/internal/scroll-motion";
+import { useViewportProgress } from "@pinky/effects";
 import { useRef, type ReactNode } from "react";
 
 import { cn } from "../internal/cn";

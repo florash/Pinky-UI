@@ -82,8 +82,8 @@ export type RegistryEntry = {
   related: string[];
   discovery?: DiscoveryMetadata;
   /**
-   * Slug of the agent skill in `packages/skills/components`. The website reads
-   * that markdown directly, so guidance lives in exactly one place.
+   * Slug of the agent skill in the repository's Skills catalogue. The website
+   * reads that markdown directly, so guidance lives in exactly one place.
    */
   skill?: string;
 };

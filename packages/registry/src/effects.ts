@@ -80,7 +80,7 @@ export const motionEffects: EffectRegistryEntry[] = [
   entry("motion", "content-swap-motion", "Content Swap Motion", "Keyed content changes hand off with directional clipping and travel."),
   // `shared-morph` used to be listed here. It never had an implementation or an
   // export — it was guidance for the existing `Morph` primitive. It now lives
-  // where guidance belongs, as `packages/skills/patterns/shared-morph.md`, so
+  // where guidance belongs, in the shared Skills catalogue, so
   // the catalogue only advertises things you can actually import.
 ];
 

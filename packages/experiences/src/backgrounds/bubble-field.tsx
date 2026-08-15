@@ -2,9 +2,14 @@
 
 import { motion, useTransform, type MotionValue } from "motion/react";
 import { useMotionEnabled } from "@pinky/primitives";
-import { useFinePointer, usePointerSource, type PointerSource } from "@pinky/effects/internal/pointer-motion";
-import { useInView } from "@pinky/effects/internal/in-view";
-import { useRect, type TrackedRect } from "@pinky/effects/internal/use-rect";
+import {
+  useFinePointer,
+  useInView,
+  usePointerSource,
+  useRect,
+  type PointerSource,
+  type TrackedRect,
+} from "@pinky/effects";
 import { useRef, type ReactNode, type RefObject } from "react";
 
 import { cn } from "../internal/cn";

@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { useMotionEnabled } from "@pinky/primitives";
-import { useInView } from "@pinky/effects/internal/in-view";
+import { useInView } from "@pinky/effects";
 import { useRef, type ReactNode } from "react";
 
 import { cn } from "../internal/cn";
