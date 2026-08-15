@@ -72,11 +72,11 @@ export function SkillPreviewCard({ kind, slug, title, summary, eyebrow, liveLabe
       <div className={cn("grid min-w-0 flex-1", wide && "lg:grid-cols-[minmax(16rem,0.8fr)_minmax(0,1.2fr)]")}>
         <div className="flex min-w-0 flex-col p-5 sm:p-6">
           <h3 className="font-display text-xl font-semibold tracking-tight">
-            <Link href={`/skills/${kind}/${slug}`} className="rounded-sm hover:underline focus-visible:outline-2 focus-visible:outline-offset-4">{title}</Link>
+            <Link href={`/skills/${kind}/${slug}`} className="rounded-sm hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-4">{title}</Link>
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-ink-700">{summary}</p>
           <p className="mt-5 font-mono text-[0.625rem] tracking-[0.1em] text-ink-500 uppercase">{signature}</p>
-          <Link href={`/skills/${kind}/${slug}`} className="mt-auto rounded-sm pt-5 text-sm font-medium text-ink-700 underline decoration-line-strong underline-offset-4 hover:text-ink-900 focus-visible:outline-2 focus-visible:outline-offset-4">
+          <Link href={`/skills/${kind}/${slug}`} className="mt-auto rounded-sm pt-5 text-sm font-medium text-ink-700 underline decoration-line-strong underline-offset-4 hover:text-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-4">
             Open recipe →
           </Link>
         </div>

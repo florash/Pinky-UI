@@ -28,7 +28,7 @@ export function PreviewPanel({
           id: "preview",
           label: "Preview",
           content: (
-            <div className="flex min-h-[20rem] items-center justify-center rounded-xl bg-milk/60 p-8 ring-1 ring-line/60">
+            <div className="flex min-h-[16rem] items-center justify-center rounded-xl bg-milk/60 p-6 sm:min-h-[18rem] sm:p-8 ring-1 ring-line/60">
               <ComponentPreview slug={slug} />
             </div>
           ),

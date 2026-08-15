@@ -146,7 +146,7 @@ export function Morph({
         aria-label={triggerLabel}
         disabled={disabled}
         onClick={() => setOpen(true)}
-        className={className}
+        className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2 ${className ?? ""}`}
         style={{ display: open ? "none" : undefined, textAlign: "inherit" }}
       >
         {children}

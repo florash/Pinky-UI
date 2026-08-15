@@ -40,9 +40,11 @@ describe("Media systems", () => {
     const change = vi.fn();
     render(<ImageSequence frames={["/1.jpg", "/2.jpg", "/3.jpg"]} alt={(index) => `Frame ${index + 1}`} onIndexChange={change} />);
     const sequence = screen.getByRole("slider", { name: "Image sequence" });
+    expect(sequence).toHaveAttribute("aria-valuetext", "Frame 1 of 3");
     sequence.focus();
     await user.keyboard("{ArrowRight}");
     expect(screen.getByAltText("Frame 2")).toHaveAttribute("src", "/2.jpg");
+    expect(sequence).toHaveAttribute("aria-valuetext", "Frame 2 of 3");
     expect(change).toHaveBeenCalledWith(1);
   });
 

@@ -64,7 +64,7 @@ export function StackGrid({
             type="button"
             aria-pressed={mode === "grid"}
             onClick={() => setMode(mode === "stack" ? "grid" : "stack")}
-            className="rounded-pill bg-ink-900 px-4 py-2 text-sm font-medium text-milk transition-opacity hover:opacity-90"
+            className="rounded-pill bg-ink-900 px-4 py-2 text-sm font-medium text-milk transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2"
           >
             {mode === "stack" ? "Spread out" : "Stack up"}
           </button>

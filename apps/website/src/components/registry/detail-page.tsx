@@ -98,7 +98,7 @@ export function RegistryDetailPage({ entry }: { entry: RegistryDetailRecord }) {
         {hasExplorePreview(entry.slug) ? (
           <section aria-labelledby="live-preview" className="mt-12">
             <h2 id="live-preview" className="sr-only">Live preview</h2>
-            <div className="flex min-h-[20rem] items-center justify-center overflow-hidden rounded-[28px] border border-line bg-white/75 p-6 shadow-soft sm:p-10">
+            <div className="flex min-h-[16rem] items-center justify-center overflow-hidden rounded-[28px] border border-line bg-white/75 p-5 shadow-soft sm:min-h-[18rem] sm:p-8">
               <ExploreDetailPreview slug={entry.slug} />
             </div>
           </section>

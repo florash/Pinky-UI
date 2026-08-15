@@ -82,7 +82,7 @@ function DockButton({
   );
 
   const surface = cn(
-    "relative grid size-11 place-items-center rounded-2xl transition-colors duration-300",
+    "relative grid size-11 place-items-center rounded-2xl transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2 focus-visible:ring-offset-white",
     item.active
       ? "bg-ink-900 text-milk"
       : "bg-blush-50 text-ink-700 hover:bg-blush-100 hover:text-ink-900",

@@ -7,6 +7,7 @@ import {
   ClipRevealMenu,
   ExpandableBottomNavigation,
   HoverExpandNavigation,
+  NeighborShiftNavigation,
   MorphingMegaNavigation,
   SectionAwareNavigation,
 } from "./expanded-navigation";
@@ -115,6 +116,13 @@ describe("expanded navigation structures", () => {
     await user.click(screen.getAllByRole("link", { name: "Work" })[0]!);
     expect(screen.getAllByRole("link", { name: "Work" })[0]).toHaveAttribute("aria-current", "page");
     expect(screen.getByRole("navigation", { name: "Section navigation" })).toBeInTheDocument();
+  });
+
+  it("keeps a wide navigation strip reachable inside its own scroll container", () => {
+    render(<NeighborShiftNavigation items={EXPANDED_ITEMS} aria-label="Projects" />);
+    const navigation = screen.getByRole("navigation", { name: "Projects" });
+    expect(navigation).toHaveClass("overflow-x-auto");
+    expect(navigation).toHaveClass("overscroll-x-contain");
   });
 
   it("dismisses an anchored menu from outside pointer input", async () => {

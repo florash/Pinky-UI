@@ -167,7 +167,7 @@ export function FluidTabs({
               disabled={item.disabled}
               onClick={() => select(item.id)}
               className={cn(
-                "relative isolate shrink-0 rounded-pill font-medium whitespace-nowrap",
+                "relative isolate shrink-0 rounded-pill font-medium whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2",
                 "transition-colors duration-200 ease-[var(--ease-soft)]",
                 "disabled:cursor-not-allowed disabled:opacity-40",
                 fill && "flex-1",
@@ -210,7 +210,7 @@ export function FluidTabs({
           initial={motionEnabled ? { opacity: 0, y: 6 } : false}
           animate={{ opacity: 1, y: 0 }}
           transition={motionEnabled ? { duration: 0.22, ease: [0.22, 1, 0.36, 1] } : { duration: 0 }}
-          className="mt-6 rounded-lg focus-visible:outline-2"
+          className="mt-6 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2"
         >
           {activeItem?.content}
         </motion.div>

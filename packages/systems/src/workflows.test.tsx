@@ -4,7 +4,7 @@ import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import { setReducedMotion } from "../../../vitest.setup";
-import { ActionUndoBar, AsyncButton, BottomSheet, CommandPalette, EdgeSwipePanel, LongPressAction, MultiStepProgress, ProgressiveStepWorkflow, PullToRefresh, ReorderableList, StatusPipeline, Stepper, SwipeActionRow, ToastProvider, useToast } from "@pinky/systems";
+import { ActionUndoBar, AsyncButton, BottomSheet, CommandPalette, EdgeSwipePanel, ExpandableListRow, LongPressAction, MultiStepProgress, ProgressiveStepWorkflow, PullToRefresh, ReorderableList, StatusPipeline, Stepper, SwipeActionRow, ToastProvider, useToast } from "@pinky/systems";
 import { moveItem } from "./lists";
 
 function ToastTrigger() { const { toast } = useToast(); return <button type="button" onClick={() => toast({ title: "File saved", action: { label: "Open file", onClick: vi.fn() } })}>Notify</button>; }
@@ -95,6 +95,19 @@ describe("Workflow systems", () => {
     await user.click(toggle);
     expect(action).toHaveAttribute("tabindex", "0"); expect(action).not.toHaveClass("pointer-events-none");
     await user.click(action); expect(archive).toHaveBeenCalledTimes(1);
+  });
+
+  it("connects an expandable row trigger to its revealed region", async () => {
+    const user = userEvent.setup();
+    render(<ExpandableListRow summary="Invoice #1042"><p>Due Friday</p></ExpandableListRow>);
+    const trigger = screen.getByRole("button", { name: /invoice/i });
+    const contentId = trigger.getAttribute("aria-controls");
+    expect(contentId).toBeTruthy();
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await user.click(trigger);
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("region")).toHaveAttribute("id", contentId);
+    expect(screen.getByRole("region")).toHaveAttribute("aria-labelledby", trigger.id);
   });
 
   it("names progress attention states without relying on colour", () => {

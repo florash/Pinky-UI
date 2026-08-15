@@ -77,6 +77,7 @@ export function ElasticToggle({
         className={cn(
           "relative inline-flex h-7 w-12 shrink-0 items-center rounded-pill px-1",
           "transition-colors duration-300 ease-[var(--ease-soft)]",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2",
           "disabled:cursor-not-allowed disabled:opacity-50",
           isChecked ? "bg-ink-900" : "bg-line-strong",
         )}

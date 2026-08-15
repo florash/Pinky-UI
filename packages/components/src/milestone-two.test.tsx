@@ -73,6 +73,7 @@ describe("ElasticToggle", () => {
 
     const toggle = screen.getByRole("switch", { name: "Notifications" });
     expect(toggle).toHaveAttribute("aria-checked", "false");
+    expect(toggle).toHaveClass("focus-visible:ring-2");
   });
 
   it("toggles on click", async () => {

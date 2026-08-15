@@ -128,7 +128,7 @@ export function GooeyMenu({
         {items.map((item) => {
           const isSelected = item.id === selected;
           const className = cn(
-            "relative z-10 block rounded-pill px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors duration-200",
+            "relative z-10 block rounded-pill px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2",
             item.disabled && "pointer-events-none opacity-40",
             isSelected ? "text-milk" : "text-ink-700 hover:text-ink-900",
           );

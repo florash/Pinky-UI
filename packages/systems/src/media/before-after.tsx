@@ -26,7 +26,7 @@ export function BeforeAfter({ before, after, value, defaultValue = 50, onValueCh
   const press = usePressSpring({ scale: 0.9, disabled });
   const vertical = orientation === "vertical";
   return (
-    <div className={cn("relative isolate overflow-hidden rounded-[22px]", className)}>
+    <div className={cn("relative isolate overflow-hidden rounded-[22px] focus-within:outline-none focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ink-900 focus-within:ring-2 focus-within:ring-ink-900/25", className)}>
       <div aria-label={beforeLabel}>{before}</div>
       <div aria-label={afterLabel} className="absolute inset-0 overflow-hidden" style={{ clipPath: vertical ? `inset(0 0 ${100 - bounded}% 0)` : `inset(0 ${100 - bounded}% 0 0)` }}>{after}</div>
       <div aria-hidden className={cn("pointer-events-none absolute bg-white shadow-lg", vertical ? "right-0 left-0 h-0.5" : "top-0 bottom-0 w-0.5")} style={vertical ? { top: `${bounded}%` } : { left: `${bounded}%` }}>
@@ -38,7 +38,7 @@ export function BeforeAfter({ before, after, value, defaultValue = 50, onValueCh
         aria-valuetext={`${Math.round(bounded)} percent ${afterLabel}`}
         onChange={(event) => setPosition(event.currentTarget.valueAsNumber)}
         {...press.handlers}
-        className={cn("absolute inset-0 z-10 size-full cursor-ew-resize opacity-0", vertical && "cursor-ns-resize")}
+        className={cn("absolute inset-0 z-10 size-full cursor-ew-resize opacity-0 outline-none", vertical && "cursor-ns-resize")}
         style={vertical ? { writingMode: "vertical-lr", direction: "rtl" } : undefined}
       />
     </div>

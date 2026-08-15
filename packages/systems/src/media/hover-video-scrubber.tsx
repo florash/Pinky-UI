@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type KeyboardEvent, type PointerEvent } from "react";
+import { useEffect, useRef, type KeyboardEvent, type PointerEvent } from "react";
 
 import { cn } from "../internal/cn";
 
@@ -19,6 +19,7 @@ export type HoverVideoScrubberProps = {
 export function HoverVideoScrubber({ src, poster, label, preload = "metadata", clickToPlay = true, muted = true, className, onPlayChange }: HoverVideoScrubberProps) {
   const video = useRef<HTMLVideoElement>(null);
   const frame = useRef(0);
+  useEffect(() => () => cancelAnimationFrame(frame.current), []);
   const seek = (clientX: number, target: HTMLElement) => {
     cancelAnimationFrame(frame.current);
     frame.current = requestAnimationFrame(() => {
@@ -32,7 +33,9 @@ export function HoverVideoScrubber({ src, poster, label, preload = "metadata", c
   const toggle = async () => {
     const node = video.current;
     if (!node) return;
-    if (node.paused) { await node.play(); onPlayChange?.(true); } else { node.pause(); onPlayChange?.(false); }
+    if (node.paused) {
+      try { await node.play(); onPlayChange?.(true); } catch { onPlayChange?.(false); }
+    } else { node.pause(); onPlayChange?.(false); }
   };
   const keys = (event: KeyboardEvent<HTMLDivElement>) => {
     const node = video.current;
@@ -43,7 +46,7 @@ export function HoverVideoScrubber({ src, poster, label, preload = "metadata", c
     } else if ((event.key === " " || event.key === "Enter") && clickToPlay) { event.preventDefault(); void toggle(); }
   };
   return (
-    <div role="group" aria-label={label} tabIndex={0} onPointerMove={pointer} onPointerDown={pointer} onKeyDown={keys} onClick={() => clickToPlay && void toggle()} className={cn("relative overflow-hidden rounded-[22px] focus-visible:outline-2", className)}>
+    <div role="group" aria-label={label} tabIndex={0} onPointerMove={pointer} onPointerDown={pointer} onKeyDown={keys} onClick={() => clickToPlay && void toggle()} className={cn("relative overflow-hidden rounded-[22px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2", className)}>
       <video ref={video} src={src} poster={poster} preload={preload} muted={muted} playsInline className="size-full object-cover" onPlay={() => onPlayChange?.(true)} onPause={() => onPlayChange?.(false)} />
       <span className="pointer-events-none absolute right-3 bottom-3 rounded-full bg-ink-900/80 px-3 py-1.5 text-xs text-milk">Scrub · {clickToPlay ? "play" : "preview"}</span>
     </div>

@@ -115,7 +115,7 @@ export function NeighborShiftNavigation({
   const motionEnabled = useMotionEnabled();
 
   return (
-    <nav aria-label={ariaLabel} className={cn("w-full overflow-hidden", className)}>
+    <nav aria-label={ariaLabel} className={cn("w-full overflow-x-auto overflow-y-hidden overscroll-x-contain", className)}>
       <ul className="flex min-w-max items-stretch gap-1 rounded-2xl border border-line bg-white/70 p-1">
         {items.map((item) => {
           const active = item.id === activeId;

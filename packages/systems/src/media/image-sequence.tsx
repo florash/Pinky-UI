@@ -49,7 +49,7 @@ export function ImageSequence({ frames, alt, index, defaultIndex = 0, onIndexCha
   };
   const src = frames[bounded];
   return (
-    <div role="slider" tabIndex={0} aria-label="Image sequence" aria-valuemin={1} aria-valuemax={Math.max(frames.length, 1)} aria-valuenow={bounded + 1} onKeyDown={keys} onPointerMove={seek} onPointerDown={(event) => { dragging.current = true; event.currentTarget.setPointerCapture(event.pointerId); seek(event); }} onPointerUp={() => { dragging.current = false; }} onPointerCancel={() => { dragging.current = false; }} className={cn("relative touch-pan-y overflow-hidden rounded-[22px] focus-visible:outline-2", className)}>
+    <div role="slider" tabIndex={0} aria-label="Image sequence" aria-valuemin={1} aria-valuemax={Math.max(frames.length, 1)} aria-valuenow={bounded + 1} aria-valuetext={`Frame ${bounded + 1} of ${Math.max(frames.length, 1)}`} onKeyDown={keys} onPointerMove={seek} onPointerDown={(event) => { dragging.current = true; event.currentTarget.setPointerCapture(event.pointerId); seek(event); }} onPointerUp={() => { dragging.current = false; }} onPointerCancel={() => { dragging.current = false; }} className={cn("relative touch-pan-y overflow-hidden rounded-[22px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2", className)}>
       {/* Library consumers may supply local, remote or generated frame URLs; image policy belongs to the host framework. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       {src ? <img src={src} alt={typeof alt === "function" ? alt(bounded) : alt} draggable={false} className="size-full select-none object-cover" /> : <div className="grid min-h-48 place-items-center">No frames</div>}

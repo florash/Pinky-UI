@@ -56,7 +56,7 @@ export function CatalogueBrowser({ blocks }: { blocks: KindBlock[] }) {
                         onFocus={activate}
                         onClick={click}
                         aria-describedby={selected ? `catalogue-preview-${block.kind}` : undefined}
-                        className={cn("group flex min-h-14 min-w-0 items-center justify-between gap-2 rounded-lg px-2 py-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-1", selected && "bg-blush-50 text-ink-900")}
+                        className={cn("group flex min-h-14 min-w-0 items-center justify-between gap-2 rounded-lg px-2 py-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-1", selected && "bg-blush-50 text-ink-900")}
                       >
                         <span className="min-w-0">
                           <span className="block text-[0.8125rem] font-medium group-hover:underline sm:text-sm">{skill.title}</span>
@@ -91,7 +91,7 @@ function Stage({ kind, skill }: { kind: SkillKind; skill: Skill & { classificati
         <span className="font-mono text-[0.55rem] tracking-[0.08em] text-ink-500">{skill.classification}</span>
       </div>
       <CataloguePreview key={`${kind}/${skill.slug}`} kind={kind} slug={skill.slug} title={skill.title} classification={skill.classification} />
-      <Link href={`/skills/${kind}/${skill.slug}`} className="mt-2 inline-flex min-h-10 items-center rounded-lg px-2 text-xs font-medium text-ink-700 underline decoration-line-strong underline-offset-4 focus-visible:outline-2">Open recipe →</Link>
+      <Link href={`/skills/${kind}/${skill.slug}`} className="mt-2 inline-flex min-h-10 items-center rounded-lg px-2 text-xs font-medium text-ink-700 underline decoration-line-strong underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-1">Open recipe →</Link>
     </div>
   );
 }
