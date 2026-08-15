@@ -514,6 +514,7 @@ async function verifyExternalConsumer(infos, tarballs, tempRoot) {
 
 async function runReleaseVerification() {
   console.log("Pinky UI release verification");
+  await run(npmCommand, ["run", "verify:security"]);
   await run(npmCommand, ["run", "typecheck"]);
   await run(npmCommand, ["run", "lint"]);
   await run(npmCommand, ["test"]);
@@ -547,7 +548,7 @@ async function runReleaseVerification() {
     }
   }
 
-  console.log("PINKY UI 3.0D — RELEASE CANDIDATE GATES PASS");
+  console.log("PINKY UI 3.0E — SECURITY LAUNCH GATE PASS");
 }
 
 try {

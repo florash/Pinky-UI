@@ -14,8 +14,17 @@ git diff --check
 ```
 
 The gate covers the website build and metadata, Skill invariants, package metadata, package
-builds, tarball hygiene, npm publish dry-runs and an isolated external consumer install,
-TypeScript check and Vite production build.
+builds, tarball hygiene, npm publish dry-runs, the production security audit and an isolated
+external consumer install, TypeScript check and Vite production build.
+
+## 3.0E security dependency constraints
+
+The 15.5.x line currently ends at Next `15.5.23`, whose published manifest still requests
+`postcss@8.4.31` and `sharp@^0.34.3`. The root overrides keep the Next major unchanged while
+selecting `postcss@8.5.26` and `sharp@0.35.3`, the patched versions used by the reviewed Next
+16.3.1 dependency contract. PostCSS remains on the same major line; Sharp 0.35.x is the
+upstream patched line and is exercised by the complete website/package/consumer regression
+suite. The lockfile must resolve one patched copy of each and no nested vulnerable PostCSS.
 
 ## Publication order
 
