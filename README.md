@@ -4,9 +4,12 @@
 
 Pinky UI is an open-source collection of expressive React components, product systems and motion primitives built for interfaces that feel responsive, tactile and alive.
 
+The repository is preparing its initial `0.1.0` public release candidate. Packages are not
+published to npm yet; the release process is documented in `RELEASING.md`.
+
 Explore jelly, liquid, magnetic, morph, glow, depth, elastic and proximity interactions —
-**243 implemented items across 12 primitives, 12 components, 27 layouts, 32 effects, 31
-experiences and 129 product and workflow systems** — designed to stay composable, accessible
+**267 implemented items across 12 primitives, 12 components, 27 layouts, 32 effects, 31
+experiences and 153 product and workflow systems** — designed to stay composable, accessible
 and practical to use. The website puts those interactions directly in front of you as live
 previews instead of hiding the work behind a documentation-first catalogue.
 

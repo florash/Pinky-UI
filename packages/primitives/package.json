@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Composable interaction primitives for Pinky UI.",
   "license": "MIT",
+  "keywords": ["react", "ui", "interaction", "motion", "primitives"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/florash/Pinky-UI.git",
@@ -27,5 +28,6 @@
     "motion": ">=12",
     "react": ">=19"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "publishConfig": { "access": "public" }
 }

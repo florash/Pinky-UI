@@ -14,19 +14,21 @@ const EXPECTED = {
   canonicalRecipes: 283,
   legacyAliases: 1,
   minimumProductPages: 567,
+  releaseVersion: "0.1.0",
 };
 const RELEASE_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://pinky-ui.example.test";
-const RELEASE_ENV = { ...process.env, NEXT_PUBLIC_SITE_URL: RELEASE_SITE_URL };
+const RELEASE_ENV = {
+  ...process.env,
+  NEXT_PUBLIC_SITE_URL: RELEASE_SITE_URL,
+  npm_config_cache: path.join(os.tmpdir(), "pinky-ui-release-npm-cache"),
+};
 
-const PUBLIC_PACKAGES = [
-  "primitives",
-  "components",
-  "layouts",
-  "effects",
-  "experiences",
-  "systems",
-  "registry",
+const PUBLIC_PACKAGE_LAYERS = [
+  ["@pinky/primitives", "@pinky/registry"],
+  ["@pinky/components", "@pinky/layouts", "@pinky/effects", "@pinky/systems"],
+  ["@pinky/experiences"],
 ];
+const PUBLIC_PACKAGES = PUBLIC_PACKAGE_LAYERS.flatMap((layer) => layer.map((packageName) => packageName.replace("@pinky/", "")));
 const PUBLIC_PACKAGE_NAMES = new Set(PUBLIC_PACKAGES.map((name) => `@pinky/${name}`));
 
 function packageDirectory(name) {
@@ -173,14 +175,36 @@ function publicPackageBase(specifier) {
 }
 
 async function assertPackageMetadata(infos) {
+  const versions = new Set();
+
   for (const info of infos) {
     const manifest = info.packageJson;
+    if (manifest.name !== info.packageName) fail(`${info.packageName} manifest name is ${manifest.name ?? "missing"}`);
     if (manifest.private === true) fail(`${info.packageName} is still private`);
     if (!manifest.version) fail(`${info.packageName} has no version`);
+    versions.add(manifest.version);
+    if (manifest.version !== EXPECTED.releaseVersion) {
+      fail(`${info.packageName} must remain on release version ${EXPECTED.releaseVersion}, found ${manifest.version}`);
+    }
     if (manifest.license !== "MIT") fail(`${info.packageName} must declare MIT license`);
+    if (!manifest.description?.trim()) fail(`${info.packageName} has no publication description`);
     if (!manifest.repository?.url) fail(`${info.packageName} has no repository metadata`);
+    if (/localhost|example\.test|workspace:|file:/i.test(manifest.repository.url)) {
+      fail(`${info.packageName} has placeholder repository metadata`);
+    }
+    if (!Array.isArray(manifest.keywords) || manifest.keywords.length === 0) {
+      fail(`${info.packageName} must declare a concise keyword list`);
+    }
+    if (manifest.publishConfig?.access !== "public") {
+      fail(`${info.packageName} must declare publishConfig.access=public for its scoped release`);
+    }
     if (!Array.isArray(manifest.files) || manifest.files.length !== 1 || manifest.files[0] !== "dist") {
       fail(`${info.packageName} must restrict files to dist`);
+    }
+    try {
+      await fs.access(path.join(info.directory, "README.md"));
+    } catch {
+      fail(`${info.packageName} is missing its package README`);
     }
 
     for (const field of ["main", "module", "types"]) {
@@ -233,10 +257,16 @@ async function assertPackageMetadata(infos) {
       if (!manifest.dependencies?.[dependency]) {
         fail(`${info.packageName} imports ${dependency} without declaring it in dependencies`);
       }
+      if (manifest.dependencies[dependency] !== EXPECTED.releaseVersion) {
+        fail(`${info.packageName} must use ${EXPECTED.releaseVersion} for ${dependency}, found ${manifest.dependencies[dependency]}`);
+      }
     }
     for (const dependency of Object.keys(manifest.dependencies ?? {})) {
       if (PUBLIC_PACKAGE_NAMES.has(dependency) && dependency === info.packageName) {
         fail(`${info.packageName} declares itself as a dependency`);
+      }
+      if (PUBLIC_PACKAGE_NAMES.has(dependency) && manifest.dependencies[dependency] !== EXPECTED.releaseVersion) {
+        fail(`${info.packageName} has a non-coherent internal dependency range for ${dependency}`);
       }
     }
 
@@ -246,7 +276,64 @@ async function assertPackageMetadata(infos) {
       }
     }
   }
-  console.log("[release] package metadata and import boundaries: PASS");
+  if (versions.size !== 1 || !versions.has(EXPECTED.releaseVersion)) {
+    fail(`public packages do not share release version ${EXPECTED.releaseVersion}`);
+  }
+  console.log(`[release] package publication metadata and import boundaries: PASS (${EXPECTED.releaseVersion})`);
+}
+
+function assertPublicationOrder(infos) {
+  const byName = new Map(infos.map((info) => [info.packageName, info.packageJson]));
+  const layerByPackage = new Map(PUBLIC_PACKAGE_LAYERS.flatMap((layer, index) => layer.map((name) => [name, index])));
+
+  for (const info of infos) {
+    const currentLayer = layerByPackage.get(info.packageName);
+    for (const dependency of Object.keys(info.packageJson.dependencies ?? {})) {
+      if (!PUBLIC_PACKAGE_NAMES.has(dependency)) continue;
+      const dependencyLayer = layerByPackage.get(dependency);
+      if (dependencyLayer === undefined || dependencyLayer >= currentLayer) {
+        fail(`${info.packageName} cannot be published in layer ${currentLayer}: dependency ${dependency} is not available earlier`);
+      }
+      if (!byName.has(dependency)) fail(`${info.packageName} publication graph is missing ${dependency}`);
+    }
+  }
+
+  console.log(`[release] publication order: ${PUBLIC_PACKAGE_LAYERS.map((layer) => layer.join(", ")).join(" -> ")}`);
+}
+
+async function verifyPublishDryRuns(infos) {
+  for (const info of infos) {
+    const result = await capture(
+      npmCommand,
+      ["publish", "--dry-run", "--ignore-scripts", "--access", "public", "--json"],
+      { cwd: info.directory, env: RELEASE_ENV },
+    );
+    process.stdout.write(result.stdout);
+    process.stderr.write(result.stderr);
+    const jsonStart = result.stdout.search(/[\[{]/);
+    if (jsonStart === -1) fail(`${info.packageName} publish dry-run returned no JSON metadata`);
+    let payload;
+    try {
+      const parsed = JSON.parse(result.stdout.slice(jsonStart));
+      payload = Array.isArray(parsed) ? parsed[0] : parsed;
+    } catch {
+      fail(`could not parse ${info.packageName} publish dry-run metadata`);
+    }
+    if (payload?.id !== `${info.packageName}@${EXPECTED.releaseVersion}`) {
+      fail(`${info.packageName} publish dry-run identity mismatch`);
+    }
+    if (!Array.isArray(payload.files) || payload.files.length === 0) {
+      fail(`${info.packageName} publish dry-run returned no files`);
+    }
+    for (const file of payload.files) {
+      const relative = file.path.replace(/^package\//, "");
+      if (relative !== "package.json" && relative !== "README.md" && !relative.startsWith("dist/")) {
+        fail(`${info.packageName} publish dry-run contains an unexpected file: ${file.path}`);
+      }
+    }
+    console.log(`[release] ${info.packageName} publish dry-run: PASS (${payload.size} bytes, ${payload.files.length} files)`);
+  }
+  console.log("[release] npm publish dry-runs: PASS");
 }
 
 async function packPackages(infos, tempRoot) {
@@ -275,7 +362,7 @@ async function packPackages(infos, tempRoot) {
     const files = item.files ?? [];
     for (const file of files) {
       const relative = file.path.replace(/^package\//, "");
-      if (relative !== "package.json" && !relative.startsWith("dist/")) {
+      if (relative !== "package.json" && relative !== "README.md" && !relative.startsWith("dist/")) {
         fail(`${item.name} tarball contains an unexpected file: ${file.path}`);
       }
       if (/(^|\/)(?:src|tests?|fixtures|snapshots|node_modules)\//.test(file.path) || /(^|\/)\._|\.DS_Store|\.test\./.test(file.path)) {
@@ -292,6 +379,19 @@ async function packPackages(infos, tempRoot) {
 
     const info = infos.find((candidate) => candidate.packageName === item.name);
     if (!info) fail(`npm pack returned an unknown package: ${item.name}`);
+    const packedManifest = JSON.parse((await capture("tar", ["-xOf", archive, "package/package.json"])).stdout);
+    if (packedManifest.name !== info.packageName || packedManifest.version !== EXPECTED.releaseVersion) {
+      fail(`${item.name} packed package identity does not match ${EXPECTED.releaseVersion}`);
+    }
+    if (packedManifest.private === true || packedManifest.publishConfig?.access !== "public") {
+      fail(`${item.name} packed package is not publication-ready`);
+    }
+    for (const [dependency, range] of Object.entries(packedManifest.dependencies ?? {})) {
+      if (!PUBLIC_PACKAGE_NAMES.has(dependency)) continue;
+      if (range !== EXPECTED.releaseVersion || /workspace:|file:|\/packages\//.test(range)) {
+        fail(`${item.name} packed dependency ${dependency} is not registry-resolvable: ${range}`);
+      }
+    }
     const distFiles = await walk(info.dist);
     for (const file of distFiles) {
       const contents = await fs.readFile(file, "utf8").catch(() => "");
@@ -432,9 +532,11 @@ async function runReleaseVerification() {
   await run(npmCommand, ["run", "build:packages"]);
   const infos = await packageInfos();
   await assertPackageMetadata(infos);
+  assertPublicationOrder(infos);
 
   const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "pinky-ui-release-"));
   try {
+    await verifyPublishDryRuns(infos);
     const tarballs = await packPackages(infos, tempRoot);
     await verifyExternalConsumer(infos, tarballs, tempRoot);
   } finally {
@@ -445,7 +547,7 @@ async function runReleaseVerification() {
     }
   }
 
-  console.log("PINKY UI 3.0C — PRODUCTION SEO & METADATA PASS");
+  console.log("PINKY UI 3.0D — RELEASE CANDIDATE GATES PASS");
 }
 
 try {

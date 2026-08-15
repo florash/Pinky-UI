@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Interactive React components built on Pinky UI primitives.",
   "license": "MIT",
+  "keywords": ["react", "ui", "components", "interaction", "motion"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/florash/Pinky-UI.git",
@@ -30,5 +31,6 @@
     "motion": ">=12",
     "react": ">=19"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "publishConfig": { "access": "public" }
 }
