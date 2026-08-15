@@ -18,9 +18,9 @@ React · TypeScript · Tailwind CSS · Motion · Accessible · Open Source
 
 ## Get started
 
-Pinky UI is currently distributed from source; the `@pinky/*` packages are private source
-packages in this repository, not published npm packages yet. This release-preparation checkpoint does not publish
-packages automatically.
+Pinky UI is currently developed from source; the `@pinky/*` packages have publish-like
+build metadata and packed artifacts, but are not published npm packages yet. Release gates
+do not publish packages automatically.
 
 ```bash
 git clone https://github.com/florash/Pinky-UI.git
@@ -142,8 +142,10 @@ examples/            Small standalone compositions
 
 The website compiles `packages/*` straight from TypeScript source through the
 path aliases in `apps/website/tsconfig.json`, so editing a primitive shows up on
-the site with no build step in between. There is no npm distribution or CLI yet;
-the repository is the current source and documentation surface.
+the site with no build step in between. `npm run build:packages` creates the
+publish-like package artifacts, and `npm run verify:release` runs the full release
+gate. There is no npm publication or CLI yet; the repository remains the current
+source and documentation surface.
 
 ## Local development
 

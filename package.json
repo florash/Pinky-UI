@@ -2,6 +2,10 @@
   "name": "pinky-ui",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@10.9.8",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "description": "Soft, fluid and interactive React components and motion primitives for modern interfaces.",
   "license": "MIT",
   "author": "florash",
@@ -28,6 +32,7 @@
     "dev": "next dev apps/website",
     "build": "next build apps/website",
     "build:packages": "node scripts/build-packages.mjs",
+    "verify:release": "node scripts/verify-release.mjs",
     "start": "next start apps/website",
     "lint": "eslint apps packages examples",
     "typecheck": "tsc -p apps/website/tsconfig.json --noEmit",

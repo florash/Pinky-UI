@@ -11,6 +11,9 @@ npm install
 npm run dev
 ```
 
+For a lockfile-exact install, use `npm ci`. The repository targets Node 22 and npm 10;
+the root `package.json` records the package-manager contract used by CI.
+
 The website runs at `http://localhost:3000`. Before opening a pull request, run the same
 checks used by the repository:
 
@@ -22,6 +25,13 @@ npm run build
 git diff --check
 ```
 
+When changing a public package or preparing a release checkpoint, run the complete gate:
+
+```bash
+npm run build:packages
+npm run verify:release
+```
+
 ## Project shape
 
 - `apps/website` is the Next.js documentation and live-preview site.
@@ -31,10 +41,9 @@ git diff --check
 - `packages/registry` describes the discoverable library and its relationships.
 - `packages/skills` contains the canonical Markdown interaction recipes.
 
-The `@pinky/*` packages are currently private, source-first package directories in this
-repository. Do not add
-published-package installation instructions or change package visibility without a dedicated
-release decision.
+The `@pinky/*` packages have publish-like `dist` and declaration contracts, but are not
+published automatically. Do not publish packages or change package visibility without a
+dedicated release decision.
 
 ## Adding or updating a Skill
 
