@@ -2,7 +2,9 @@
 
 ## Purpose
 
-`MorphSelect` expands a compact value control into an accessible single-select listbox. Use it for short custom option sets where styled spatial continuity matters.
+`MorphSelect` expands a compact value control into a complete single-select
+listbox with an active descendant, keyboard navigation and focus restoration.
+Use it for short custom option sets where styled spatial continuity matters.
 
 Prefer native `select` for long, platform-standard or mobile-critical choices. Avoid multi-select, remote search and hundreds of options. Do not remove labels or replace familiar keyboard behaviour for animation.
 

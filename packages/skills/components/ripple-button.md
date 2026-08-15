@@ -10,7 +10,8 @@ ripple or a second action.
 
 - **Trigger:** a native button receiving pointer, keyboard or touch input.
 - **State:** idle, pressed, released and disabled.
-- **Motion:** short radial expansion under a bounded press spring.
+- **Motion:** a short pressure wave under a bounded press spring; it is a
+  surface response, not a detached ink circle.
 - **Surface:** the button keeps its size while the feedback stays clipped inside.
 - **Feedback:** pointer position is reflected; keyboard activation uses a centred response.
 
@@ -28,8 +29,8 @@ ripple or a second action.
 
 ## Live example
 
-Press either live button above with a pointer or Space. The feedback stays
-inside the real button and does not intercept the click.
+Press either live button above with a pointer, touch or Space. The feedback
+stays inside the real button and does not intercept the click.
 
 ## Usage
 

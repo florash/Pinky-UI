@@ -83,6 +83,7 @@ export function Tilt({
         rotateY: active ? rotateY : 0,
         z: active ? z : 0,
         position: "relative",
+        touchAction: "pan-y",
       }}
       onPointerMove={track}
       onPointerEnter={(event) => {

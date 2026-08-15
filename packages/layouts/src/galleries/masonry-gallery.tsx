@@ -33,7 +33,9 @@ export function MasonryGallery({
 }: MasonryGalleryProps) {
   const count = useColumns(columns);
   const items = Children.toArray(children);
-  const buckets = distribute(items, count);
+  if (items.length === 0) return null;
+  const columnCount = Math.max(1, Math.min(count, items.length));
+  const buckets = distribute(items, columnCount);
 
   return (
     <ul
@@ -41,7 +43,7 @@ export function MasonryGallery({
       className={className}
       style={{
         display: "grid",
-        gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))`,
+        gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
         gap,
         listStyle: "none",
         margin: 0,

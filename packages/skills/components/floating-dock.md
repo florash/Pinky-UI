@@ -2,9 +2,9 @@
 
 ## Purpose
 
-Use Floating Dock for a small set of primary destinations or tools. Items swell
-as the pointer travels along the row, which makes targeting feel assisted rather
-than decorative.
+Use Floating Dock for a small set of contextual destinations or tools. The dock
+rests as a compact utility surface, keeps the active destination expanded with
+its label, and adds pointer proximity only as a desktop targeting enhancement.
 
 ## Good for
 
@@ -32,6 +32,8 @@ The dock must be fully usable without pointer proximity, and it is:
 - every item carries a permanent visually-hidden label; the hover label is
   decoration, not the accessible name
 - Tab and Enter operate it with no proximity involved
+- The active item keeps a visible label, so touch users do not need a hover
+  tooltip to understand the current destination
 - active items expose `aria-current` (links) or `aria-pressed` (buttons)
 - magnification is skipped for touch, so nothing swells under a finger
 

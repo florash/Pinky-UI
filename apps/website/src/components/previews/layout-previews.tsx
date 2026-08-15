@@ -109,6 +109,7 @@ function StackGridDemo() {
 
 function MasonryGalleryDemo() {
   const ratios = ["3 / 4", "1 / 1", "4 / 3", "2 / 3", "1 / 1", "4 / 5", "3 / 4", "16 / 10"];
+  const captions = ["Quiet study", "Blue hour", "Open table", "Soft archive", "Field notes", "After rain", "A small room", "Last light"];
 
   return (
     <MasonryGallery
@@ -118,9 +119,12 @@ function MasonryGalleryDemo() {
       className="w-full max-w-md"
     >
       {ratios.map((ratio, index) => (
-        <span key={index} className="block overflow-hidden rounded-[10px] shadow-soft">
+        <figure key={captions[index]} className="m-0 overflow-hidden rounded-xl bg-white/80 p-1.5 ring-1 ring-line/70">
           <Swatch index={index} ratio={ratio} />
-        </span>
+          <figcaption className="px-1.5 py-2 font-mono text-[0.55rem] tracking-[0.1em] text-ink-500 uppercase">
+            {captions[index]}
+          </figcaption>
+        </figure>
       ))}
     </MasonryGallery>
   );

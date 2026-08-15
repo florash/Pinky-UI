@@ -40,7 +40,12 @@ export const RippleButton = forwardRef<HTMLButtonElement, RippleButtonProps>(fun
     type = "button",
     disabled,
     onPointerDown,
+    onPointerUp,
+    onPointerLeave,
+    onPointerCancel,
+    onBlur,
     onKeyDown,
+    onKeyUp,
     ...props
   },
   ref,
@@ -84,19 +89,34 @@ export const RippleButton = forwardRef<HTMLButtonElement, RippleButtonProps>(fun
         press.handlers.onPointerDown();
         onPointerDown?.(event);
       }}
-      onPointerUp={press.handlers.onPointerUp}
-      onPointerLeave={press.handlers.onPointerLeave}
-      onPointerCancel={press.handlers.onPointerCancel}
-      onBlur={press.handlers.onBlur}
+      onPointerUp={(event) => {
+        press.handlers.onPointerUp();
+        onPointerUp?.(event);
+      }}
+      onPointerLeave={(event) => {
+        press.handlers.onPointerLeave();
+        onPointerLeave?.(event);
+      }}
+      onPointerCancel={(event) => {
+        press.handlers.onPointerCancel();
+        onPointerCancel?.(event);
+      }}
+      onBlur={(event) => {
+        press.handlers.onBlur();
+        onBlur?.(event);
+      }}
       onKeyDown={(event) => {
-        if (event.key === " " || event.key === "Enter") {
+        if (!event.repeat && (event.key === " " || event.key === "Enter")) {
           const box = event.currentTarget.getBoundingClientRect();
           addRipple(box.width / 2, box.height / 2);
         }
         press.handlers.onKeyDown(event);
         onKeyDown?.(event);
       }}
-      onKeyUp={press.handlers.onKeyUp}
+      onKeyUp={(event) => {
+        press.handlers.onKeyUp(event);
+        onKeyUp?.(event);
+      }}
       {...props}
     >
       {ripples.map((ripple) => (
@@ -106,7 +126,7 @@ export const RippleButton = forwardRef<HTMLButtonElement, RippleButtonProps>(fun
           initial={{ opacity: 0.5, scale: 0 }}
           animate={{ opacity: 0, scale: 1 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="pointer-events-none absolute -z-10 size-[220px] rounded-pill"
+          className="pointer-events-none absolute z-0 size-[220px] rounded-pill mix-blend-screen"
           style={{
             left: ripple.x - 110,
             top: ripple.y - 110,
@@ -114,7 +134,7 @@ export const RippleButton = forwardRef<HTMLButtonElement, RippleButtonProps>(fun
           }}
         />
       ))}
-      {children}
+      <span className="relative z-10">{children}</span>
     </motion.button>
   );
 });

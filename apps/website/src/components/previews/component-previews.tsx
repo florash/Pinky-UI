@@ -89,12 +89,20 @@ function LiquidCardPreview() {
         style={{ background: "var(--color-cloud-300)", opacity: 0.8 }}
       />
       <LiquidCard tint="clear" intensity={0.24} className="relative">
-        <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">
-          Liquid Card
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">Liquid Card</p>
+            <p className="mt-2 text-sm font-medium">Quiet priority</p>
+          </div>
+          <span className="rounded-lg bg-white/70 px-2 py-1 font-mono text-[0.6rem] text-ink-500">LIVE</span>
+        </div>
+        <p className="mt-4 text-sm leading-relaxed text-ink-700">
+          The surface redistributes light and keeps the action attached to the content.
         </p>
-        <p className="mt-3 text-sm leading-relaxed text-ink-700">
-          Light gathers where your pointer is, and the edge bends with it.
-        </p>
+        <div className="mt-5 flex items-center justify-between border-t border-white/70 pt-3">
+          <span className="text-xs text-ink-500">Pointer-aware material</span>
+          <span className="text-xs font-medium text-ink-900">Inspect →</span>
+        </div>
       </LiquidCard>
     </div>
   );
@@ -154,21 +162,29 @@ function SpotlightCardPreview() {
 function TiltCardPreview() {
   return (
     <TiltCard
-      className="w-[13rem]"
+      className="w-full max-w-[18rem]"
       padded={false}
       foreground={
-        <span className="absolute right-4 bottom-4 rounded-pill bg-white/90 px-2.5 py-1 font-mono text-[0.625rem] tracking-[0.1em] text-ink-700 uppercase shadow-soft">
+        <span className="absolute top-4 right-4 rounded-pill bg-white/90 px-2.5 py-1 font-mono text-[0.625rem] tracking-[0.1em] text-ink-700 uppercase shadow-soft">
           Vol. 1
         </span>
       }
     >
       <div
-        className="h-44 w-full"
+        className="relative h-48 w-full bg-white/70 p-4"
         style={{
           background:
             "linear-gradient(160deg, var(--color-white), var(--color-blush-100) 45%, var(--color-cloud-200))",
         }}
-      />
+      >
+        <div className="flex h-full flex-col justify-between">
+          <span className="font-mono text-[0.6rem] tracking-[0.14em] text-ink-500 uppercase">Field notes / 01</span>
+          <div>
+            <p className="font-display text-lg font-semibold tracking-tight text-ink-900">Solid, not loud.</p>
+            <p className="mt-1 max-w-[13rem] text-xs text-ink-700">A rigid surface catches light without moving the reading.</p>
+          </div>
+        </div>
+      </div>
     </TiltCard>
   );
 }
@@ -197,7 +213,7 @@ function RippleButtonPreview() {
         </RippleButton>
       </div>
       <p className="font-mono text-[0.625rem] tracking-[0.12em] text-ink-500 uppercase">
-        press anywhere on the button
+        local pressure · bounded response
       </p>
     </div>
   );

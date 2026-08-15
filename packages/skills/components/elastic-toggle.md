@@ -27,7 +27,8 @@ that colour and position do not already carry.
 - `role="switch"` with `aria-checked`, so it is announced as on/off rather than
   as a checkbox.
 - Operable with Space and Enter; the visible label toggles it too.
-- State is carried by position and colour, never by the animation.
+- State is carried by position, the explicit On/Off label and colour, never by
+  the animation alone.
 - Disabled state is exposed to assistive technology and blocks interaction.
 
 Pass either `label` or `aria-label`. A switch with no accessible name is a

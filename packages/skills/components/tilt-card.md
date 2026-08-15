@@ -29,7 +29,9 @@ stops belonging to the card.
 
 - Transform-only, so surrounding layout never shifts.
 - Glare and parallax layers are decorative and non-interactive.
-- Skipped entirely for touch input and reduced motion.
+- Pointer tilt is skipped for touch input; the layered card remains stable and
+  readable while the page keeps its vertical pan.
+- Reduced motion keeps the same flat layered fallback.
 - Keep rotation low when the card carries reading content.
 
 ## Performance

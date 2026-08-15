@@ -46,7 +46,7 @@ export function FloatingDock({
   return (
     <Proximity distance={distance} axis="x">
       <nav aria-label={ariaLabel} className={cn("inline-flex", className)}>
-        <ul className="flex items-end gap-2 rounded-pill bg-white/80 px-3 py-2.5 shadow-soft ring-1 ring-line">
+        <ul className="flex items-end gap-1.5 rounded-2xl bg-white/85 px-2 py-2 shadow-soft ring-1 ring-line">
           {items.map((item) => (
             <DockButton key={item.id} item={item} magnification={magnification} labels={labels} />
           ))}
@@ -74,23 +74,25 @@ function DockButton({
 
   const content = (
     <>
-      <span aria-hidden className="grid size-full place-items-center">
+      <span aria-hidden className="grid size-5 shrink-0 place-items-center">
         {item.icon}
       </span>
-      <span className="sr-only">{item.label}</span>
+      <span className={item.active && labels ? "text-xs font-medium whitespace-nowrap" : "sr-only"}>
+        {item.label}
+      </span>
     </>
   );
 
   const surface = cn(
-    "relative grid size-11 place-items-center rounded-2xl transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2 focus-visible:ring-offset-white",
+    "relative inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl px-3 transition-[background-color,color,box-shadow] duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2 focus-visible:ring-offset-white",
     item.active
-      ? "bg-ink-900 text-milk"
+      ? "bg-ink-900 text-milk shadow-soft"
       : "bg-blush-50 text-ink-700 hover:bg-blush-100 hover:text-ink-900",
   );
 
   return (
     <li ref={ref} className="relative flex flex-col items-center">
-      {labels ? (
+      {labels && !item.active ? (
         <motion.span
           aria-hidden
           style={motionEnabled ? { opacity: labelOpacity } : { opacity: 0 }}
@@ -100,7 +102,7 @@ function DockButton({
         </motion.span>
       ) : null}
 
-      <motion.div style={motionEnabled ? { scale, y: lift } : undefined} className="origin-bottom">
+      <motion.div layout={motionEnabled} style={motionEnabled ? { scale, y: lift } : undefined} className="origin-bottom">
         {item.href ? (
           <a
             href={item.href}

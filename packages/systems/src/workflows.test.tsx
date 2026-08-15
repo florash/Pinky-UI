@@ -4,12 +4,20 @@ import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import { setReducedMotion } from "../../../vitest.setup";
-import { ActionUndoBar, AsyncButton, BottomSheet, CommandPalette, EdgeSwipePanel, ExpandableListRow, LongPressAction, MultiStepProgress, ProgressiveStepWorkflow, PullToRefresh, ReorderableList, StatusPipeline, Stepper, SwipeActionRow, ToastProvider, useToast } from "@pinky/systems";
+import { ActionUndoBar, AsyncButton, BottomSheet, CommandPalette, EdgeSwipePanel, ExpandableListRow, LongPressAction, MultiStepProgress, ProgressiveStepWorkflow, PullToRefresh, ReorderableList, ShimmerSurface, StatusPipeline, Stepper, SwipeActionRow, ToastProvider, useToast } from "@pinky/systems";
 import { moveItem } from "./lists";
 
 function ToastTrigger() { const { toast } = useToast(); return <button type="button" onClick={() => toast({ title: "File saved", action: { label: "Open file", onClick: vi.fn() } })}>Notify</button>; }
 
 describe("Workflow systems", () => {
+  it("keeps the shimmer surface readable and static under reduced motion", () => {
+    setReducedMotion(true);
+    const { container } = render(<ShimmerSurface>Waiting for the preview</ShimmerSurface>);
+
+    expect(screen.getByText("Waiting for the preview")).toBeInTheDocument();
+    expect(container.querySelector("i")).not.toBeInTheDocument();
+  });
+
   it("announces a toast, supports its action, and dismisses it", async () => {
     const user = userEvent.setup(); const action = vi.fn();
     function Trigger() { const { toast } = useToast(); return <button type="button" onClick={() => toast({ title: "File saved", action: { label: "Open file", onClick: action } })}>Notify</button>; }

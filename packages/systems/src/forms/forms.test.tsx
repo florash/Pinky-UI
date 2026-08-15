@@ -39,6 +39,9 @@ describe("Form systems", () => {
     render(<MorphSelect label="Format" options={[{ value: "photo", label: "Photo" }, { value: "video", label: "Video" }]} onValueChange={change} />);
     const trigger = screen.getByRole("button", { name: "Format" });
     await user.click(trigger);
+    const listbox = screen.getByRole("listbox", { name: "Format" });
+    expect(listbox).toHaveFocus();
+    expect(listbox).toHaveAttribute("aria-activedescendant", expect.stringContaining("option"));
     await user.keyboard("{ArrowDown}{Enter}");
     expect(change).toHaveBeenCalledWith("video");
     await waitFor(() => expect(trigger).toHaveFocus());

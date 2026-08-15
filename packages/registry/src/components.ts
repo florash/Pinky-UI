@@ -488,7 +488,7 @@ export const components: RegistryEntry[] = [
   {
     slug: "floating-dock",
     name: "Floating Dock",
-    description: "A dock whose items swell as the pointer travels along it.",
+    description: "A compact contextual dock whose active destination expands with its label and whose pointer response stays an optional desktop enhancement.",
     status: "ready",
     category: "navigation",
     interactions: ["proximity", "magnetic", "depth"],
@@ -516,8 +516,8 @@ export const components: RegistryEntry[] = [
       "Renders a nav landmark with a list of real links or buttons.",
       "Every item carries a permanent visually-hidden label — the hover label is decoration, not the accessible name.",
       "Fully operable by Tab and Enter with no pointer proximity involved.",
-      "Active items expose aria-current (links) or aria-pressed (buttons).",
-      "Magnification is skipped for touch, so nothing swells under a finger.",
+      "Active items expose aria-current (links) or aria-pressed (buttons), and the active label remains visible for touch users.",
+      "Magnification is skipped for touch, while the active destination remains named in the surface.",
     ],
     reducedMotion:
       "With prefers-reduced-motion: reduce, items never scale or lift and the hover label stays hidden. The dock is a plain, fully functional row of icons.",
@@ -537,7 +537,7 @@ export const components: RegistryEntry[] = [
   {
     slug: "gooey-menu",
     name: "Gooey Menu",
-    description: "Navigation whose selection stretches between items as it travels.",
+    description: "A section switcher whose selected surface stretches between items with a restrained shared-origin connection.",
     status: "ready",
     category: "navigation",
     interactions: ["liquid", "morph", "elastic"],
@@ -565,7 +565,7 @@ export const components: RegistryEntry[] = [
     accessibility: [
       "Renders a nav landmark with real links or buttons — the goo is one aria-hidden layer behind them.",
       "Labels sit above the filtered layer, so text stays perfectly crisp.",
-      "Selection is conveyed by aria-current, never by the blob alone.",
+      "Selection is conveyed by aria-current for links and aria-pressed for buttons, never by the connected surface alone.",
       "Standard Tab order; no custom key handling to learn.",
     ],
     reducedMotion:
@@ -676,7 +676,7 @@ export const components: RegistryEntry[] = [
   {
     slug: "elastic-toggle",
     name: "Elastic Toggle",
-    description: "A switch whose thumb stretches as it travels.",
+    description: "A preference switch whose track and thumb redistribute together and settle with an explicit On/Off state.",
     status: "ready",
     category: "controls",
     interactions: ["elastic", "jelly"],

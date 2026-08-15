@@ -69,6 +69,7 @@ export function ElasticToggle({
       <button
         type="button"
         role="switch"
+        data-state={isChecked ? "on" : "off"}
         aria-checked={isChecked}
         aria-label={label ? undefined : ariaLabel}
         aria-labelledby={label ? labelId : undefined}
@@ -79,7 +80,7 @@ export function ElasticToggle({
           "transition-colors duration-300 ease-[var(--ease-soft)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2",
           "disabled:cursor-not-allowed disabled:opacity-50",
-          isChecked ? "bg-ink-900" : "bg-line-strong",
+          isChecked ? "bg-ink-900" : "bg-cloud-100 ring-1 ring-line-strong",
         )}
       >
         <motion.span
@@ -101,6 +102,9 @@ export function ElasticToggle({
           {label}
         </label>
       ) : null}
+      <span aria-hidden className="font-mono text-[0.6rem] tracking-[0.1em] text-ink-500 uppercase">
+        {isChecked ? "On" : "Off"}
+      </span>
     </div>
   );
 }

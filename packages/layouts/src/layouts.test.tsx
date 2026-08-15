@@ -27,6 +27,17 @@ describe("MasonryGallery", () => {
     }
     expect(screen.getByRole("list", { name: "Photos" })).toBeInTheDocument();
   });
+
+  it("does not create empty columns when the item set is smaller than the responsive count", () => {
+    render(
+      <MasonryGallery label="Small gallery" columns={4}>
+        <p>First</p>
+        <p>Second</p>
+      </MasonryGallery>,
+    );
+
+    expect(screen.getByRole("list", { name: "Small gallery" }).children).toHaveLength(2);
+  });
 });
 
 describe("PolaroidWall", () => {

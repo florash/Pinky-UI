@@ -108,7 +108,7 @@ export function GooeyMenu({
           <span
             aria-hidden
             className="pointer-events-none absolute inset-0"
-            style={goo ? { filter: "blur(7px) contrast(14)" } : undefined}
+            style={goo ? { filter: "blur(4px) contrast(8)" } : undefined}
           >
             <motion.span
               className="absolute top-1.5 bottom-1.5 rounded-pill bg-ink-900"
@@ -153,7 +153,7 @@ export function GooeyMenu({
               ) : (
                 <button
                   type="button"
-                  aria-current={isSelected ? "true" : undefined}
+                  aria-pressed={isSelected}
                   disabled={item.disabled}
                   onClick={() => select(item.id)}
                   className={className}

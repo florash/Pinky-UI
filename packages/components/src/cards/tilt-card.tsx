@@ -46,7 +46,17 @@ export function TiltCard({
   disabled = false,
 }: TiltCardProps) {
   return (
-    <Tilt max={max} glare={glare} lift={8} disabled={disabled} className={cn(RADIUS[radius], className)}>
+    <Tilt
+      max={max}
+      glare={glare}
+      lift={8}
+      disabled={disabled}
+      className={cn(
+        RADIUS[radius],
+        "focus-within:outline-none focus-within:ring-2 focus-within:ring-ink-900/25 focus-within:ring-offset-2",
+        className,
+      )}
+    >
       <Parallax
         disabled={disabled}
         className={cn(

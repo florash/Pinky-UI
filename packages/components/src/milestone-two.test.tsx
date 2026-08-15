@@ -37,6 +37,7 @@ describe("FloatingDock", () => {
   it("marks the active item", () => {
     render(<FloatingDock items={DOCK_ITEMS} />);
     expect(screen.getByRole("link", { name: "Work" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByText("Work")).toBeVisible();
   });
 
   it("is reachable by keyboard with no pointer proximity", async () => {
@@ -168,11 +169,21 @@ describe("GooeyMenu", () => {
     render(<GooeyMenu items={ITEMS} aria-label="Sections" />);
 
     expect(screen.getByRole("navigation", { name: "Sections" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Work" })).toHaveAttribute("aria-current", "true");
+    expect(screen.getByRole("button", { name: "Work" })).toHaveAttribute("aria-pressed", "true");
 
     await user.click(screen.getByRole("button", { name: "Studio" }));
-    expect(screen.getByRole("button", { name: "Studio" })).toHaveAttribute("aria-current", "true");
-    expect(screen.getByRole("button", { name: "Work" })).not.toHaveAttribute("aria-current");
+    expect(screen.getByRole("button", { name: "Studio" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Work" })).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("exposes button selection as pressed state", async () => {
+    const user = userEvent.setup();
+    render(<GooeyMenu items={ITEMS} />);
+    const studio = screen.getByRole("button", { name: "Studio" });
+
+    expect(screen.getByRole("button", { name: "Work" })).toHaveAttribute("aria-pressed", "true");
+    await user.click(studio);
+    expect(studio).toHaveAttribute("aria-pressed", "true");
   });
 
   it("reports selection changes", async () => {
