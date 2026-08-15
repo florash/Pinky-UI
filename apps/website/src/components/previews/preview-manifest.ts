@@ -203,6 +203,17 @@ export const EXPLORE_PREVIEW_SLUGS = [
   "follow-anchor-surface",
   "shared-context-surface",
   "morphing-context-surface",
+  "floating-tab-bar",
+  "contextual-bottom-bar",
+  "scroll-compact-bottom-nav",
+  "sticky-bottom-cta",
+  "floating-action-island",
+  "swipe-to-confirm",
+  "search-morph-header",
+  "keyboard-aware-composer",
+  "mobile-selection-bar",
+  "progressive-auth-surface",
+  "auth-completion-morph",
 ] as const;
 
 export function hasComponentPreview(slug: string) {

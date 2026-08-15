@@ -5,8 +5,8 @@
 Pinky UI is an open-source collection of expressive React components and motion primitives built for interfaces that feel responsive, playful and alive.
 
 Explore jelly, liquid, magnetic, morph, glow, depth, elastic and proximity interactions —
-**232 implemented items across 12 primitives, 12 components, 27 layouts, 32 effects, 31
-experiences and 118 product and workflow systems** — designed to stay composable, accessible
+**243 implemented items across 12 primitives, 12 components, 27 layouts, 32 effects, 31
+experiences and 129 product and workflow systems** — designed to stay composable, accessible
 and practical to use.
 
 Every item listed on the site has an implemented source entry and an import path. Nothing is
@@ -105,7 +105,7 @@ dependency list is `motion`, `next`, `react` and `react-dom`.
 
 ## Skills
 
-Pinky UI ships **agent-readable interaction Skills**: 249 public markdown recipes in
+Pinky UI ships **agent-readable interaction Skills**: 260 public markdown recipes in
 `packages/skills`, covering individual items and system-level guidance on interaction
 density, reduced motion, landing-page motion, choosing a card, and composition.
 

@@ -57,6 +57,7 @@ export const PUBLIC_TAXONOMY = [
       { href: "/data", label: "Data" },
       { href: "/workflows", label: "Workflows" },
       { href: "/overlays", label: "Overlays" },
+      { href: "/mobile", label: "Mobile" },
     ],
   },
   {
@@ -134,7 +135,7 @@ export const TAXONOMY_MAPPING = [
   { current: "scroll interactions", route: "/effects#scroll", package: "@pinky/effects", canonicalCategory: "Effects → Scroll", canonicalName: "Scroll interactions" },
   { current: "transitions", route: "/transitions", package: "@pinky/experiences", canonicalCategory: "Experiences → Transitions", canonicalName: "Transitions" },
   { current: "text effects", route: "/effects#text", package: "@pinky/effects", canonicalCategory: "Effects → Text", canonicalName: "Text effects" },
-  { current: "media / forms / data / collections / overlays", route: "/media and /overlays", package: "@pinky/systems", canonicalCategory: "Systems", canonicalName: "Product systems" },
+  { current: "media / forms / data / collections / overlays / mobile", route: "/media, /overlays and /mobile", package: "@pinky/systems", canonicalCategory: "Systems", canonicalName: "Product systems" },
   { current: "content browsing systems", route: "/collections", package: "@pinky/systems", canonicalCategory: "Systems → Collections", canonicalName: "Collection browsing systems" },
   { current: "feedback / search / loading / lists / drag / onboarding / mobile", route: "/workflows", package: "@pinky/systems", canonicalCategory: "Systems → Workflows", canonicalName: "Workflow systems" },
   { current: "implementation folders in packages/skills", route: "/skills", package: "@pinky/skills", canonicalCategory: "Skills", canonicalName: "Interaction recipes" },

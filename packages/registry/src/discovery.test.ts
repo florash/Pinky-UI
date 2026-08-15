@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { allEffects, allProductSystems, allWorkflowSystems, components, primitives } from "./index";
+import { allEffects, allProductSystems, allWorkflowSystems, components, mobileSystems, primitives } from "./index";
 
 const entries = [...components, ...allEffects, ...allProductSystems, ...allWorkflowSystems, ...primitives];
 
@@ -31,5 +31,25 @@ describe("public discovery canonicalization", () => {
     expect(roles.get("multi-step-progress")).toBe("preset");
     expect(roles.get("cursor")).toBe("canonical");
     expect(roles.get("glow")).toBe("secondary");
+  });
+
+  it("registers the mobile-first expansion as distinct canonical workflow systems", () => {
+    const expected = [
+      "floating-tab-bar",
+      "contextual-bottom-bar",
+      "scroll-compact-bottom-nav",
+      "sticky-bottom-cta",
+      "floating-action-island",
+      "swipe-to-confirm",
+      "search-morph-header",
+      "keyboard-aware-composer",
+      "mobile-selection-bar",
+      "progressive-auth-surface",
+      "auth-completion-morph",
+    ];
+    const mobile = allWorkflowSystems.filter((entry) => entry.family === "mobile");
+    expect(mobileSystems).toHaveLength(16);
+    expect(mobile).toHaveLength(16);
+    expect(expected.every((slug) => mobile.some((entry) => entry.slug === slug && entry.discovery?.role === "canonical"))).toBe(true);
   });
 });
