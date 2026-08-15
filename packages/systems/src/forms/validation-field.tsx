@@ -44,10 +44,17 @@ export function ValidationField({
   const statusMessage = status === "correcting" ? "Updating the value…" : result?.message ?? (status === "valid" ? "Ready to continue." : "");
   const statusStyles: Record<ValidationStatus, string> = {
     idle: "border-line bg-white",
-    valid: "border-emerald-200 bg-emerald-50/40",
-    warning: "border-amber-200 bg-amber-50/40",
-    invalid: "border-rose-200 bg-rose-50/40",
+    valid: "border-cloud-300 bg-cloud-50",
+    warning: "border-blush-300 bg-blush-50",
+    invalid: "border-ink-900/25 bg-milk",
     correcting: "border-cloud-300 bg-cloud-50",
+  };
+  const statusIconStyles: Record<ValidationStatus, string> = {
+    idle: "bg-cloud-200 text-ink-700",
+    valid: "bg-cloud-300 text-ink-900",
+    warning: "bg-blush-200 text-ink-900",
+    invalid: "bg-ink-900 text-milk",
+    correcting: "bg-cloud-200 text-ink-700",
   };
   const statusLabel: Record<ValidationStatus, string> = { idle: "Not checked", valid: "Valid", warning: "Check", invalid: "Needs attention", correcting: "Correcting" };
 
@@ -69,7 +76,7 @@ export function ValidationField({
           className="w-full rounded-xl bg-transparent px-3 py-2.5 text-sm text-ink-900 outline-none placeholder:text-ink-400 focus-visible:ring-2 focus-visible:ring-ink-900/15"
         />
         <div className="flex items-center justify-between gap-3 px-3 pb-1 pt-2 text-xs">
-          <span className="flex items-center gap-2 text-ink-700"><span aria-hidden className={cn("grid size-4 place-items-center rounded-full text-[0.625rem]", status === "valid" ? "bg-emerald-200" : status === "invalid" ? "bg-rose-200" : "bg-cloud-200")}>{status === "valid" ? "✓" : status === "invalid" ? "!" : "·"}</span>{statusLabel[status]}</span>
+          <span className="flex items-center gap-2 text-ink-700"><span aria-hidden className={cn("grid size-4 place-items-center rounded-full text-[0.625rem]", statusIconStyles[status])}>{status === "valid" ? "✓" : status === "invalid" ? "!" : "·"}</span>{statusLabel[status]}</span>
           {statusMessage ? <span id={statusId} role={status === "invalid" ? "alert" : "status"} className="text-right text-ink-500">{statusMessage}</span> : null}
         </div>
       </div>

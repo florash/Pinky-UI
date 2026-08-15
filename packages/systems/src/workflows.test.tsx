@@ -4,7 +4,7 @@ import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import { setReducedMotion } from "../../../vitest.setup";
-import { ActionUndoBar, AsyncButton, BottomSheet, CommandPalette, EdgeSwipePanel, LongPressAction, ProgressiveStepWorkflow, PullToRefresh, ReorderableList, StatusPipeline, Stepper, ToastProvider, useToast } from "@pinky/systems";
+import { ActionUndoBar, AsyncButton, BottomSheet, CommandPalette, EdgeSwipePanel, LongPressAction, MultiStepProgress, ProgressiveStepWorkflow, PullToRefresh, ReorderableList, StatusPipeline, Stepper, SwipeActionRow, ToastProvider, useToast } from "@pinky/systems";
 import { moveItem } from "./lists";
 
 function ToastTrigger() { const { toast } = useToast(); return <button type="button" onClick={() => toast({ title: "File saved", action: { label: "Open file", onClick: vi.fn() } })}>Notify</button>; }
@@ -85,6 +85,21 @@ describe("Workflow systems", () => {
     expect(moveItem(["a", "b", "c"], 0, 2)).toEqual(["b", "c", "a"]);
     const reordered = vi.fn(); const items = [{ id: "a", label: "Alpha" }, { id: "b", label: "Beta" }];
     render(<ReorderableList items={items} onReorder={reordered} />); const handle = screen.getByRole("button", { name: "Move Alpha" }); fireEvent.keyDown(handle, { key: "ArrowDown" }); expect(reordered).toHaveBeenCalledWith([items[1], items[0]]);
+  });
+
+  it("keeps swipe actions out of the tab order until the row is opened", async () => {
+    const user = userEvent.setup(); const archive = vi.fn();
+    render(<SwipeActionRow actions={[{ label: "Archive", onAction: archive }]}><span>Team notes</span></SwipeActionRow>);
+    const toggle = screen.getByRole("button", { name: "Show row actions" }); const action = screen.getByRole("button", { name: "Archive" });
+    expect(action).toHaveAttribute("tabindex", "-1"); expect(action).toHaveClass("pointer-events-none");
+    await user.click(toggle);
+    expect(action).toHaveAttribute("tabindex", "0"); expect(action).not.toHaveClass("pointer-events-none");
+    await user.click(action); expect(archive).toHaveBeenCalledTimes(1);
+  });
+
+  it("names progress attention states without relying on colour", () => {
+    render(<MultiStepProgress steps={[{ id: "cart", label: "Cart", state: "completed" }, { id: "payment", label: "Payment", state: "error" }]} />);
+    expect(screen.getByRole("listitem", { name: "Payment, needs attention" })).toBeInTheDocument();
   });
 
   it("exposes step semantics and bottom sheet Escape focus restoration", async () => {

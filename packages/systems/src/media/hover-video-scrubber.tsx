@@ -45,7 +45,7 @@ export function HoverVideoScrubber({ src, poster, label, preload = "metadata", c
   return (
     <div role="group" aria-label={label} tabIndex={0} onPointerMove={pointer} onPointerDown={pointer} onKeyDown={keys} onClick={() => clickToPlay && void toggle()} className={cn("relative overflow-hidden rounded-[22px] focus-visible:outline-2", className)}>
       <video ref={video} src={src} poster={poster} preload={preload} muted={muted} playsInline className="size-full object-cover" onPlay={() => onPlayChange?.(true)} onPause={() => onPlayChange?.(false)} />
-      <span className="pointer-events-none absolute right-3 bottom-3 rounded-full bg-black/65 px-3 py-1.5 text-xs text-white">Scrub · {clickToPlay ? "play" : "preview"}</span>
+      <span className="pointer-events-none absolute right-3 bottom-3 rounded-full bg-ink-900/80 px-3 py-1.5 text-xs text-milk">Scrub · {clickToPlay ? "play" : "preview"}</span>
     </div>
   );
 }

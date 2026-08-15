@@ -66,7 +66,7 @@ function LightboxView({ items, initialIndex }: { items: MorphLightboxItem[]; ini
       if (event.key === "ArrowRight") { event.preventDefault(); move(1); }
       if (event.key === "ArrowLeft") { event.preventDefault(); move(-1); }
     }}>
-      <div className="grid max-h-[72vh] min-h-72 place-items-center overflow-auto bg-black/20">{item.media}</div>
+      <div className="grid max-h-[72vh] min-h-72 place-items-center overflow-auto bg-ink-900/20">{item.media}</div>
       <div className="flex items-center justify-between gap-4 p-4 sm:p-5">
         <div><p className="font-medium">{item.label}</p>{item.caption ? <div className="mt-1 text-sm text-white/65">{item.caption}</div> : null}</div>
         {items.length > 1 ? <div className="flex gap-2"><button type="button" onClick={() => move(-1)} aria-label="Previous media" className="rounded-full border border-white/20 px-3 py-2">←</button><button type="button" onClick={() => move(1)} aria-label="Next media" className="rounded-full border border-white/20 px-3 py-2">→</button></div> : null}

@@ -53,7 +53,7 @@ export function ImageSequence({ frames, alt, index, defaultIndex = 0, onIndexCha
       {/* Library consumers may supply local, remote or generated frame URLs; image policy belongs to the host framework. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       {src ? <img src={src} alt={typeof alt === "function" ? alt(bounded) : alt} draggable={false} className="size-full select-none object-cover" /> : <div className="grid min-h-48 place-items-center">No frames</div>}
-      <span className="absolute right-3 bottom-3 rounded-full bg-black/65 px-3 py-1.5 text-xs text-white">{bounded + 1} / {frames.length}</span>
+      <span className="absolute right-3 bottom-3 rounded-full bg-ink-900/80 px-3 py-1.5 text-xs text-milk">{bounded + 1} / {frames.length}</span>
     </div>
   );
 }
