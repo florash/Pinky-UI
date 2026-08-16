@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 
 const LOCAL_SITE_URL = "http://localhost:3000";
 
+function normalizeBasePath(value?: string) {
+  const raw = value?.trim() || "";
+  if (!raw || raw === "/") return "";
+  return `/${raw.replace(/^\/+|\/+$/g, "")}`;
+}
+
 /** Normalize the public origin once so metadata never grows competing URL logic. */
 export function normalizeSiteUrl(value?: string) {
   const raw = value?.trim() || LOCAL_SITE_URL;
@@ -35,11 +41,18 @@ export const SITE = {
   github: "https://github.com/florash/Pinky-UI",
   /** Set NEXT_PUBLIC_SITE_URL in the deployment environment; localhost is local-only fallback. */
   url: normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
+  /** Project Pages deployments provide this at build time; custom domains leave it empty. */
+  basePath: normalizeBasePath(process.env.NEXT_PUBLIC_BASE_PATH),
 } as const;
 
-export function absoluteSiteUrl(pathname = "/") {
+export function sitePathname(pathname = "/") {
   const path = pathname.startsWith("/") ? pathname : `/${pathname}`;
-  return new URL(path, `${SITE.url}/`).toString();
+  if (!SITE.basePath || path === SITE.basePath || path.startsWith(`${SITE.basePath}/`)) return path;
+  return `${SITE.basePath}${path}`;
+}
+
+export function absoluteSiteUrl(pathname = "/") {
+  return new URL(sitePathname(pathname), `${SITE.url}/`).toString();
 }
 
 export function pageMetadata(
@@ -49,15 +62,16 @@ export function pageMetadata(
   options?: { absoluteTitle?: boolean },
 ): Metadata {
   const socialTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}`;
+  const publicPathname = sitePathname(pathname);
 
   return {
     title: options?.absoluteTitle ? { absolute: title } : title,
     description,
-    alternates: { canonical: pathname },
+    alternates: { canonical: publicPathname },
     openGraph: {
       title: socialTitle,
       description,
-      url: pathname,
+      url: publicPathname,
       siteName: SITE.name,
       type: "website",
     },

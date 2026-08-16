@@ -3,13 +3,14 @@
 import { cn } from "@pinky/components";
 import { layouts } from "@pinky/registry";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { LayoutPreview, hasLayoutPreview } from "@/components/previews/layout-previews";
 import {
   layoutBelongsToPublicFamily,
   publicLayoutFamilyFor,
   PUBLIC_LAYOUT_FAMILIES,
+  resolveLayoutFamily,
   type PublicLayoutFamily,
 } from "@/lib/site";
 
@@ -20,6 +21,12 @@ import {
  */
 export function LayoutGallery({ initialFamily = "all" }: { initialFamily?: PublicLayoutFamily | "all" }) {
   const [family, setFamily] = useState<PublicLayoutFamily | "all">(initialFamily);
+
+  useEffect(() => {
+    const requestedFamily = new URLSearchParams(window.location.search).get("family");
+    if (requestedFamily) setFamily(resolveLayoutFamily(requestedFamily));
+  }, []);
+
   const results = layouts.filter(
     (entry) =>
       entry.status === "ready" &&

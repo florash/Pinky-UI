@@ -5,6 +5,8 @@ import { hasComponentPreview, hasLayoutPreview } from "@/components/previews/pre
 import { listAllSkills, SKILL_KINDS, SKILL_ROUTE_ALIASES } from "@/lib/skills";
 import { absoluteSiteUrl, PUBLIC_INDEXABLE_ROUTES } from "@/lib/site";
 
+export const dynamic = "force-static";
+
 function uniquePaths(paths: Iterable<string>) {
   const aliases = new Set<string>(SKILL_ROUTE_ALIASES.map((alias) => alias.from));
   return [...new Set(paths)].filter((pathname) => {
