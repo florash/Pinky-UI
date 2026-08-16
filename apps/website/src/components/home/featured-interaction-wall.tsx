@@ -41,7 +41,7 @@ export function FeaturedInteractionWall({ compact = false }: { compact?: boolean
             <MorphingHeroDemo compact={compact} />
           </Exhibit>
 
-          <Exhibit compact={compact} label="Surfaces" note="jelly · liquid · morph" className="lg:col-span-5">
+          <Exhibit compact={compact} label="Surfaces" note="move · catch · open" className="lg:col-span-5">
             <SurfaceSampler />
           </Exhibit>
 
@@ -247,20 +247,79 @@ function MorphingHeroDemo({ compact }: { compact: boolean }) {
 
 function SurfaceSampler() {
   return (
-    <div className="grid min-h-36 gap-3 sm:grid-cols-3">
-      <JellyCard className="min-h-28" radius="xl" surfaceClassName="grid place-items-center p-4">
-        <span className="text-sm font-medium">Jelly</span>
+    <div className="grid gap-3 sm:grid-cols-3">
+      <JellyCard
+        elasticity={0.55}
+        intensity={0.72}
+        hoverScale={1.035}
+        className="min-h-36"
+        radius="xl"
+        padded={false}
+        surfaceClassName="p-0"
+      >
+        <div className="relative flex min-h-36 flex-col justify-between overflow-hidden p-4">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[var(--pinky-glow-opacity,0)] transition-opacity duration-200"
+            style={{
+              background:
+                "radial-gradient(120px circle at var(--pinky-glow-x, 50%) var(--pinky-glow-y, 50%), var(--color-blush-100), transparent 72%)",
+            }}
+          />
+          <div className="relative z-10 flex items-center justify-between gap-2">
+            <span className="font-mono text-[0.55rem] tracking-[0.12em] text-ink-500 uppercase">01 / soft body</span>
+            <span className="font-mono text-[0.55rem] tracking-[0.12em] text-ink-500 uppercase">move</span>
+          </div>
+          <div className="relative z-10">
+            <p className="text-base font-medium">Jelly</p>
+            <p className="mt-1 font-mono text-[0.58rem] tracking-[0.08em] text-ink-500">lean · press · settle</p>
+          </div>
+        </div>
       </JellyCard>
-      <LiquidCard tint="clear" intensity={0.24} className="min-h-28">
-        <span className="text-sm font-medium">Liquid</span>
+      <LiquidCard
+        tint="cloud"
+        intensity={0.82}
+        depth={0.55}
+        blur={14}
+        className="min-h-36"
+        padded={false}
+        surfaceClassName="p-0"
+      >
+        <div className="relative flex min-h-36 flex-col justify-between overflow-hidden p-4">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[calc(var(--pinky-glow-opacity,0)*0.9)] transition-opacity duration-300"
+            style={{
+              background:
+                "radial-gradient(128px circle at var(--pinky-glow-x, 50%) var(--pinky-glow-y, 50%), rgba(255,255,255,0.95), transparent 64%)",
+            }}
+          />
+          <div className="relative z-10 flex items-center justify-between gap-2">
+            <span className="font-mono text-[0.55rem] tracking-[0.12em] text-ink-500 uppercase">02 / refracted</span>
+            <span className="font-mono text-[0.55rem] tracking-[0.12em] text-ink-500 uppercase">catch</span>
+          </div>
+          <div className="relative z-10">
+            <p className="text-base font-medium">Liquid</p>
+            <p className="mt-1 font-mono text-[0.58rem] tracking-[0.08em] text-ink-500">light · edge · depth</p>
+          </div>
+        </div>
       </LiquidCard>
       <MorphCard
         label="Morph surface"
         maxWidth={520}
-        className="min-h-28"
-        expandedContent={<div className="p-8"><p className="font-mono text-xs tracking-[0.14em] text-ink-500 uppercase">Morph surface</p><p className="mt-3 text-xl font-medium">The same surface, opened into a little more context.</p></div>}
+        className="group min-h-36 transition-transform duration-300 hover:-translate-y-0.5"
+        expandedContent={<div className="p-8"><p className="font-mono text-xs tracking-[0.14em] text-ink-500 uppercase">Morph surface / opened</p><p className="mt-3 text-xl font-medium">The same surface, opened into a little more context.</p><p className="mt-4 text-sm leading-relaxed text-ink-700">Press Escape to return to the compact surface.</p></div>}
       >
-        <div className="grid min-h-28 place-items-center p-4 text-sm font-medium">Morph</div>
+        <div className="flex min-h-36 flex-col justify-between p-4">
+          <div className="flex items-center justify-between gap-2">
+            <span className="font-mono text-[0.55rem] tracking-[0.12em] text-ink-500 uppercase">03 / state change</span>
+            <span className="font-mono text-[0.55rem] tracking-[0.12em] text-ink-500 uppercase">open</span>
+          </div>
+          <div>
+            <p className="text-base font-medium">Morph</p>
+            <p className="mt-1 font-mono text-[0.58rem] tracking-[0.08em] text-ink-500">tap · expand · return</p>
+          </div>
+        </div>
       </MorphCard>
     </div>
   );
