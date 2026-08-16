@@ -38,91 +38,86 @@ export function SignatureInteractions() {
         </p>
 
         {/*
-          Two stacked columns rather than a row grid: the pieces have very
-          different natural heights, and a row grid would leave a band of dead
-          space under every short one.
+          Masonry keeps the editorial asymmetry without coupling the left and
+          right columns to the height of their longest neighbour. Each piece
+          remains a direct live surface, while the column fill prevents a
+          short first column from leaving a dead band beside the longer one.
         */}
-        <div className="mt-8 grid items-start gap-x-8 gap-y-12 lg:grid-cols-12">
-          {/* The anchor: one collection, read two ways. Widest footprint on the
-              page, so the eye lands here before anything else. */}
-          <div className="flex flex-col gap-12 lg:col-span-7">
-            <Piece label="Gallery ↔ List">
-              <GalleryListMorph
-                items={COLLECTION}
-                columns={4}
-                label="Featured collection"
-                className="min-h-44"
-              />
-            </Piece>
+        <div className="mt-8 lg:columns-2 lg:gap-x-8">
+          <Piece label="Gallery ↔ List" className="mb-12 break-inside-avoid">
+            <GalleryListMorph
+              items={COLLECTION}
+              columns={4}
+              label="Featured collection"
+              className="min-h-44"
+            />
+          </Piece>
 
-            <Piece label="Card Fan">
-              <div className="flex justify-center rounded-[20px] bg-white/60 px-4 py-6 sm:px-6">
-                <CardFan label="Curated studio deck" spread={22} rotation={7} className="min-h-[11rem]">
-                  {COLLECTION.map((card, index) => (
-                    <div
-                      key={card.id}
-                      className="w-36 overflow-hidden rounded-[18px] border border-line bg-white shadow-lift sm:w-40"
-                    >
-                      <SoftSurface index={index} className="h-20 w-full rounded-none" />
-                      <div className="p-3">
-                        <p className="text-sm font-semibold">{card.title}</p>
-                        <p className="mt-1 font-mono text-[0.58rem] text-ink-500">{card.meta}</p>
-                      </div>
+          <Piece label="Card Fan" className="mb-12 break-inside-avoid">
+            <div className="flex justify-center rounded-[20px] bg-white/60 px-4 py-6 sm:px-6">
+              <CardFan label="Curated studio deck" spread={22} rotation={7} className="min-h-[11rem]">
+                {COLLECTION.map((card, index) => (
+                  <div
+                    key={card.id}
+                    className="w-36 overflow-hidden rounded-[18px] border border-line bg-white shadow-lift sm:w-40"
+                  >
+                    <SoftSurface index={index} className="h-20 w-full rounded-none" />
+                    <div className="p-3">
+                      <p className="text-sm font-semibold">{card.title}</p>
+                      <p className="mt-1 font-mono text-[0.58rem] text-ink-500">{card.meta}</p>
                     </div>
-                  ))}
-                </CardFan>
-              </div>
-            </Piece>
-          </div>
-
-          <div className="flex flex-col gap-12 lg:col-span-5">
-            <Piece label="Morph Lightbox">
-              <MorphLightbox
-                label="Featured media collection"
-                className="grid-cols-3 gap-2"
-                itemClassName="rounded-xl"
-                items={COLLECTION.slice(0, 3).map((item, index) => ({
-                  id: `signature-media-${item.id}`,
-                  label: item.title,
-                  thumbnail: <SoftSurface index={index} className="h-24 w-full" />,
-                  media: <SoftSurface index={index} className="h-64 w-full" />,
-                  caption: item.meta,
-                }))}
-              />
-            </Piece>
-
-            <div className="grid gap-12 sm:grid-cols-2">
-              <Piece label="Morphing Input">
-                <MorphingInputDemo />
-              </Piece>
-
-              <Piece label="Completion Morph">
-                <CompletionMorphDemo />
-              </Piece>
+                  </div>
+                ))}
+              </CardFan>
             </div>
+          </Piece>
 
-            <Piece label="Anchored Inspector">
-              <AnchoredInspectorDemo />
+          <Piece label="Morph Lightbox" className="mb-12 break-inside-avoid">
+            <MorphLightbox
+              label="Featured media collection"
+              className="grid-cols-3 gap-2"
+              itemClassName="rounded-xl"
+              items={COLLECTION.slice(0, 3).map((item, index) => ({
+                id: `signature-media-${item.id}`,
+                label: item.title,
+                thumbnail: <SoftSurface index={index} className="h-24 w-full" />,
+                media: <SoftSurface index={index} className="h-64 w-full" />,
+                caption: item.meta,
+              }))}
+            />
+          </Piece>
+
+          <div className="mb-12 break-inside-avoid grid gap-12 sm:grid-cols-2">
+            <Piece label="Morphing Input">
+              <MorphingInputDemo />
             </Piece>
 
-            <Piece label="Search Morph Header">
-              <SearchMorphDemo />
-            </Piece>
-
-            <Piece label="Command Palette">
-              <CommandPaletteDemo />
-            </Piece>
-
-            <Piece label="Mobile touch signatures">
-              <div className="grid gap-4 rounded-[20px] bg-cloud-50 p-4 sm:grid-cols-2 xl:grid-cols-5">
-                <MobileSignatureMini label="Morphing nav"><MorphingBottomNavigation /></MobileSignatureMini>
-                <MobileSignatureMini label="Bottom search"><BottomSearchSheet /></MobileSignatureMini>
-                <MobileSignatureMini label="Detent sheet"><DetentSheet /></MobileSignatureMini>
-                <MobileSignatureMini label="Swipe actions"><SwipeActions /></MobileSignatureMini>
-                <MobileSignatureMini label="Long-press select"><LongPressSelection items={[{ id: "note", label: "North star", meta: "Hold or tap" }, { id: "brief", label: "Release brief", meta: "Ready" }]} /></MobileSignatureMini>
-              </div>
+            <Piece label="Completion Morph">
+              <CompletionMorphDemo />
             </Piece>
           </div>
+
+          <Piece label="Anchored Inspector" className="mb-12 break-inside-avoid">
+            <AnchoredInspectorDemo />
+          </Piece>
+
+          <Piece label="Search Morph Header" className="mb-12 break-inside-avoid">
+            <SearchMorphDemo />
+          </Piece>
+
+          <Piece label="Command Palette" className="mb-12 break-inside-avoid">
+            <CommandPaletteDemo />
+          </Piece>
+
+          <Piece label="Mobile touch signatures" className="mb-12 break-inside-avoid">
+            <div className="grid gap-4 rounded-[20px] bg-cloud-50 p-4 sm:grid-cols-2 xl:grid-cols-5">
+              <MobileSignatureMini label="Morphing nav"><MorphingBottomNavigation /></MobileSignatureMini>
+              <MobileSignatureMini label="Bottom search"><BottomSearchSheet /></MobileSignatureMini>
+              <MobileSignatureMini label="Detent sheet"><DetentSheet /></MobileSignatureMini>
+              <MobileSignatureMini label="Swipe actions"><SwipeActions /></MobileSignatureMini>
+              <MobileSignatureMini label="Long-press select"><LongPressSelection items={[{ id: "note", label: "North star", meta: "Hold or tap" }, { id: "brief", label: "Release brief", meta: "Ready" }]} /></MobileSignatureMini>
+            </div>
+          </Piece>
         </div>
       </Container>
     </section>
