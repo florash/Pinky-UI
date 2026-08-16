@@ -45,9 +45,11 @@ export function FeaturedInteractionWall({ compact = false }: { compact?: boolean
             <SurfaceSampler />
           </Exhibit>
 
-          {!compact ? <Exhibit compact={compact} label="Magnetic" note="move close, then press" className="lg:col-span-5">
-            <div className="flex min-h-36 items-center justify-center"><MagneticButton size="lg" strength={0.45} range={150}>Move me</MagneticButton></div>
-          </Exhibit> : null}
+          <Exhibit compact={compact} label="Magnetic" note="move close, then press" className="lg:col-span-5">
+            <div className={`flex ${compact ? "min-h-36 lg:min-h-[14rem]" : "min-h-36"} items-center justify-center`}>
+              <MagneticButton size="lg" strength={0.45} range={150}>Move me</MagneticButton>
+            </div>
+          </Exhibit>
 
           <Exhibit compact={compact} label="Gallery ↔ List Morph" note="same collection, two readings" className="lg:col-span-7">
             <GalleryListDemo />
@@ -232,7 +234,8 @@ function Exhibit({ compact = false, label, note, children, className = "", clipC
 function MorphingHeroDemo({ compact }: { compact: boolean }) {
   return (
     <MorphingHero
-      height={compact ? "34rem" : "42rem"}
+      height={compact ? "28rem" : "42rem"}
+      stickyTop={compact ? 88 : 20}
       titleAs="h2"
       className="min-h-[27rem] rounded-2xl bg-cloud-50 p-5 sm:p-7"
       eyebrow={<span className="font-mono text-[0.6rem] tracking-[0.14em] text-ink-500 uppercase">Independent practice</span>}
