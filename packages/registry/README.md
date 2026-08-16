@@ -4,7 +4,11 @@ The typed metadata registry for Pinky UI's public components, layouts, effects, 
 product systems. It is useful for catalogue tooling and discovery surfaces rather than rendering
 UI by itself.
 
-## Install
+## Registry installation
+
+The `@pinky/*` `0.1.0` packages are prepared for public release but are not published to npm yet. Until publication, use Pinky UI from the repository source.
+
+### After npm publication
 
 ```bash
 npm install @pinky/registry

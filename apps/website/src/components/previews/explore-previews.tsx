@@ -511,11 +511,7 @@ const WORKFLOW_PREVIEWS: Record<string, ReactNode> = {
       <p className="text-xs text-ink-700">Due Friday · design review attached.</p>
     </ExpandableListRow>
   ),
-  "swipe-action-row": (
-    <SwipeActionRow actions={[{ label: "Archive", onAction: () => undefined }]}>
-      <span className="text-sm">Team notes · updated 4m ago</span>
-    </SwipeActionRow>
-  ),
+  "swipe-action-row": <SwipeActionRowPreview />,
   "sticky-data-header": (
     <div className="h-28 w-full overflow-auto rounded-xl border border-line">
       <StickyDataHeader><div className="grid grid-cols-3 text-[0.65rem] font-semibold"><span>Project</span><span>Owner</span><span>Status</span></div></StickyDataHeader>
@@ -702,6 +698,16 @@ function ReorderableListPreview() {
     { id: "three", label: "Release" },
   ]);
   return <ReorderableList items={items} onReorder={setItems} renderItem={(item) => <span className="text-sm">{item.label}</span>} label="Preview tasks" />;
+}
+
+function SwipeActionRowPreview() {
+  const [archived, setArchived] = useState(false);
+
+  if (archived) {
+    return <div className="flex min-h-12 items-center justify-between gap-3 rounded-xl bg-cloud-50 px-3 text-sm"><span role="status">Team notes · archived</span><button type="button" onClick={() => setArchived(false)} className="min-h-11 shrink-0 rounded-lg px-2 text-xs text-ink-700 underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25">Restore</button></div>;
+  }
+
+  return <SwipeActionRow actions={[{ label: "Archive", onAction: () => setArchived(true) }]}><span className="text-sm">Team notes · updated 4m ago</span></SwipeActionRow>;
 }
 
 function DragReorderPreview() {

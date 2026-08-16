@@ -40,7 +40,7 @@ export function Hero() {
               with the live surfaces beside it.
             */}
             <p className="mt-5 max-w-sm text-base leading-relaxed text-ink-700">
-              An open-source interaction system — real UI, already moving, ready to touch.
+              An open-source React interaction system — real UI, already moving, ready to touch.
             </p>
 
             <div className="mt-7">

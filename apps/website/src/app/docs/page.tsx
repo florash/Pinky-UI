@@ -91,9 +91,10 @@ export default function DocsPage() {
           <div className="flex min-w-0 flex-col gap-16">
             <Section title="Installation" id="installation">
               <p className="text-sm leading-relaxed text-ink-700">
-                Pinky UI is source-first today: the <code className="font-mono text-xs">@pinky/*</code> namespaces are
-                private source packages in this repository, not published npm packages. Clone the repository to
-                run the live site and copy a pattern into an application when you are ready.
+                Pinky UI is source-first today. The seven <code className="font-mono text-xs">@pinky/*</code> packages
+                are prepared for public release but are not published to npm yet. Clone the repository to run the
+                live site and copy a pattern into an application when you are ready; after npm publication, the
+                package READMEs will show the normal registry installation commands.
               </p>
               <CodeBlock
                 className="mt-5"

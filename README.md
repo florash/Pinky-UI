@@ -4,8 +4,8 @@
 
 Pinky UI is an open-source collection of expressive React components, product systems and motion primitives built for interfaces that feel responsive, tactile and alive.
 
-The repository is preparing its initial `0.1.0` public release candidate. Packages are not
-published to npm yet; the release process is documented in `RELEASING.md`.
+Pinky UI `0.1.0` is available from source today. The seven `@pinky/*` packages are prepared
+for public release but are not published to npm yet.
 
 Explore jelly, liquid, magnetic, morph, glow, depth, elastic and proximity interactions —
 **267 implemented items across 12 primitives, 12 components, 27 layouts, 32 effects, 31
@@ -21,9 +21,9 @@ React · TypeScript · Tailwind CSS · Motion · Accessible · Open Source
 
 ## Get started
 
-Pinky UI is currently developed from source; the `@pinky/*` packages have publish-like
-build metadata and packed artifacts, but are not published npm packages yet. Release gates
-do not publish packages automatically.
+Pinky UI is currently developed from source; the `@pinky/*` packages have publish-like build
+metadata and packed artifacts, but are not published npm packages yet. After npm publication,
+the package READMEs will show the normal registry installation commands.
 
 ```bash
 git clone https://github.com/florash/Pinky-UI.git

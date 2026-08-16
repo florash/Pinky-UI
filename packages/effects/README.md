@@ -3,7 +3,11 @@
 Cursor, motion, text and scroll effects for Pinky UI. Effects are expressive layers that keep
 content, native interaction and performance in charge.
 
-## Install
+## Registry installation
+
+The `@pinky/*` `0.1.0` packages are prepared for public release but are not published to npm yet. Until publication, use Pinky UI from the repository source.
+
+### After npm publication
 
 ```bash
 npm install @pinky/effects @pinky/primitives react motion
