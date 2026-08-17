@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useMotionEnabled } from "@pinky/primitives";
+import { GridReveal, useMotionEnabled } from "@pinky-ui/primitives";
 import {
   useCallback,
   useEffect,
@@ -215,8 +215,8 @@ export function EdgeDockedPanel({ className }: { className?: string }) {
 }
 
 export function ExpandingActionSurface({ className }: { className?: string }) {
-  const [open, setOpen] = useState(false); const root = useRef<HTMLDivElement>(null); const trigger = useRef<HTMLButtonElement>(null); const surface = useRef<HTMLDivElement>(null); const motionEnabled = useMotionEnabled(); const close = useCallback(() => setOpen(false), []); useSurfaceLifecycle(open, close, root, surface, trigger);
-  return <div ref={root} className={cn("min-h-28 rounded-2xl border border-line bg-white p-4", className)}><div className="flex flex-wrap items-center gap-3"><div className="mr-auto"><p className="text-sm font-medium">Project brief</p><p className="mt-1 text-xs text-ink-500">Actions expand from the object they affect.</p></div><button ref={trigger} type="button" aria-expanded={open} aria-controls="expanding-actions" onClick={() => setOpen((value) => !value)} className={cn(CONTROL, "bg-blush-50")}>{open ? "Close actions" : "More actions"}<span aria-hidden className="ml-2">⋯</span></button></div><AnimatePresence initial={false}>{open ? <motion.div ref={surface} id="expanding-actions" role="toolbar" aria-label="Project actions" initial={motionEnabled ? { opacity: 0, height: 0 } : false} animate={{ opacity: 1, height: "auto" }} exit={motionEnabled ? { opacity: 0, height: 0 } : undefined} className="mt-3 flex flex-wrap gap-2 border-t border-line pt-3"><button type="button" className={CONTROL} onClick={close}>Duplicate</button><button type="button" className={CONTROL} onClick={close}>Move</button><button type="button" className={cn(CONTROL, "bg-ink-900 text-milk")} onClick={close}>Archive</button></motion.div> : null}</AnimatePresence></div>;
+  const [open, setOpen] = useState(false); const root = useRef<HTMLDivElement>(null); const trigger = useRef<HTMLButtonElement>(null); const surface = useRef<HTMLDivElement>(null); const close = useCallback(() => setOpen(false), []); useSurfaceLifecycle(open, close, root, surface, trigger);
+  return <div ref={root} className={cn("min-h-28 rounded-2xl border border-line bg-white p-4", className)}><div className="flex flex-wrap items-center gap-3"><div className="mr-auto"><p className="text-sm font-medium">Project brief</p><p className="mt-1 text-xs text-ink-500">Actions expand from the object they affect.</p></div><button ref={trigger} type="button" aria-expanded={open} aria-controls="expanding-actions" onClick={() => setOpen((value) => !value)} className={cn(CONTROL, "bg-blush-50")}>{open ? "Close actions" : "More actions"}<span aria-hidden className="ml-2">⋯</span></button></div><GridReveal open={open} className="mt-3" contentRef={surface} contentProps={{ id: "expanding-actions", role: "toolbar", "aria-label": "Project actions", className: "flex flex-wrap gap-2 border-t border-line pt-3" }}><button type="button" className={CONTROL} onClick={close}>Duplicate</button><button type="button" className={CONTROL} onClick={close}>Move</button><button type="button" className={cn(CONTROL, "bg-ink-900 text-milk")} onClick={close}>Archive</button></GridReveal></div>;
 }
 
 export function FollowAnchorSurface({ className }: { className?: string }) {
