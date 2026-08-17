@@ -1,6 +1,6 @@
 "use client";
 
-import { distribute, useColumns, type ResponsiveColumns } from "@pinky/primitives";
+import { distribute, useColumns, type ResponsiveColumns } from "@pinky-ui/primitives";
 import { Children, type ReactNode } from "react";
 
 export type MasonryGalleryProps = {

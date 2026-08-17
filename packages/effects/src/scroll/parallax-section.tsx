@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useSpring, useTransform } from "motion/react";
-import { springs, useMotionEnabled } from "@pinky/primitives";
+import { springs, useMotionEnabled } from "@pinky-ui/primitives";
 import { useRef, type ReactNode } from "react";
 
 import { useViewportProgress } from "../internal/scroll-motion";

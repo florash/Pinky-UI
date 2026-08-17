@@ -1,4 +1,4 @@
-import { allEffects } from "@pinky/registry";
+import { allEffects } from "@pinky-ui/registry";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -53,6 +53,7 @@ export default async function EffectDetailPage({ params }: PageProps) {
     whenToUse: entry.whenToUse,
     whenNotToUse: entry.whenNotToUse,
     related,
+    sameFamily: related,
     discovery: entry.discovery ? {
       role: entry.discovery.role,
       note: entry.discovery.note,

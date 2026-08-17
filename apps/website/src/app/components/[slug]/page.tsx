@@ -1,4 +1,4 @@
-import { components, getComponent } from "@pinky/registry";
+import { components, getComponent } from "@pinky-ui/registry";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -8,7 +8,10 @@ import { hasComponentPreview } from "@/components/previews/preview-manifest";
 import { Markdown } from "@/components/skills/markdown";
 import { getSkill } from "@/lib/skills";
 import { Playground } from "@/components/playground/playground";
+import { Breadcrumbs } from "@/components/site/breadcrumbs";
 import { CodeBlock } from "@/components/site/code-block";
+import { FamilyLinks } from "@/components/site/family-links";
+import { InstallTabs } from "@/components/site/install-tabs";
 import { Container, Halo } from "@/components/site/layout";
 import { pageMetadata } from "@/lib/site";
 
@@ -35,6 +38,10 @@ export default async function ComponentDetailPage({ params }: PageProps) {
   if (!entry || entry.status !== "ready" || !hasComponentPreview(entry.slug)) notFound();
 
   const related = entry.related.map(getComponent).filter((item) => item !== undefined);
+  const sameFamily = components
+    .filter((item) => item.category === entry.category && item.slug !== entry.slug)
+    .slice(0, 4)
+    .map((item) => ({ slug: item.slug, name: item.name, href: `/components/${item.slug}` }));
   // One source of truth: the same markdown the /skills route renders.
   const skill = entry.skill ? await getSkill("components", entry.skill) : null;
 
@@ -43,23 +50,7 @@ export default async function ComponentDetailPage({ params }: PageProps) {
       <Halo className="-top-40 right-[-12rem] size-[30rem]" color="var(--pinky-halo-b)" />
 
       <Container>
-        <nav aria-label="Breadcrumb" className="text-xs text-ink-500">
-          <ol className="flex items-center gap-2">
-            <li>
-              <Link href="/" className="transition-colors hover:text-ink-900">
-                Pinky UI
-              </Link>
-            </li>
-            <li aria-hidden>/</li>
-            <li>
-              <Link href="/components" className="transition-colors hover:text-ink-900">
-                Components
-              </Link>
-            </li>
-            <li aria-hidden>/</li>
-            <li className="text-ink-900">{entry.name}</li>
-          </ol>
-        </nav>
+        <Breadcrumbs trail={[{ href: "/components", label: "Components" }]} current={entry.name} />
 
         <header className="mt-8 max-w-2xl">
           <div className="flex flex-wrap items-center gap-3">
@@ -129,14 +120,17 @@ export default async function ComponentDetailPage({ params }: PageProps) {
                 </Block>
               ) : null}
 
-              <Block title="Install from source" id="installation">
+              <Block title="Install" id="installation">
                 <p className="text-sm leading-relaxed text-ink-700">
-                  The <code className="font-mono text-xs">@pinky/*</code> packages are private source packages in this repository today,
-                  not published npm packages. Clone this repository to run the examples, or copy
-                  the component and its built-on source files into your own app.
+                  Add <code className="font-mono text-xs">@pinky-ui/components</code> as a dependency, or use the CLI to
+                  copy this component&apos;s source directly into your project — no dependency to manage, fully editable.
+                </p>
+                <InstallTabs className="mt-4" packageName="@pinky-ui/components" slug={entry.slug} />
+                <p className="mt-4 text-sm leading-relaxed text-ink-700">
+                  Prefer to run the whole repository locally instead?
                 </p>
                 <CodeBlock
-                  className="mt-4"
+                  className="mt-2"
                   copy={false}
                   label="repository"
                   code={"git clone https://github.com/florash/Pinky-UI.git\ncd Pinky-UI\nnpm install\nnpm run dev"}
@@ -240,6 +234,8 @@ export default async function ComponentDetailPage({ params }: PageProps) {
                   </ul>
                 </>
               ) : null}
+
+              <FamilyLinks heading="More components" items={sameFamily} />
             </aside>
           </div>
       </Container>

@@ -1,4 +1,4 @@
-import { primitives } from "@pinky/registry";
+import { primitives } from "@pinky-ui/registry";
 import type { Metadata } from "next";
 import Link from "next/link";
 

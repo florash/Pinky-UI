@@ -1,6 +1,6 @@
 "use client";
 
-import { getProductSystem } from "@pinky/registry";
+import { getProductSystem } from "@pinky-ui/registry";
 import { ExplorePreview } from "@/components/previews/explore-previews";
 import Link from "next/link";
 import { useMemo } from "react";
@@ -8,6 +8,8 @@ import { useMemo } from "react";
 const OVERLAY_ORDER = [
   "anchored-inspector",
   "adaptive-popover",
+  "tooltip",
+  "dialog",
   "context-menu-surface",
   "selection-toolbar",
   "peek-overlay",
@@ -21,7 +23,7 @@ const OVERLAY_ORDER = [
   "morphing-context-surface",
 ] as const;
 
-const SIGNATURE = new Set(["anchored-inspector", "adaptive-popover", "context-menu-surface", "selection-toolbar", "nested-surface-stack", "spotlight-overlay"]);
+const SIGNATURE = new Set(["anchored-inspector", "adaptive-popover", "tooltip", "dialog", "context-menu-surface", "selection-toolbar", "nested-surface-stack", "spotlight-overlay"]);
 
 export function OverlaysShowcase({ compact = false }: { compact?: boolean }) {
   const order = useMemo(() => compact ? OVERLAY_ORDER.slice(0, 4) : OVERLAY_ORDER, [compact]);

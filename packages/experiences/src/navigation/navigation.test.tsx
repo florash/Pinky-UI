@@ -96,9 +96,14 @@ describe("expanded navigation structures", () => {
 
     const trigger = screen.getByRole("button", { name: "Open index" });
     await user.click(trigger);
-    expect(screen.getByRole("button", { name: "Work" })).toHaveAttribute("aria-pressed", "true");
+    const workButton = screen.getByRole("button", { name: "Work" });
+    expect(workButton).toHaveAttribute("aria-pressed", "true");
+    expect(workButton.closest("[inert]")).toBeNull();
     await user.keyboard("{Escape}");
-    await waitFor(() => expect(screen.queryByRole("button", { name: "Work" })).not.toBeInTheDocument());
+    // GridReveal keeps the panel mounted and clips it via CSS rather than
+    // unmounting; `inert` — not absence from the DOM — is what takes it off
+    // the tab order and assistive tech now.
+    await waitFor(() => expect(screen.getByRole("button", { name: "Work" }).closest("[inert]")).not.toBeNull());
     expect(trigger).toHaveFocus();
   });
 

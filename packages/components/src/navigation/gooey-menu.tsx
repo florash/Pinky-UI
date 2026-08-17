@@ -1,6 +1,6 @@
 "use client";
 
-import { springs, useMotionEnabled } from "@pinky/primitives";
+import { springs, useMotionEnabled } from "@pinky-ui/primitives";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
@@ -111,14 +111,14 @@ export function GooeyMenu({
             style={goo ? { filter: "blur(4px) contrast(8)" } : undefined}
           >
             <motion.span
-              className="absolute top-1.5 bottom-1.5 rounded-pill bg-ink-900"
-              animate={{ left: slot.left, width: slot.width }}
+              className="absolute top-1.5 bottom-1.5 left-0 rounded-pill bg-ink-900"
+              animate={{ x: slot.left, width: slot.width }}
               transition={transition}
             />
             {goo ? (
               <motion.span
-                className="absolute top-2.5 bottom-2.5 rounded-pill bg-ink-900"
-                animate={{ left: slot.left + slot.width * 0.15, width: slot.width * 0.7 }}
+                className="absolute top-2.5 bottom-2.5 left-0 rounded-pill bg-ink-900"
+                animate={{ x: slot.left + slot.width * 0.15, width: slot.width * 0.7 }}
                 transition={trailing}
               />
             ) : null}

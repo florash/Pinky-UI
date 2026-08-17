@@ -1,5 +1,5 @@
 {
-  "name": "@pinky/registry",
+  "name": "@pinky-ui/registry",
   "version": "0.1.0",
   "description": "Metadata describing Pinky UI components, layouts, effects, experiences and systems.",
   "license": "MIT",

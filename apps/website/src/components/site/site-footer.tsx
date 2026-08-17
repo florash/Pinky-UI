@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { LIBRARY_SECTIONS, NAV_LINKS, SITE, UTILITY_LINKS } from "@/lib/site";
+import { EXPLORE_LINK, NAV_GROUPS, NAV_UTILITY_LINKS } from "@/config/navigation";
+import { SITE, UTILITY_LINKS } from "@/lib/site";
 
 import { GitHubMark } from "./icons";
 import { Container } from "./layout";
@@ -17,10 +18,13 @@ export function SiteFooter() {
           </p>
         </div>
 
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-6 lg:gap-12">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-12">
           <nav aria-label="Footer" className="flex flex-col gap-3">
             <p className="font-mono text-[0.65rem] tracking-[0.14em] text-ink-500 uppercase">Site</p>
-            {NAV_LINKS.map((link) => (
+            <Link href={EXPLORE_LINK.href} className={footerLink}>
+              {EXPLORE_LINK.label}
+            </Link>
+            {NAV_UTILITY_LINKS.map((link) => (
               <Link key={link.href} href={link.href} className={footerLink}>
                 {link.label}
               </Link>
@@ -37,12 +41,12 @@ export function SiteFooter() {
             </a>
           </nav>
 
-          {LIBRARY_SECTIONS.map((section) => (
-            <nav key={section.label} aria-label={section.label} className="flex flex-col gap-3">
+          {NAV_GROUPS.map((group) => (
+            <nav key={group.href} aria-label={group.label} className="flex flex-col gap-3">
               <p className="font-mono text-[0.65rem] tracking-[0.14em] text-ink-500 uppercase">
-                {section.label}
+                {group.label}
               </p>
-              {section.links.map((link) => (
+              {group.children.map((link) => (
                 <Link key={link.href} href={link.href} className={footerLink}>
                   {link.label}
                 </Link>

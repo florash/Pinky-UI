@@ -4,7 +4,7 @@ import {
   CursorTarget,
   HoverImagePreview,
   HoverImagePreviewItem,
-} from "@pinky/effects";
+} from "@pinky-ui/effects";
 import { type ReactNode } from "react";
 
 import { cn } from "../internal/cn";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Parallax, ParallaxLayer, Tilt } from "@pinky/primitives";
+import { Parallax, ParallaxLayer, Tilt } from "@pinky-ui/primitives";
 import type { ReactNode } from "react";
 
 import { cn } from "../utils/cn";

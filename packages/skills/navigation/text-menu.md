@@ -20,7 +20,7 @@ The preview runs the real text trigger and demonstrates the same response for po
 ## Usage
 
 ```tsx
-import { TextMenu } from "@pinky/components";
+import { TextMenu } from "@pinky-ui/components";
 
 <TextMenu
   open={open}

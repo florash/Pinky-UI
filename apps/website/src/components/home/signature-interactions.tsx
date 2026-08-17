@@ -1,6 +1,7 @@
 "use client";
 
-import { CardFan, GalleryListMorph } from "@pinky/layouts";
+import { cn } from "@pinky-ui/components";
+import { CardFan, GalleryListMorph } from "@pinky-ui/layouts";
 import {
   AnchoredInspector,
   BottomSearchSheet,
@@ -14,7 +15,7 @@ import {
   SearchMorphHeader,
   SwipeActions,
   useCommandShortcut,
-} from "@pinky/systems";
+} from "@pinky-ui/systems";
 import { useState, type ReactNode } from "react";
 
 import { SoftSurface } from "@/components/previews/soft-surface";
@@ -110,12 +111,19 @@ export function SignatureInteractions() {
           </Piece>
 
           <Piece label="Mobile touch signatures" className="mb-12 break-inside-avoid">
-            <div className="grid gap-4 rounded-[20px] bg-cloud-50 p-4 sm:grid-cols-2 xl:grid-cols-5">
+            {/*
+              This Piece lives inside a 2-column masonry (`lg:columns-2`
+              above), so it only ever gets roughly half the page width — an
+              inner grid that jumps to 5 columns at `xl` was cramming each
+              card into ~110px and clipping every one of them. Two columns
+              fits the real available width at every breakpoint instead.
+            */}
+            <div className="grid grid-cols-2 gap-4 rounded-[20px] bg-cloud-50 p-4">
               <MobileSignatureMini label="Morphing nav"><MorphingBottomNavigation /></MobileSignatureMini>
               <MobileSignatureMini label="Bottom search"><BottomSearchSheet /></MobileSignatureMini>
               <MobileSignatureMini label="Detent sheet"><DetentSheet /></MobileSignatureMini>
               <MobileSignatureMini label="Swipe actions"><SwipeActions /></MobileSignatureMini>
-              <MobileSignatureMini label="Long-press select"><LongPressSelection items={[{ id: "note", label: "North star", meta: "Hold or tap" }, { id: "brief", label: "Release brief", meta: "Ready" }]} /></MobileSignatureMini>
+              <MobileSignatureMini label="Long-press select" className="col-span-2 sm:col-span-1"><LongPressSelection items={[{ id: "note", label: "North star", meta: "Hold or tap" }, { id: "brief", label: "Release brief", meta: "Ready" }]} /></MobileSignatureMini>
             </div>
           </Piece>
         </div>
@@ -229,8 +237,23 @@ function CommandPaletteDemo() {
   );
 }
 
-function MobileSignatureMini({ label, children }: { label: string; children: ReactNode }) {
-  return <div className="min-w-0"><p className="font-mono text-[0.56rem] tracking-[0.12em] text-ink-500 uppercase">{label}</p><div className="mt-3 min-w-0">{children}</div></div>;
+/**
+ * These are the real production mobile components, not screenshots — some
+ * of them (Bottom Search Sheet, Detent Sheet) open a genuine
+ * `position: fixed` full-viewport modal when their trigger is pressed. Two
+ * defenses, not one: `inert` stops the trigger from ever being reachable by
+ * pointer or keyboard here (a live, functioning version already exists on
+ * `/mobile` — this grid is a glance, not the interactive catalog entry),
+ * and `translateZ(0)` + `overflow-hidden` contain anything that still
+ * escapes instead of letting it spill across the page.
+ */
+function MobileSignatureMini({ label, children, className }: { label: string; children: ReactNode; className?: string }) {
+  return (
+    <div className={cn("min-w-0", className)}>
+      <p className="font-mono text-[0.56rem] tracking-[0.12em] text-ink-500 uppercase">{label}</p>
+      <div className="relative mt-3 min-w-0 overflow-hidden rounded-2xl [transform:translateZ(0)]" inert>{children}</div>
+    </div>
+  );
 }
 
 function MorphingInputDemo() {

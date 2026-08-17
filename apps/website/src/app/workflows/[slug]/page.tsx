@@ -1,4 +1,4 @@
-import { allWorkflowSystems, getWorkflowSystem } from "@pinky/registry";
+import { allWorkflowSystems, getWorkflowSystem } from "@pinky-ui/registry";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -52,6 +52,7 @@ export default async function WorkflowDetailPage({ params }: PageProps) {
     whenToUse: entry.whenToUse,
     whenNotToUse: entry.whenNotToUse,
     related,
+    sameFamily: related,
     discovery: entry.discovery ? {
       role: entry.discovery.role,
       note: entry.discovery.note,

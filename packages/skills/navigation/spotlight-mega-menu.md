@@ -18,7 +18,7 @@ Open the menu and move through its sections. Use the group buttons with keyboard
 ## Usage
 
 ```tsx
-import { SpotlightMegaMenu } from "@pinky/experiences";
+import { SpotlightMegaMenu } from "@pinky-ui/experiences";
 
 <SpotlightMegaMenu groups={groups} aria-label="Explore sections" />;
 ```

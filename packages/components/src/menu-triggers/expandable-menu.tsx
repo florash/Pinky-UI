@@ -1,6 +1,6 @@
 "use client";
 
-import { springs, usePressSpring } from "@pinky/primitives";
+import { GridReveal, usePressSpring } from "@pinky-ui/primitives";
 import { AnimatePresence, motion, useTransform } from "motion/react";
 import { forwardRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
@@ -81,12 +81,7 @@ export const ExpandableMenu = forwardRef<HTMLButtonElement, MenuTriggerBase>(fun
         />
       </span>
 
-      <motion.span
-        className="overflow-hidden whitespace-nowrap"
-        initial={false}
-        animate={{ width: showLabel ? "auto" : 0 }}
-        transition={motionEnabled ? { type: "spring", ...springs.snappy } : { duration: 0 }}
-      >
+      <GridReveal open={showLabel} axis="columns" inertWhenClosed={false} className="min-w-0" contentProps={{ className: "whitespace-nowrap" }}>
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span
             key={isOpen ? "close" : "menu"}
@@ -99,7 +94,7 @@ export const ExpandableMenu = forwardRef<HTMLButtonElement, MenuTriggerBase>(fun
             {isOpen ? "Close" : "Menu"}
           </motion.span>
         </AnimatePresence>
-      </motion.span>
+      </GridReveal>
     </motion.button>
   );
 });

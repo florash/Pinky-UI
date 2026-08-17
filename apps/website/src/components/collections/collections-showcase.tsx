@@ -13,8 +13,8 @@ import {
   ProgressiveCollection,
   ScrubPreview,
   SharedPreviewCollection,
-} from "@pinky/systems";
-import { collectionSystems } from "@pinky/registry";
+} from "@pinky-ui/systems";
+import { collectionSystems } from "@pinky-ui/registry";
 import Link from "next/link";
 import { type ReactNode } from "react";
 

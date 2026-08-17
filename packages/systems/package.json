@@ -1,5 +1,5 @@
 {
-  "name": "@pinky/systems",
+  "name": "@pinky-ui/systems",
   "version": "0.1.0",
   "description": "Media, form, data, collection and workflow systems for Pinky UI.",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "prepack": "node ../../scripts/build-packages.mjs --package systems"
   },
   "dependencies": {
-    "@pinky/primitives": "0.1.0"
+    "@pinky-ui/primitives": "0.1.0"
   },
   "peerDependencies": { "motion": ">=12", "react": ">=19" },
   "sideEffects": false,

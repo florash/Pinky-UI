@@ -9,7 +9,7 @@ import {
   LinkedSmallMultiples,
   RangeBrushChart,
   ThresholdBandChart,
-} from "@pinky/systems";
+} from "@pinky-ui/systems";
 import type { ReactNode } from "react";
 
 const DATA = [

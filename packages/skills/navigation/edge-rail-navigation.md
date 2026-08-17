@@ -18,7 +18,7 @@ Move into the rail or focus a destination. The rail expands and the same native 
 ## Usage
 
 ```tsx
-import { EdgeRailNavigation } from "@pinky/experiences";
+import { EdgeRailNavigation } from "@pinky-ui/experiences";
 
 <EdgeRailNavigation items={items} aria-label="Workspace sections" />;
 ```

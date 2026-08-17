@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
-import { useMotionEnabled } from "@pinky/primitives";
+import { AnimatePresence, animate, motion, useMotionValue } from "motion/react";
+import { springs, useMotionEnabled } from "@pinky-ui/primitives";
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { cn } from "../internal/cn";
 import { useControllable } from "../internal/use-controllable";
@@ -31,7 +31,6 @@ export function PullToRefresh({
 }) {
   const motionEnabled = useMotionEnabled();
   const [state, setState] = useState<PullState>("idle");
-  const [dragging, setDragging] = useState(false);
   const start = useRef<number | null>(null);
   const distance = useRef(0);
   const node = useRef<HTMLDivElement>(null);
@@ -41,15 +40,25 @@ export function PullToRefresh({
   const alive = useRef(true);
   const stateRef = useRef<PullState>("idle");
   const safeThreshold = Math.max(1, threshold);
+  const offsetY = useMotionValue(0);
 
   useEffect(() => {
     stateRef.current = state;
   }, [state]);
 
   const setOffset = (offset: number, raw = 0) => {
+    offsetY.set(Math.max(0, offset));
     if (!node.current) return;
-    node.current.style.setProperty("--pull-offset", `${Math.max(0, offset)}px`);
     node.current.style.setProperty("--pull-progress", `${Math.min(Math.max(raw / safeThreshold, 0), 1)}`);
+  };
+
+  /** The release settle borrows Jelly's elastic curve — a visible, springy overshoot, not a linear ease-out. */
+  const settleOffset = (target: number) => {
+    if (!motionEnabled) {
+      offsetY.set(target);
+      return;
+    }
+    animate(offsetY, target, { type: "spring", ...springs.elastic });
   };
 
   const clearCompletion = () => {
@@ -58,14 +67,14 @@ export function PullToRefresh({
     refreshing.current = false;
     if (!alive.current) return;
     setState("idle");
-    setOffset(0);
+    settleOffset(0);
   };
 
   const finish = async () => {
     if (refreshing.current) return;
     refreshing.current = true;
     setState("refreshing");
-    setOffset(safeThreshold * 0.7, safeThreshold);
+    settleOffset(safeThreshold * 0.7);
     let completed = false;
     try {
       await onRefresh();
@@ -106,7 +115,6 @@ export function PullToRefresh({
     if (event.target instanceof Element && event.target.closest("button,a,input,textarea,select")) return;
     start.current = event.clientY;
     distance.current = 0;
-    setDragging(true);
     node.current?.setPointerCapture?.(event.pointerId);
   };
 
@@ -126,12 +134,11 @@ export function PullToRefresh({
     const pulled = distance.current;
     start.current = null;
     distance.current = 0;
-    setDragging(false);
     if (pulled >= safeThreshold) {
       void finish();
     } else {
       setState("idle");
-      setOffset(0);
+      settleOffset(0);
     }
   };
 
@@ -167,13 +174,7 @@ export function PullToRefresh({
         </div>
       </div>
 
-      <div
-        className="relative z-10 min-h-full"
-        style={{
-          transform: "translateY(var(--pull-offset, 0px))",
-          transition: dragging || !motionEnabled ? "none" : "transform 420ms cubic-bezier(.22,.72,.2,1)",
-        }}
-      >
+      <motion.div className="relative z-10 min-h-full" style={{ y: offsetY }}>
         <div className="flex items-center justify-between gap-3 border-b border-line/70 bg-white/85 px-4 py-3 backdrop-blur-[2px]">
           <div role="status" aria-label={label} aria-live="polite" className="min-w-0 text-xs text-ink-500">
             <span className="block truncate">{stateCopy}</span>
@@ -182,7 +183,7 @@ export function PullToRefresh({
           {showRefreshButton ? <button type="button" disabled={state === "refreshing"} onClick={() => void finish()} className="min-h-10 shrink-0 rounded-pill border border-line bg-white px-3 py-2 text-xs font-medium transition-colors hover:bg-blush-50 disabled:cursor-wait disabled:opacity-50">{actionLabel}</button> : null}
         </div>
         <div>{children}</div>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -435,3 +436,5 @@ export function EdgeSwipePanel({
 export function LongPressAction({ children, onLongPress, duration = 500, onClick, label, className }: { children: ReactNode; onLongPress: () => void; duration?: number; onClick?: () => void; label?: string; className?: string }) { const timer = useRef<number | null>(null); const fired = useRef(false); const clear = () => { if (timer.current) window.clearTimeout(timer.current); timer.current = null; }; useEffect(() => () => { if (timer.current) window.clearTimeout(timer.current); }, []); const start = () => { fired.current = false; clear(); timer.current = window.setTimeout(() => { fired.current = true; onLongPress(); }, duration); }; return <button type="button" aria-label={label} className={className} onPointerDown={start} onPointerUp={() => { clear(); if (!fired.current) onClick?.(); }} onPointerLeave={clear} onPointerCancel={clear} onContextMenu={(event) => { event.preventDefault(); clear(); onLongPress(); }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onClick?.(); } }}>{children}</button>; }
 
 export * from "./mobile-expansion";
+export * from "./mobile-native";
+export * from "./mobile-media";

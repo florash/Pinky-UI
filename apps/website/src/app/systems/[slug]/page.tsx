@@ -1,4 +1,4 @@
-import { allProductSystems, getProductSystem } from "@pinky/registry";
+import { allProductSystems, getProductSystem } from "@pinky-ui/registry";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -31,6 +31,10 @@ export default async function SystemDetailPage({ params }: PageProps) {
   const canonical = entry.discovery?.canonicalSlug
     ? allProductSystems.find((item) => item.slug === entry.discovery?.canonicalSlug)
     : undefined;
+  const sameFamily = allProductSystems
+    .filter((item) => item.family === entry.family && item.slug !== entry.slug)
+    .slice(0, 4)
+    .map((item) => ({ slug: item.slug, name: item.name, href: `/systems/${item.slug}` }));
 
   const detail: RegistryDetailRecord = {
     slug: entry.slug,
@@ -38,7 +42,7 @@ export default async function SystemDetailPage({ params }: PageProps) {
     description: entry.description,
     familyLabel: entry.family,
     collectionHref: `/${entry.family}`,
-    collectionLabel: entry.family,
+    collectionLabel: entry.family.charAt(0).toUpperCase() + entry.family.slice(1),
     status: entry.status,
     tags: entry.tags,
     builtOn: entry.builtOn,
@@ -52,6 +56,7 @@ export default async function SystemDetailPage({ params }: PageProps) {
     whenToUse: entry.whenToUse,
     whenNotToUse: entry.whenNotToUse,
     related,
+    sameFamily,
     discovery: entry.discovery ? {
       role: entry.discovery.role,
       note: entry.discovery.note,

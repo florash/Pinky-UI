@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useTransform } from "motion/react";
-import { useMotionEnabled } from "@pinky/primitives";
+import { useMotionEnabled } from "@pinky-ui/primitives";
 import { Children, useEffect, useRef, useState, type ReactNode } from "react";
 
 import { useFinePointer } from "../internal/pointer-motion";

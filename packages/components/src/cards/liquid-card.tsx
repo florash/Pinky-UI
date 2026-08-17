@@ -1,6 +1,6 @@
 "use client";
 
-import { LiquidSurface, type LiquidTint } from "@pinky/primitives";
+import { LiquidSurface, type LiquidTint } from "@pinky-ui/primitives";
 import type { ReactNode } from "react";
 
 import { cn } from "../utils/cn";

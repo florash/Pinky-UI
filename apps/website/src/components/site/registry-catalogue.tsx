@@ -1,4 +1,4 @@
-import type { DiscoveryMetadata } from "@pinky/registry";
+import type { DiscoveryMetadata } from "@pinky-ui/registry";
 import Link from "next/link";
 
 export type RegistryCatalogueItem = {

@@ -1,8 +1,8 @@
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
-import { Magnetic, springs } from "@pinky/primitives";
-import { useScrollSource } from "@pinky/effects";
+import { Magnetic, springs } from "@pinky-ui/primitives";
+import { useScrollSource } from "@pinky-ui/effects";
 import { useEffect } from "react";
 
 import { cn } from "../internal/cn";

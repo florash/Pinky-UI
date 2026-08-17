@@ -23,6 +23,7 @@ export { TrailToggle, type TrailToggleProps } from "./controls/trail-toggle";
 export * from "./menu-triggers";
 export { GlowBorder, type GlowBorderProps } from "./effects/glow-border";
 export { FluidTabs, type FluidTabsProps, type FluidTabItem } from "./navigation/fluid-tabs";
+export { PillNav, type PillNavProps, type PillNavItem } from "./navigation/pill-nav";
 export { FloatingDock, type FloatingDockProps, type DockItem } from "./navigation/floating-dock";
 export { GooeyMenu, type GooeyMenuProps, type GooeyMenuItem } from "./navigation/gooey-menu";
 export { ElasticToggle, type ElasticToggleProps } from "./controls/elastic-toggle";

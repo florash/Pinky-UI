@@ -1,10 +1,10 @@
 "use client";
 
-import { BentoMenu, ExpandButton, FloatingLines, InsetButton, JellyCard, LiquidCard, MagneticButton, MorphCard, TextMenu } from "@pinky/components";
-import { StickyStory } from "@pinky/effects";
-import { MorphingHero } from "@pinky/experiences";
-import { CardFan, EditorialMosaic, GalleryListMorph, InfiniteSpatialCanvas, StackSpatial } from "@pinky/layouts";
-import { CommandPalette, EdgeSwipePanel, MorphLightbox, PullToRefresh, useCommandShortcut } from "@pinky/systems";
+import { BentoMenu, ExpandButton, FloatingLines, InsetButton, JellyCard, LiquidCard, MagneticButton, MorphCard, TextMenu } from "@pinky-ui/components";
+import { StickyStory } from "@pinky-ui/effects";
+import { MorphingHero } from "@pinky-ui/experiences";
+import { CardFan, EditorialMosaic, GalleryListMorph, InfiniteSpatialCanvas, StackSpatial } from "@pinky-ui/layouts";
+import { CommandPalette, EdgeSwipePanel, MorphLightbox, PullToRefresh, useCommandShortcut } from "@pinky-ui/systems";
 import { useState, type ReactNode } from "react";
 
 import { SoftSurface } from "@/components/previews/soft-surface";

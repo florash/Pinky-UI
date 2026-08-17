@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
 import { setReducedMotion } from "../../../vitest.setup";
-import { allExperiences } from "@pinky/registry";
+import { allExperiences } from "@pinky-ui/registry";
 import { BubbleField } from "./backgrounds/bubble-field";
 import { SoftMeshBackground } from "./backgrounds/soft-mesh-background";
 import { MagneticCtaHero } from "./heroes/magnetic-cta-hero";
@@ -122,8 +122,8 @@ describe("experience accessibility and lifecycle", () => {
   });
 
   it("registers every production experience once with a live-ready status", () => {
-    expect(allExperiences).toHaveLength(31);
-    expect(new Set(allExperiences.map((item) => item.slug))).toHaveProperty("size", 31);
+    expect(allExperiences).toHaveLength(32);
+    expect(new Set(allExperiences.map((item) => item.slug))).toHaveProperty("size", 32);
     expect(allExperiences.every((item) => item.status === "ready")).toBe(true);
     expect(allExperiences.every((item) => item.demoPath.endsWith(`#${item.slug}`))).toBe(true);
   });

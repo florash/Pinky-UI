@@ -22,7 +22,7 @@ import {
   SplitNarrative,
   SplitScreenGallery,
   StackSpatial,
-} from "@pinky/layouts";
+} from "@pinky-ui/layouts";
 import type { ReactNode } from "react";
 
 import { SoftSurface } from "./soft-surface";

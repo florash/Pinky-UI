@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence, Reorder, motion } from "motion/react";
-import { useMotionEnabled } from "@pinky/primitives";
+import { Reorder, motion } from "motion/react";
+import { GridReveal, useMotionEnabled } from "@pinky-ui/primitives";
 import { useId, useRef, useState, type ReactNode } from "react";
 import { cn } from "../internal/cn";
 
@@ -17,7 +17,7 @@ export function ExpandableListRow({ summary, children, open, defaultOpen = false
   const contentId = useId();
   const shown = open ?? internal;
   const set = (next: boolean) => { if (open === undefined) setInternal(next); onOpenChange?.(next); };
-  return <div className={cn("rounded-2xl border border-line bg-white", className)}><button id={`${contentId}-trigger`} type="button" aria-expanded={shown} aria-controls={contentId} onClick={() => set(!shown)} className="flex min-h-12 w-full items-center justify-between gap-3 p-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ink-900/25"><span>{summary}</span><span aria-hidden>{shown ? "−" : "+"}</span></button><AnimatePresence initial={false}>{shown ? <motion.div id={contentId} role="region" aria-labelledby={`${contentId}-trigger`} initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden"><div className="border-t border-line p-4">{children}</div></motion.div> : null}</AnimatePresence></div>;
+  return <div className={cn("rounded-2xl border border-line bg-white", className)}><button id={`${contentId}-trigger`} type="button" aria-expanded={shown} aria-controls={contentId} onClick={() => set(!shown)} className="flex min-h-12 w-full items-center justify-between gap-3 p-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ink-900/25"><span>{summary}</span><span aria-hidden>{shown ? "−" : "+"}</span></button><GridReveal open={shown} contentProps={{ id: contentId, role: "region", "aria-labelledby": `${contentId}-trigger` }}><div className="border-t border-line p-4">{children}</div></GridReveal></div>;
 }
 
 export function SwipeActionRow({ children, actions, threshold = 72, className }: { children: ReactNode; actions: Array<{ label: string; onAction: () => void; destructive?: boolean }>; threshold?: number; className?: string }) { const [open, setOpen] = useState(false); const start = useRef(0); const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-inset"; return <div className={cn("relative overflow-hidden rounded-2xl bg-cloud-100", className)}><div className="absolute inset-y-0 right-0 flex items-stretch">{actions.map((action) => <button key={action.label} type="button" tabIndex={open ? 0 : -1} onClick={action.onAction} className={cn("min-h-11 min-w-20 px-3 text-sm", focusRing, action.destructive ? "bg-blush-300 text-ink-900" : "bg-cloud-200 text-ink-900", !open && "pointer-events-none")}>{action.label}</button>)}</div><motion.div drag="x" dragDirectionLock dragConstraints={{ left: -actions.length * 80, right: 0 }} dragElastic={.08} dragMomentum={false} animate={{ x: open ? -actions.length * 80 : 0 }} onDragStart={(_, info) => { start.current = info.point.x; }} onDragEnd={(_, info) => setOpen(start.current - info.point.x > threshold)} className="relative flex touch-pan-y items-center gap-3 bg-white p-4"><div className="min-w-0 flex-1">{children}</div><button type="button" aria-expanded={open} aria-label="Show row actions" onClick={() => setOpen(!open)} className={cn("min-h-11 min-w-11 shrink-0 rounded-lg text-ink-700", focusRing)}>•••</button></motion.div></div>; }

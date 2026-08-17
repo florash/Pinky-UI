@@ -1,6 +1,6 @@
 "use client";
 
-import { useMotionEnabled } from "@pinky/primitives";
+import { GridReveal, useMotionEnabled } from "@pinky-ui/primitives";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 
@@ -94,7 +94,7 @@ export function FloatingActionIsland({ actions = [{ id: "note", label: "New note
   }, []);
   return <div data-compact={compact} className={cn("flex justify-end", className)}><div className={cn("flex items-center gap-2 rounded-[18px] border border-line bg-white/95 p-1.5 shadow-soft transition-[width,background-color] duration-300 motion-reduce:transition-none", compact && !expanded ? "w-12" : "w-auto")}>
     <button type="button" aria-expanded={expanded} aria-label={expanded ? `Close ${label} actions` : `Open ${label} actions`} onClick={() => setExpanded((value) => !value)} className={cn("flex min-h-10 min-w-10 items-center justify-center rounded-[14px] px-3 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25", expanded ? "bg-cloud-50 text-ink-900" : "bg-ink-900 text-milk")}>{expanded ? "×" : "+"}<span className={cn("ml-2 whitespace-nowrap transition-[opacity,width]", compact && !expanded && "sr-only")}>{label}</span></button>
-    <AnimatePresence initial={false}>{expanded ? <motion.div key="actions" initial={enabled ? { opacity: 0, width: 0 } : false} animate={{ opacity: 1, width: "auto" }} exit={enabled ? { opacity: 0, width: 0 } : undefined} className="flex min-w-0 items-center gap-1 overflow-hidden"><span aria-hidden className="mx-1 h-5 w-px bg-cloud-200" />{actions.slice(0, 3).map((action) => <button key={action.id} type="button" onClick={action.onAction} className="min-h-10 whitespace-nowrap rounded-[12px] px-2.5 text-xs text-ink-700 transition-colors hover:bg-blush-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25">{action.label}</button>)}</motion.div> : null}</AnimatePresence>
+    <GridReveal open={expanded} axis="columns" className="min-w-0" contentProps={{ className: "flex items-center gap-1", style: { opacity: expanded ? 1 : 0, transition: enabled ? "opacity 200ms" : "none" } }}><span aria-hidden className="mx-1 h-5 w-px bg-cloud-200" />{actions.slice(0, 3).map((action) => <button key={action.id} type="button" onClick={action.onAction} className="min-h-10 whitespace-nowrap rounded-[12px] px-2.5 text-xs text-ink-700 transition-colors hover:bg-blush-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25">{action.label}</button>)}</GridReveal>
   </div></div>;
 }
 

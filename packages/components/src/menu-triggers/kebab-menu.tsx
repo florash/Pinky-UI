@@ -1,6 +1,6 @@
 "use client";
 
-import { usePressSpring } from "@pinky/primitives";
+import { usePressSpring } from "@pinky-ui/primitives";
 import { motion, useTransform } from "motion/react";
 import { forwardRef } from "react";
 
@@ -57,9 +57,9 @@ export const KebabMenu = forwardRef<HTMLButtonElement, MenuTriggerBase>(function
           {[0, 6, 12].map((top, i) => (
             <motion.span
               key={top}
-              className="absolute left-0 block size-1 rounded-full bg-ink-900"
+              className="absolute top-0 left-0 block size-1 rounded-full bg-ink-900"
               initial={false}
-              animate={{ top: isOpen ? 6 : top, scaleY: isOpen ? 2.6 : 1, borderRadius: isOpen ? 2 : 99 }}
+              animate={{ y: isOpen ? 6 : top, scaleY: isOpen ? 2.6 : 1, borderRadius: isOpen ? 2 : 99 }}
               transition={{ ...spring, delay: isOpen ? i * 0.02 : 0 }}
             />
           ))}

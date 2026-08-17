@@ -1,7 +1,7 @@
 "use client";
 
-import { buttonSurface, type MagneticButtonProps } from "@pinky/components";
-import { Magnetic } from "@pinky/primitives";
+import { buttonSurface, type MagneticButtonProps } from "@pinky-ui/components";
+import { Magnetic } from "@pinky-ui/primitives";
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 

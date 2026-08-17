@@ -1,6 +1,6 @@
 "use client";
 
-import { FluidTabs } from "@pinky/components";
+import { FluidTabs } from "@pinky-ui/components";
 import type { ReactNode } from "react";
 
 import { ComponentPreview } from "@/components/previews/component-previews";

@@ -8,6 +8,8 @@
 @source "../../../../packages/effects/src";
 @source "../../../../packages/experiences/src";
 @source "../../../../packages/systems/src";
+@source "../../../../packages/ai-ui/src";
+@source "../../../../packages/mobile/src";
 
 @theme {
   /* ---- Palette ------------------------------------------------------- */
@@ -157,6 +159,18 @@
     font-weight: 600;
   }
 
+  /* Every count, stat and mono figure lines up on its digits instead of
+     jittering as values change. */
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Long-form copy — docs and skill body text — stays inside a comfortable
+     reading measure regardless of how wide its container is. */
+  .prose {
+    max-width: 65ch;
+  }
+
   ::selection {
     background: var(--color-blush-200);
     color: var(--color-ink-900);
@@ -210,9 +224,15 @@
     transform 900ms var(--ease-soft);
 }
 
-.group:hover .liquid-blob {
-  border-radius: 64% 36% 47% 53% / 38% 45% 55% 62%;
-  transform: rotate(8deg) scale(1.04);
+/* Raw CSS bypasses Tailwind's own `hover:` compilation, which wraps every
+ * generated utility in `@media (hover: hover)` automatically — so this rule
+ * has to ask for that guard itself, or it risks a tap "sticking" the hovered
+ * shape on a touch device until the next unrelated tap. */
+@media (hover: hover) {
+  .group:hover .liquid-blob {
+    border-radius: 64% 36% 47% 53% / 38% 45% 55% 62%;
+    transform: rotate(8deg) scale(1.04);
+  }
 }
 
 /* A second, slower body underneath, so the shape reads as volume not outline. */
@@ -223,9 +243,11 @@
     transform 1300ms var(--ease-soft);
 }
 
-.group:hover .liquid-blob--trail {
-  border-radius: 38% 62% 57% 43% / 62% 38% 62% 38%;
-  transform: rotate(-10deg) scale(1.1);
+@media (hover: hover) {
+  .group:hover .liquid-blob--trail {
+    border-radius: 38% 62% 57% 43% / 62% 38% 62% 38%;
+    transform: rotate(-10deg) scale(1.1);
+  }
 }
 
 /* Ambient page lighting used by the hero and section headers. */

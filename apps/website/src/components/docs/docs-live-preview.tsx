@@ -1,6 +1,6 @@
 "use client";
 
-import { Jelly, Magnetic } from "@pinky/primitives";
+import { Jelly, Magnetic } from "@pinky-ui/primitives";
 import { useState } from "react";
 
 export function DocsLivePreview() {

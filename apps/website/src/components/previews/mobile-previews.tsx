@@ -1,8 +1,11 @@
 "use client";
 
 import {
+  ActionSheet,
   AuthCompletionMorph,
   BottomSearchSheet,
+  LongPressContextMenu,
+  PinchZoomImage,
   BottomToastStack,
   CardStackBrowse,
   ContextualBottomBar,
@@ -32,11 +35,13 @@ import {
   SearchMorphHeader,
   StickyBottomCTA,
   SwipeActions,
+  SwipeBackGesture,
   SwipeDismissCardSheet,
   SwipeMediaInspector,
   SwipeToConfirm,
   ThumbReachMenu,
-} from "@pinky/systems";
+  WheelPicker,
+} from "@pinky-ui/systems";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 function ContextualBottomBarPreview() {
@@ -49,6 +54,32 @@ function StickyBottomCTAPreview() {
   const timer = useRef<number | null>(null);
   useEffect(() => () => { if (timer.current) window.clearTimeout(timer.current); }, []);
   return <div className="min-h-36 rounded-[18px] bg-cloud-50 p-4"><p className="max-w-[18rem] text-sm leading-relaxed text-ink-700">The action stays with the reading surface while the next decision is nearby.</p><StickyBottomCTA label="Continue" description="Ready for the next step" pending={pending} onAction={() => { setPending(true); if (timer.current) window.clearTimeout(timer.current); timer.current = window.setTimeout(() => setPending(false), 700); }} /></div>;
+}
+
+function ActionSheetPreview() {
+  const [open, setOpen] = useState(false);
+  return <div><button type="button" onClick={() => setOpen(true)} className="min-h-10 rounded-full bg-ink-900 px-4 text-sm text-milk">Open photo actions</button><ActionSheet open={open} onOpenChange={setOpen} title="Photo" actions={[{ id: "share", label: "Share", onAction: () => {} }, { id: "save", label: "Save to library", onAction: () => {} }, { id: "delete", label: "Delete", tone: "destructive", onAction: () => {} }]} /></div>;
+}
+
+function WheelPickerPreview() {
+  const [hour, setHour] = useState("9");
+  return <WheelPicker label="Hour" value={hour} onValueChange={setHour} options={Array.from({ length: 12 }, (_, index) => ({ value: String(index + 1), label: String(index + 1) }))} className="mx-auto w-24" />;
+}
+
+const SAMPLE_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23eaf6fd'/%3E%3Ccircle cx='120' cy='110' r='90' fill='%23f4c7d7' fill-opacity='.8'/%3E%3Ccircle cx='300' cy='190' r='100' fill='%23c8e4f7' fill-opacity='.9'/%3E%3C/svg%3E";
+
+function LongPressContextMenuPreview() {
+  return <div className="flex min-h-32 items-center justify-center rounded-2xl bg-cloud-50 p-6"><LongPressContextMenu label="Photo actions" actions={[{ id: "share", label: "Share", onAction: () => {} }, { id: "save", label: "Save to library", onAction: () => {} }, { id: "delete", label: "Delete", tone: "destructive", onAction: () => {} }]}><div className="grid size-24 place-items-center rounded-2xl bg-white text-xs text-ink-500 shadow-soft">Hold me</div></LongPressContextMenu></div>;
+}
+
+function PinchZoomImagePreview() {
+  const [open, setOpen] = useState(false);
+  return <div><button type="button" onClick={() => setOpen(true)} className="min-h-10 rounded-full bg-ink-900 px-4 text-sm text-milk">Open image</button>{open ? <div className="fixed inset-0 z-[90] bg-ink-900/80" onClick={() => setOpen(false)}><div className="h-full" onClick={(event) => event.stopPropagation()}><PinchZoomImage src={SAMPLE_IMAGE} alt="Sample product photo" onDismiss={() => setOpen(false)} className="h-full w-full" /></div></div> : null}</div>;
+}
+
+function SwipeBackPreview() {
+  const [screen, setScreen] = useState<"detail" | "list">("detail");
+  return <div className="relative h-40 overflow-hidden rounded-xl border border-line bg-cloud-50">{screen === "detail" ? <SwipeBackGesture onBack={() => setScreen("list")} behind={<div className="grid size-full place-items-center bg-cloud-100 text-sm text-ink-500">Project list</div>} className="size-full"><div className="grid size-full place-items-center text-sm">Swipe from the left edge</div></SwipeBackGesture> : <button type="button" onClick={() => setScreen("detail")} className="grid size-full place-items-center text-sm text-ink-700">List — tap to reopen</button>}</div>;
 }
 
 export const MOBILE_PREVIEWS: Record<string, ReactNode> = {
@@ -76,6 +107,11 @@ export const MOBILE_PREVIEWS: Record<string, ReactNode> = {
   "mobile-undo-bar": <MobileUndoBar />,
   "quick-action-sheet": <QuickActionSheet />,
   "hold-to-reveal-actions": <HoldToRevealActions />,
+  "action-sheet": <ActionSheetPreview />,
+  "wheel-picker": <WheelPickerPreview />,
+  "swipe-back": <SwipeBackPreview />,
+  "long-press-context-menu": <LongPressContextMenuPreview />,
+  "pinch-zoom-image": <PinchZoomImagePreview />,
   "floating-tab-bar": <FloatingTabBar />,
   "contextual-bottom-bar": <ContextualBottomBarPreview />,
   "scroll-compact-bottom-nav": <ScrollCompactBottomNav />,

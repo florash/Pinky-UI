@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Morph, useMotionEnabled } from "@pinky/primitives";
+import { Morph, useMotionEnabled } from "@pinky-ui/primitives";
 import { type CSSProperties, type MouseEventHandler, type ReactNode } from "react";
 
 export type SharedElementTransitionProps = {

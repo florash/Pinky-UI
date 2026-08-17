@@ -1,6 +1,6 @@
 "use client";
 
-import { Jelly, usePointerGlow } from "@pinky/primitives";
+import { Jelly, usePointerGlow } from "@pinky-ui/primitives";
 import type { CSSProperties, ReactNode } from "react";
 
 import { cn } from "../utils/cn";

@@ -1,6 +1,6 @@
 "use client";
 
-import { springs, useMotionEnabled } from "@pinky/primitives";
+import { springs, useMotionEnabled } from "@pinky-ui/primitives";
 import { motion } from "motion/react";
 import { forwardRef, useEffect, useRef, useState, type ReactNode } from "react";
 
@@ -92,10 +92,10 @@ export const BloomToggle = forwardRef<HTMLInputElement, BloomToggleProps>(functi
           />
         ) : null}
         <motion.span
-          className="absolute top-1/2 block size-6 rounded-full bg-white [box-shadow:var(--depth-raised-md),var(--edge-light)]"
+          className="absolute top-1/2 left-0 block size-6 rounded-full bg-white [box-shadow:var(--depth-raised-md),var(--edge-light)]"
           style={{ marginTop: -12 }}
           initial={false}
-          animate={{ left: isOn ? 28 : 4 }}
+          animate={{ x: isOn ? 28 : 4 }}
           transition={motionEnabled ? { type: "spring", ...springs.snappy } : { duration: 0 }}
         />
       </span>

@@ -17,8 +17,8 @@ import {
   SlidingStack,
   SplitRail,
   TextMenu,
-} from "@pinky/components";
-import { Proximity } from "@pinky/primitives";
+} from "@pinky-ui/components";
+import { Proximity } from "@pinky-ui/primitives";
 import { useState, type ReactNode } from "react";
 
 const SIGNATURE_TRIGGERS = [

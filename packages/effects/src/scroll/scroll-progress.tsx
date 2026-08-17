@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue } from "motion/react";
-import { useMotionEnabled } from "@pinky/primitives";
+import { useMotionEnabled } from "@pinky-ui/primitives";
 import { useEffect, useRef, type CSSProperties, type RefObject } from "react";
 
 import { calculateScrollProgress, useScrollSource } from "../internal/scroll-motion";

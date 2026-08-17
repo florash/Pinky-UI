@@ -1,7 +1,7 @@
 "use client";
 
-import { cn, GlowBorder } from "@pinky/components";
-import { Jelly, LiquidSurface, Magnetic, Tilt, useMotionEnabled } from "@pinky/primitives";
+import { cn, GlowBorder } from "@pinky-ui/components";
+import { Jelly, LiquidSurface, Magnetic, Tilt, useMotionEnabled } from "@pinky-ui/primitives";
 import { useState, type CSSProperties, type ReactNode } from "react";
 
 import { Container, Section, SectionHeading } from "@/components/site/layout";

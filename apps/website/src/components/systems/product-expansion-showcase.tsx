@@ -12,7 +12,7 @@ import {
   StatusPipeline,
   ValidationField,
   type SortableDataRow,
-} from "@pinky/systems";
+} from "@pinky-ui/systems";
 import { useState, type ReactNode } from "react";
 
 import { FormsInteractionShowcase } from "./forms-interaction-showcase";

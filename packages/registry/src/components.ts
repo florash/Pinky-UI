@@ -10,7 +10,7 @@ export const components: RegistryEntry[] = [
     interactions: ["jelly", "depth", "glow"],
     tags: ["card", "elastic", "hover", "spring"],
     builtOn: ["jelly", "spring", "glow"],
-    importPath: 'import { JellyCard } from "@pinky/components";',
+    importPath: 'import { JellyCard } from "@pinky-ui/components";',
     usage: `<JellyCard elasticity={0.35} intensity={0.18}>
   <ProfileCard />
 </JellyCard>`,
@@ -127,7 +127,7 @@ export const components: RegistryEntry[] = [
     interactions: ["magnetic"],
     tags: ["button", "pointer", "proximity", "cta"],
     builtOn: ["magnetic", "spring"],
-    importPath: 'import { MagneticButton } from "@pinky/components";',
+    importPath: 'import { MagneticButton } from "@pinky-ui/components";',
     usage: `<MagneticButton variant="primary" strength={0.4}>
   Explore components
 </MagneticButton>`,
@@ -217,7 +217,7 @@ export const components: RegistryEntry[] = [
     interactions: ["glow"],
     tags: ["border", "light", "gradient", "focus"],
     builtOn: ["glow"],
-    importPath: 'import { GlowBorder } from "@pinky/components";',
+    importPath: 'import { GlowBorder } from "@pinky-ui/components";',
     usage: `<GlowBorder radius="xl">
   <article className="rounded-xl border border-line bg-white p-6">
     Pricing
@@ -309,7 +309,7 @@ export const components: RegistryEntry[] = [
     interactions: ["morph"],
     tags: ["tabs", "navigation", "indicator", "layout"],
     builtOn: ["spring"],
-    importPath: 'import { FluidTabs } from "@pinky/components";',
+    importPath: 'import { FluidTabs } from "@pinky-ui/components";',
     usage: `<FluidTabs
   aria-label="Views"
   items={[
@@ -388,6 +388,74 @@ export const components: RegistryEntry[] = [
     skill: "fluid-tabs",
   },
   {
+    slug: "pill-nav",
+    name: "Pill Nav",
+    description: "Real navigation links with a shared pill background that slides to whichever one is current.",
+    status: "ready",
+    category: "navigation",
+    interactions: ["morph"],
+    tags: ["navigation", "indicator", "links", "route"],
+    builtOn: ["spring"],
+    importPath: 'import { PillNav } from "@pinky-ui/components";',
+    usage: `<PillNav
+  aria-label="Main"
+  items={[
+    { id: "explore", label: "Explore", href: "/explore", active: pathname === "/explore" },
+    { id: "docs", label: "Docs", href: "/docs", active: pathname === "/docs" },
+  ]}
+/>`,
+    props: [
+      {
+        name: "items",
+        type: "PillNavItem[]",
+        description: "Each item is a link (href) or a trigger (onClick, for a dropdown); active is supplied by the caller's own router.",
+      },
+      {
+        name: "size",
+        type: '"sm" | "md"',
+        defaultValue: '"md"',
+        description: "Control height and type size.",
+      },
+      {
+        name: "scrollable",
+        type: "boolean",
+        defaultValue: "false",
+        description: "Horizontal scroll for a narrow track. Leave off unless the row can genuinely overflow — an explicit overflow-x forces overflow-y to compute as auto too, clipping any item's dropdown panel.",
+      },
+      {
+        name: "aria-label",
+        type: "string",
+        defaultValue: '"Navigation"',
+        description: "Names the nav landmark for assistive technology.",
+      },
+    ],
+    presets: [
+      { name: "Default", description: "Standard header height.", props: {} },
+      { name: "Compact", description: "For a shrunken sticky header state.", props: { size: "sm" } },
+    ],
+    accessibility: [
+      "Renders real <a> or <button> elements — never a div with a click handler.",
+      "aria-current=\"page\" marks the active link; trigger items expose aria-expanded and aria-haspopup for their dropdown.",
+      "The active state and its indicator both come from the caller's router, so back/forward navigation and direct links land on the correct pill without extra wiring.",
+    ],
+    reducedMotion:
+      "With prefers-reduced-motion: reduce, the pill jumps directly to the active item instead of sliding and stretching.",
+    whenToUse: [
+      "A primary site or app navigation bar with a handful of top-level destinations",
+      "Route-based navigation where the current page should read as a persistent, moving highlight",
+    ],
+    whenNotToUse: [
+      "Switching between peer views without a URL change — use Fluid Tabs",
+      "More than about seven destinations, where the pill row stops reading as a set",
+    ],
+    related: ["fluid-tabs", "gooey-menu"],
+    discovery: {
+      role: "canonical",
+      note: "Link-based primary navigation; Fluid Tabs remains the canonical route for controlled-value tab panels.",
+    },
+    skill: "pill-nav",
+  },
+  {
     slug: "liquid-card",
     name: "Liquid Card",
     description: "A translucent surface where light gathers under the pointer.",
@@ -396,7 +464,7 @@ export const components: RegistryEntry[] = [
     interactions: ["liquid", "glow", "depth"],
     tags: ["glass", "translucent", "refraction", "surface"],
     builtOn: ["liquid-surface", "glow"],
-    importPath: 'import { LiquidCard } from "@pinky/components";',
+    importPath: 'import { LiquidCard } from "@pinky-ui/components";',
     usage: `<LiquidCard intensity={0.2} blur={18} tint="cloud">
   <FeatureSummary />
 </LiquidCard>`,
@@ -445,7 +513,7 @@ export const components: RegistryEntry[] = [
     interactions: ["morph", "depth"],
     tags: ["expand", "dialog", "shared layout", "detail"],
     builtOn: ["morph", "spring"],
-    importPath: 'import { MorphCard } from "@pinky/components";',
+    importPath: 'import { MorphCard } from "@pinky-ui/components";',
     usage: `<MorphCard label="Mira Odaka" expandedContent={<Details />}>
   <Preview />
 </MorphCard>`,
@@ -494,7 +562,7 @@ export const components: RegistryEntry[] = [
     interactions: ["proximity", "magnetic", "depth"],
     tags: ["dock", "toolbar", "magnify", "nav"],
     builtOn: ["proximity", "spring"],
-    importPath: 'import { FloatingDock } from "@pinky/components";',
+    importPath: 'import { FloatingDock } from "@pinky-ui/components";',
     usage: `<FloatingDock
   items={items}
   magnification={1.35}
@@ -543,7 +611,7 @@ export const components: RegistryEntry[] = [
     interactions: ["liquid", "morph", "elastic"],
     tags: ["menu", "gooey", "nav", "indicator"],
     builtOn: ["spring"],
-    importPath: 'import { GooeyMenu } from "@pinky/components";',
+    importPath: 'import { GooeyMenu } from "@pinky-ui/components";',
     usage: `<GooeyMenu
   aria-label="Sections"
   items={sections}
@@ -592,7 +660,7 @@ export const components: RegistryEntry[] = [
     interactions: ["glow"],
     tags: ["light", "surface", "grid", "calm"],
     builtOn: ["spotlight", "glow"],
-    importPath: 'import { SpotlightCard } from "@pinky/components";',
+    importPath: 'import { SpotlightCard } from "@pinky-ui/components";',
     usage: `<SpotlightCard size={300} intensity={0.5}>
   <Feature />
 </SpotlightCard>`,
@@ -636,7 +704,7 @@ export const components: RegistryEntry[] = [
     interactions: ["depth", "glow"],
     tags: ["3d", "perspective", "parallax", "glare"],
     builtOn: ["tilt", "parallax", "spring"],
-    importPath: 'import { TiltCard } from "@pinky/components";',
+    importPath: 'import { TiltCard } from "@pinky-ui/components";',
     usage: `<TiltCard max={4} glare foreground={<Badge />}>
   <Cover />
 </TiltCard>`,
@@ -682,7 +750,7 @@ export const components: RegistryEntry[] = [
     interactions: ["elastic", "jelly"],
     tags: ["switch", "toggle", "form", "control"],
     builtOn: ["spring"],
-    importPath: 'import { ElasticToggle } from "@pinky/components";',
+    importPath: 'import { ElasticToggle } from "@pinky-ui/components";',
     usage: `<ElasticToggle
   label="Reduced motion"
   onCheckedChange={setEnabled}
@@ -728,7 +796,7 @@ export const components: RegistryEntry[] = [
     interactions: ["elastic", "liquid"],
     tags: ["button", "press", "ripple", "feedback"],
     builtOn: ["press-spring"],
-    importPath: 'import { RippleButton } from "@pinky/components";',
+    importPath: 'import { RippleButton } from "@pinky-ui/components";',
     usage: `<RippleButton variant="primary">
   Save changes
 </RippleButton>`,

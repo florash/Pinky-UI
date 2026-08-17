@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@pinky/components";
-import { CursorGlow, Jelly, Magnetic, Spring, Tilt } from "@pinky/primitives";
+import { cn } from "@pinky-ui/components";
+import { CursorGlow, Jelly, Magnetic, Spring, Tilt } from "@pinky-ui/primitives";
 import type { ReactNode } from "react";
 
 import { CodeBlock } from "@/components/site/code-block";

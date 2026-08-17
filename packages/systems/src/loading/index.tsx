@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useMotionEnabled, usePressSpring } from "@pinky/primitives";
+import { useMotionEnabled, usePressSpring } from "@pinky-ui/primitives";
 import { useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { cn } from "../internal/cn";
 

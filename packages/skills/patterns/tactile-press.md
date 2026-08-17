@@ -20,7 +20,7 @@ The live wall places extruded, inset, and layered controls together so their dif
 ## Usage
 
 ```tsx
-import { ExtrudedButton, InsetButton, LayeredButton } from "@pinky/components";
+import { ExtrudedButton, InsetButton, LayeredButton } from "@pinky-ui/components";
 
 export function Actions() {
   return (

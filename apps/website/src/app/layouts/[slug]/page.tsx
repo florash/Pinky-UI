@@ -1,4 +1,4 @@
-import { getLayout, layouts } from "@pinky/registry";
+import { getLayout, layouts } from "@pinky-ui/registry";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -6,7 +6,9 @@ import { notFound } from "next/navigation";
 import { LayoutPreview } from "@/components/previews/layout-previews";
 import { hasLayoutPreview } from "@/components/previews/preview-manifest";
 import { Markdown } from "@/components/skills/markdown";
+import { Breadcrumbs } from "@/components/site/breadcrumbs";
 import { CodeBlock } from "@/components/site/code-block";
+import { FamilyLinks } from "@/components/site/family-links";
 import { Container, Halo } from "@/components/site/layout";
 import { getSkill } from "@/lib/skills";
 import { pageMetadata } from "@/lib/site";
@@ -31,29 +33,17 @@ export default async function LayoutDetailPage({ params }: PageProps) {
 
   const skill = entry.skill ? await getSkill("layouts", entry.skill) : null;
   const related = entry.related.map(getLayout).filter((item) => item !== undefined);
+  const sameFamily = layouts
+    .filter((item) => item.family === entry.family && item.slug !== entry.slug)
+    .slice(0, 4)
+    .map((item) => ({ slug: item.slug, name: item.name, href: `/layouts/${item.slug}` }));
 
   return (
     <article className="relative overflow-hidden pt-10 pb-20">
       <Halo className="-top-40 right-[-12rem] size-[28rem]" color="var(--pinky-halo-b)" />
 
       <Container>
-        <nav aria-label="Breadcrumb" className="text-xs text-ink-500">
-          <ol className="flex items-center gap-2">
-            <li>
-              <Link href="/" className="transition-colors hover:text-ink-900">
-                Pinky UI
-              </Link>
-            </li>
-            <li aria-hidden>/</li>
-            <li>
-              <Link href="/layouts" className="transition-colors hover:text-ink-900">
-                Layouts
-              </Link>
-            </li>
-            <li aria-hidden>/</li>
-            <li className="text-ink-900">{entry.name}</li>
-          </ol>
-        </nav>
+        <Breadcrumbs trail={[{ href: "/layouts", label: "Layouts" }]} current={entry.name} />
 
         <header className="mt-8 max-w-2xl">
           <h1 className="text-section text-balance-tight">{entry.name}</h1>
@@ -182,6 +172,8 @@ export default async function LayoutDetailPage({ params }: PageProps) {
                 </ul>
               </>
             ) : null}
+
+            <FamilyLinks heading="More layouts" items={sameFamily} />
           </aside>
         </div>
       </Container>

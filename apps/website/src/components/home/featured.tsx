@@ -1,5 +1,5 @@
-import { cn } from "@pinky/components";
-import { components } from "@pinky/registry";
+import { cn } from "@pinky-ui/components";
+import { components } from "@pinky-ui/registry";
 import Link from "next/link";
 
 import { ComponentPreview } from "@/components/previews/component-previews";
