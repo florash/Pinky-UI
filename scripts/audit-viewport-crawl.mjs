@@ -24,6 +24,10 @@ const ALL_VIEWPORTS = [
 const viewportFilter = process.env.AUDIT_VIEWPORTS?.split(",").map((value) => value.trim());
 const VIEWPORTS = viewportFilter ? ALL_VIEWPORTS.filter((viewport) => viewportFilter.includes(viewport.name)) : ALL_VIEWPORTS;
 const MAX_ROUTES = process.env.AUDIT_MAX_ROUTES ? Number(process.env.AUDIT_MAX_ROUTES) : Infinity;
+// Comma-separated route prefixes, e.g. "/ai,/mobile" — for auditing a
+// specific route tree (a newly added package's pages, say) without paying
+// for a full-site crawl.
+const routePrefixFilter = process.env.AUDIT_ROUTE_PREFIX?.split(",").map((value) => value.trim());
 
 const INTERACTIVE_SELECTOR =
   'button, a[href], input:not([type="hidden"]), select, textarea, [role="button"], [role="link"], summary';
@@ -408,7 +412,10 @@ async function main() {
     console.log("[audit] server ready");
 
     const allRoutes = await getRoutes();
-    const routes = Number.isFinite(MAX_ROUTES) ? allRoutes.slice(0, MAX_ROUTES) : allRoutes;
+    const prefixed = routePrefixFilter
+      ? allRoutes.filter((route) => routePrefixFilter.some((prefix) => route === prefix || route.startsWith(`${prefix}/`) || route.startsWith(`${prefix}?`)))
+      : allRoutes;
+    const routes = Number.isFinite(MAX_ROUTES) ? prefixed.slice(0, MAX_ROUTES) : prefixed;
     console.log(`[audit] ${routes.length}/${allRoutes.length} routes, ${VIEWPORTS.length} viewports`);
 
     const browser = await chromium.launch();
