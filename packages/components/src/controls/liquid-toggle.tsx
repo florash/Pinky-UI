@@ -1,6 +1,6 @@
 "use client";
 
-import { elasticSpring, useMotionEnabled, usePressSpring } from "@pinky/primitives";
+import { elasticSpring, useMotionEnabled, usePressSpring } from "@pinky-ui/primitives";
 import { motion, useTransform } from "motion/react";
 import { forwardRef, useEffect, useRef, useState, type ReactNode } from "react";
 
@@ -121,10 +121,10 @@ export const LiquidToggle = forwardRef<HTMLInputElement, LiquidToggleProps>(func
 
         {/* Position is the state. It survives when the colour has gone. */}
         <motion.span
-          className="absolute top-1/2 block h-6 rounded-pill bg-white [box-shadow:var(--depth-raised-md),var(--edge-light)]"
+          className="absolute top-1/2 left-0 block size-6 rounded-pill bg-white [box-shadow:var(--depth-raised-md),var(--edge-light)]"
           style={{ scaleX: squash, marginTop: -12 }}
           initial={false}
-          animate={{ left: isOn ? 28 : 4, width: 24 }}
+          animate={{ x: isOn ? 28 : 4 }}
           transition={spring}
         />
       </span>

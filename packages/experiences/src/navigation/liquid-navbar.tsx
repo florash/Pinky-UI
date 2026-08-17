@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { springs, useMotionEnabled } from "@pinky/primitives";
+import { springs, useMotionEnabled } from "@pinky-ui/primitives";
 import {
   useCallback,
   useEffect,
@@ -118,10 +118,10 @@ export function LiquidNavbar({
         {slot ? (
           <motion.span
             aria-hidden
-            className="pointer-events-none absolute top-1.5 bottom-1.5 rounded-[999px] bg-[color:var(--color-ink-900,#252933)] shadow-[0_8px_24px_rgba(37,41,51,.12)]"
+            className="pointer-events-none absolute top-1.5 bottom-1.5 left-0 rounded-[999px] bg-[color:var(--color-ink-900,#252933)] shadow-[0_8px_24px_rgba(37,41,51,.12)]"
             initial={false}
             animate={{
-              left: slot.left,
+              x: slot.left,
               width: slot.width,
               scaleX: travelling ? 1 + Math.min(Math.max(stretch, 0), 0.2) : 1,
               skewX: travelling ? direction * 2.5 : 0,
