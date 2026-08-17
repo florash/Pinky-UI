@@ -1,6 +1,6 @@
 "use client";
 
-import { usePressSpring, useProximityItem } from "@pinky/primitives";
+import { usePressSpring, useProximityItem } from "@pinky-ui/primitives";
 import { motion, useTransform } from "motion/react";
 import { forwardRef } from "react";
 

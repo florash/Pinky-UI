@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@pinky/components";
+import { cn } from "@pinky-ui/components";
 import Link from "next/link";
 import { useEffect, useRef, type FocusEvent, type PointerEvent as ReactPointerEvent } from "react";
 

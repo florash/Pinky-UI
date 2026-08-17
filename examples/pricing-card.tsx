@@ -5,7 +5,7 @@
  * Nothing here is a new component — Glow Border frames a Jelly Card, and the
  * action inside is magnetic on its own.
  */
-import { GlowBorder, JellyCard, MagneticButton } from "@pinky/components";
+import { GlowBorder, JellyCard, MagneticButton } from "@pinky-ui/components";
 
 const FEATURES = ["Unlimited projects", "Interaction presets", "Priority support"];
 

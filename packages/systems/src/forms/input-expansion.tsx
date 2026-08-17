@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useMotionEnabled } from "@pinky/primitives";
+import { useMotionEnabled } from "@pinky-ui/primitives";
 import { useCallback, useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
 import { cn } from "../internal/cn";

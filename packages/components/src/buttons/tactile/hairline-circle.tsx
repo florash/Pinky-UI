@@ -1,6 +1,6 @@
 "use client";
 
-import { surfaceShadow, usePressSpring } from "@pinky/primitives";
+import { surfaceShadow, usePressSpring } from "@pinky-ui/primitives";
 import { motion, useTransform } from "motion/react";
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
 

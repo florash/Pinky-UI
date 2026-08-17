@@ -10,9 +10,9 @@ import {
   LayeredButton,
   SplitRail,
   TextMenu,
-} from "@pinky/components";
-import { CursorProvider, MagneticCursorTarget, StickyStory } from "@pinky/effects";
-import { Morph, Proximity } from "@pinky/primitives";
+} from "@pinky-ui/components";
+import { CursorProvider, MagneticCursorTarget, StickyStory } from "@pinky-ui/effects";
+import { Morph, Proximity } from "@pinky-ui/primitives";
 import { cloneElement, type ReactElement, type ReactNode } from "react";
 
 import { ExploreDetailPreview } from "@/components/previews/explore-previews";

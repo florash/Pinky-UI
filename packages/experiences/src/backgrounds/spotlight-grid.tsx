@@ -1,6 +1,6 @@
 "use client";
 
-import { CursorSpotlight } from "@pinky/effects";
+import { CursorSpotlight } from "@pinky-ui/effects";
 import { type ReactNode } from "react";
 
 import { cn } from "../internal/cn";

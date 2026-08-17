@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { springs, useMotionEnabled, type SpringPreset } from "@pinky/primitives";
+import { springs, useMotionEnabled, type SpringPreset } from "@pinky-ui/primitives";
 import { useRef, type ReactNode } from "react";
 
 import { useInView } from "../internal/in-view";

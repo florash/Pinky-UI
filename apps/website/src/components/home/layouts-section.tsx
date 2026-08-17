@@ -1,7 +1,7 @@
 "use client";
 
-import { ExpandingSearch, InlineEditField } from "@pinky/systems";
-import { layouts } from "@pinky/registry";
+import { ExpandingSearch, InlineEditField } from "@pinky-ui/systems";
+import { layouts } from "@pinky-ui/registry";
 import Link from "next/link";
 
 import { LayoutPreview } from "@/components/previews/layout-previews";

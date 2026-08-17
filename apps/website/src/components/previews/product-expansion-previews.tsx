@@ -22,7 +22,7 @@ import {
   ThresholdBandChart,
   ValidationField,
   type SortableDataRow,
-} from "@pinky/systems";
+} from "@pinky-ui/systems";
 import { useState, type ReactNode } from "react";
 
 const PREVIEW_FILTERS = [{ id: "status", label: "Status", options: [{ id: "ready", label: "Ready", count: 12 }, { id: "review", label: "Review", count: 4 }] }, { id: "owner", label: "Owner", options: [{ id: "flora", label: "Flora", count: 7 }, { id: "team", label: "Team", count: 9 }] }];

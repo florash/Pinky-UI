@@ -1,5 +1,5 @@
 {
-  "name": "@pinky/components",
+  "name": "@pinky-ui/components",
   "version": "0.1.0",
   "description": "Interactive React components built on Pinky UI primitives.",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "prepack": "node ../../scripts/build-packages.mjs --package components"
   },
   "dependencies": {
-    "@pinky/primitives": "0.1.0"
+    "@pinky-ui/primitives": "0.1.0"
   },
   "peerDependencies": {
     "motion": ">=12",

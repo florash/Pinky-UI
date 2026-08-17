@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState, type FocusEvent, type MouseEvent } from "react";
 
-import { cn } from "@pinky/components";
+import { cn } from "@pinky-ui/components";
 import type { Skill, SkillKind, SkillPreviewClass } from "@/lib/skills";
 
 import { CataloguePreview } from "./catalogue-preview";

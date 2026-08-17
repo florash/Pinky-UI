@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@pinky/components";
+import { cn } from "@pinky-ui/components";
 import {
   CATEGORIES,
   components,
@@ -8,7 +8,7 @@ import {
   INTERACTIONS,
   type Category,
   type Interaction,
-} from "@pinky/registry";
+} from "@pinky-ui/registry";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 

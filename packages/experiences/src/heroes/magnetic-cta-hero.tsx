@@ -1,7 +1,7 @@
 "use client";
 
-import { Magnetic } from "@pinky/primitives";
-import { CursorSpotlight } from "@pinky/effects";
+import { Magnetic } from "@pinky-ui/primitives";
+import { CursorSpotlight } from "@pinky-ui/effects";
 import { type ReactNode } from "react";
 
 import { cn } from "../internal/cn";

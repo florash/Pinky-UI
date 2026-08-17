@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@pinky/components";
-import { layouts } from "@pinky/registry";
+import { cn } from "@pinky-ui/components";
+import { layouts } from "@pinky-ui/registry";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 

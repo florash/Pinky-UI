@@ -1,5 +1,5 @@
 {
-  "name": "@pinky/effects",
+  "name": "@pinky-ui/effects",
   "version": "0.1.0",
   "description": "Cursor, motion, text and scroll effects for Pinky UI.",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "prepack": "node ../../scripts/build-packages.mjs --package effects"
   },
   "dependencies": {
-    "@pinky/primitives": "0.1.0"
+    "@pinky-ui/primitives": "0.1.0"
   },
   "peerDependencies": {
     "motion": ">=12",

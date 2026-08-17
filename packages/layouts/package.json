@@ -1,5 +1,5 @@
 {
-  "name": "@pinky/layouts",
+  "name": "@pinky-ui/layouts",
   "version": "0.1.0",
   "description": "Interactive layouts and collections for Pinky UI.",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "prepack": "node ../../scripts/build-packages.mjs --package layouts"
   },
   "dependencies": {
-    "@pinky/primitives": "0.1.0"
+    "@pinky-ui/primitives": "0.1.0"
   },
   "peerDependencies": {
     "motion": ">=12",

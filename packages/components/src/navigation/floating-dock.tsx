@@ -1,6 +1,6 @@
 "use client";
 
-import { Proximity, useProximityItem, useMotionEnabled } from "@pinky/primitives";
+import { Proximity, useProximityItem, useMotionEnabled } from "@pinky-ui/primitives";
 import { motion, useTransform } from "motion/react";
 import type { ReactNode } from "react";
 

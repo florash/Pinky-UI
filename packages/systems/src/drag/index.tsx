@@ -1,7 +1,7 @@
 "use client";
 
 import { Reorder, motion } from "motion/react";
-import { useMotionEnabled } from "@pinky/primitives";
+import { useMotionEnabled } from "@pinky-ui/primitives";
 import { useRef, useState, type ReactNode } from "react";
 import { cn } from "../internal/cn";
 import { moveItem, type ReorderItem } from "../lists";

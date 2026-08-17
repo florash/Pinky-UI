@@ -1,6 +1,6 @@
 "use client";
 
-import { useMotionEnabled } from "@pinky/primitives";
+import { useMotionEnabled } from "@pinky-ui/primitives";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const DEFAULT_CHARACTERS = "·+*#@";

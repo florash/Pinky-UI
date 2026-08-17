@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@pinky/components";
+import { cn } from "@pinky-ui/components";
 import {
   AuthCompletionMorph,
   BottomSheet,
@@ -14,7 +14,7 @@ import {
   StickyBottomCTA,
   SwipeToConfirm,
   SwipeableTabs,
-} from "@pinky/systems";
+} from "@pinky-ui/systems";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 

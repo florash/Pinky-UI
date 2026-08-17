@@ -1,6 +1,6 @@
 "use client";
 
-import { Morph } from "@pinky/primitives";
+import { Morph } from "@pinky-ui/primitives";
 import { type ReactNode } from "react";
 
 import { cn } from "../internal/cn";

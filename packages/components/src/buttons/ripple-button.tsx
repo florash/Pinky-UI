@@ -1,6 +1,6 @@
 "use client";
 
-import { usePressSpring } from "@pinky/primitives";
+import { usePressSpring } from "@pinky-ui/primitives";
 import { motion } from "motion/react";
 import { forwardRef, useCallback, useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 

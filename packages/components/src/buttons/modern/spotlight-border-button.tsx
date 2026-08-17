@@ -1,6 +1,6 @@
 "use client";
 
-import { usePointerGlow, usePressSpring } from "@pinky/primitives";
+import { usePointerGlow, usePressSpring } from "@pinky-ui/primitives";
 import { motion, useTransform } from "motion/react";
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
 

@@ -5,7 +5,7 @@ import {
   allWorkflowSystems,
   components,
   layouts,
-} from "@pinky/registry";
+} from "@pinky-ui/registry";
 import Link from "next/link";
 
 import { ArrowRight } from "@/components/site/icons";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMotionEnabled } from "@pinky/primitives";
+import { useMotionEnabled } from "@pinky-ui/primitives";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { cn } from "../internal/cn";

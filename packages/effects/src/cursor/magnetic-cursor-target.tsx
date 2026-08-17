@@ -1,6 +1,6 @@
 "use client";
 
-import { Magnetic, type MagneticProps } from "@pinky/primitives";
+import { Magnetic, type MagneticProps } from "@pinky-ui/primitives";
 import { type ReactNode } from "react";
 
 import { CursorTarget, type CursorTargetProps } from "./cursor-provider";

@@ -1,8 +1,8 @@
 "use client";
 
 import { motion, useSpring, useTransform } from "motion/react";
-import { springs, useMotionEnabled } from "@pinky/primitives";
-import { useViewportProgress } from "@pinky/effects";
+import { springs, useMotionEnabled } from "@pinky-ui/primitives";
+import { useViewportProgress } from "@pinky-ui/effects";
 import { useRef, type ReactNode } from "react";
 
 import { cn } from "../internal/cn";

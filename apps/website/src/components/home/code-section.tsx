@@ -1,6 +1,6 @@
 "use client";
 
-import { JellyCard, MagneticButton } from "@pinky/components";
+import { JellyCard, MagneticButton } from "@pinky-ui/components";
 
 import { CodeBlock } from "@/components/site/code-block";
 import { Container, Section, SectionHeading } from "@/components/site/layout";

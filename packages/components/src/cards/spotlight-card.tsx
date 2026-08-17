@@ -1,6 +1,6 @@
 "use client";
 
-import { Spotlight } from "@pinky/primitives";
+import { Spotlight } from "@pinky-ui/primitives";
 import type { ReactNode } from "react";
 
 import { cn } from "../utils/cn";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMotionEnabled } from "@pinky/primitives";
+import { useMotionEnabled } from "@pinky-ui/primitives";
 import { AnimatePresence, motion } from "motion/react";
 import { type ReactNode } from "react";
 

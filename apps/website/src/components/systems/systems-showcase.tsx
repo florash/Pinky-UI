@@ -1,8 +1,8 @@
 "use client";
 
 
-import { LensCursor } from "@pinky/effects";
-import { getProductSystem, type ProductFamily } from "@pinky/registry";
+import { LensCursor } from "@pinky-ui/effects";
+import { getProductSystem, type ProductFamily } from "@pinky-ui/registry";
 import {
   AnimatedNumber,
   BeforeAfter,
@@ -22,7 +22,7 @@ import {
   SmartDropzone,
   TactileRange,
   TimelineScrubber,
-} from "@pinky/systems";
+} from "@pinky-ui/systems";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { ProductSystemsExpansion } from "./product-expansion-showcase";

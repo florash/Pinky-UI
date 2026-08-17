@@ -1,6 +1,6 @@
 "use client";
 
-import { Magnetic } from "@pinky/primitives";
+import { Magnetic } from "@pinky-ui/primitives";
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
 
 import { cn } from "../utils/cn";

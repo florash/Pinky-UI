@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useMotionEnabled } from "@pinky/primitives";
-import { useInView } from "@pinky/effects";
+import { useMotionEnabled } from "@pinky-ui/primitives";
+import { useInView } from "@pinky-ui/effects";
 import { useRef, type ReactNode } from "react";
 
 import { cn } from "../internal/cn";

@@ -16,7 +16,7 @@ import {
   ResumableProgress,
   RetrySurface,
   UndoableAction,
-} from "@pinky/systems";
+} from "@pinky-ui/systems";
 import { useState, type ReactNode } from "react";
 
 const wait = (duration: number) => new Promise<void>((resolve) => window.setTimeout(resolve, duration));

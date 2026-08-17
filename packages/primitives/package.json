@@ -1,5 +1,5 @@
 {
-  "name": "@pinky/primitives",
+  "name": "@pinky-ui/primitives",
   "version": "0.1.0",
   "description": "Composable interaction primitives for Pinky UI.",
   "license": "MIT",

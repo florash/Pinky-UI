@@ -13,7 +13,7 @@ import {
   ProgressiveCollection,
   ScrubPreview,
   SharedPreviewCollection,
-} from "@pinky/systems";
+} from "@pinky-ui/systems";
 import type { ReactNode } from "react";
 
 const TONES = [
