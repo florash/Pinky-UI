@@ -527,6 +527,7 @@ async function runReleaseVerification() {
   console.log(`[release] website build: PASS (${pageCount} generated pages; metadata routes are not frozen)`);
   await run(npmCommand, ["run", "verify:metadata"], { env: RELEASE_ENV });
   await run(npmCommand, ["run", "verify:orphans"]);
+  await run(npmCommand, ["run", "verify:nested-anchors"]);
   await run("git", ["diff", "--check"]);
   await assertTrackedHygiene();
   await assertSkillInvariants();

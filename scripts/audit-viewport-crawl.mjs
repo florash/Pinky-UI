@@ -377,6 +377,16 @@ async function auditRoute(page, route, viewport) {
   page.off("console", onConsole);
   page.off("pageerror", onPageError);
 
+  // consoleErrors/pageErrors already catch this (hydration mismatches log
+  // via console.error / throw), but only as anonymous text in a pile of
+  // other errors — the Pill Nav nested-<a> bug shipped invisibly through
+  // every other check here (no overflow, no clipping, touch targets fine)
+  // and was only caught by a human eye on the dev-mode error overlay.
+  // Surfacing hydration messages under their own name means a route with
+  // one doesn't just blend into "0 console errors is fine" at a glance.
+  const HYDRATION_PATTERN = /hydration|cannot be a descendant of|cannot contain a nested|did not match/i;
+  const hydrationErrors = [...consoleErrors, ...pageErrors].filter((message) => HYDRATION_PATTERN.test(message));
+
   return {
     route,
     viewport: viewport.name,
@@ -385,6 +395,7 @@ async function auditRoute(page, route, viewport) {
     overflowPx: overflow,
     consoleErrors,
     pageErrors,
+    hydrationErrors,
     smallTargets,
     fixedElements,
     concurrentAnimations,
@@ -443,6 +454,16 @@ async function main() {
     await browser.close();
     await fs.writeFile(path.join(OUT_DIR, "results.json"), JSON.stringify(results, null, 2));
     console.log(`[audit] done. ${results.length} checks written to .audit/results.json`);
+
+    const withHydrationErrors = results.filter((result) => result.hydrationErrors?.length > 0);
+    if (withHydrationErrors.length > 0) {
+      console.log(`[audit] HYDRATION MISMATCH on ${withHydrationErrors.length} route/viewport check(s):`);
+      for (const result of withHydrationErrors) {
+        console.log(`  - ${result.route} @ ${result.viewport}: ${result.hydrationErrors[0].slice(0, 120)}`);
+      }
+    } else {
+      console.log("[audit] hydration: PASS (no hydration-mismatch console/page errors on any checked route)");
+    }
   } finally {
     cleanup();
   }

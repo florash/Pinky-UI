@@ -68,12 +68,26 @@ export function ComponentGallery() {
       ) : (
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {results.map((entry) => (
-            <Link
+            <article
               key={entry.slug}
-              href={`/components/${entry.slug}`}
-              className="group flex flex-col overflow-hidden rounded-xl border border-line bg-white/80 transition-[transform,box-shadow] duration-500 ease-[var(--ease-soft)] hover:shadow-soft focus-visible:shadow-lift active:translate-y-px"
+              className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-white/80 transition-[transform,box-shadow] duration-500 ease-[var(--ease-soft)] hover:shadow-soft focus-within:shadow-lift active:translate-y-px"
             >
-              <div className="flex h-52 items-center justify-center overflow-hidden border-b border-line bg-milk/50 p-6">
+              {/*
+                A stretched link, not a card-wide <Link>: the preview below
+                can render a component that renders its own real <a>/<button>
+                (Pill Nav, for example), and nesting an anchor inside an
+                anchor is invalid HTML that fails hydration. This covers the
+                same click area — everywhere except the live preview itself,
+                which sits above it via z-10 and stays genuinely interactive,
+                matching "Previews are live — try them here" above.
+              */}
+              <Link
+                href={`/components/${entry.slug}`}
+                className="absolute inset-0 z-0 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2"
+              >
+                <span className="sr-only">{entry.name}</span>
+              </Link>
+              <div className="relative z-10 flex h-52 items-center justify-center overflow-hidden border-b border-line bg-milk/50 p-6">
                 <ComponentPreview slug={entry.slug} />
               </div>
               <div className="flex flex-1 flex-col p-5">
@@ -90,7 +104,7 @@ export function ComponentGallery() {
                   ))}
                 </ul>
               </div>
-            </Link>
+            </article>
           ))}
         </div>
       )}

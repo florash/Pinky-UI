@@ -36,6 +36,7 @@
     "build:cli": "npm run build:packages && npm run build:cli-manifest && node scripts/build-cli.mjs",
     "verify:metadata": "node scripts/verify-metadata.mjs",
     "verify:orphans": "node scripts/check-orphans.mjs",
+    "verify:nested-anchors": "node scripts/check-nested-anchors.mjs",
     "verify:security": "node scripts/verify-security.mjs",
     "verify:hover-coverage": "node scripts/check-hover-coverage.mjs",
     "verify:layout-animations": "node scripts/check-layout-animations.mjs",
