@@ -1,6 +1,6 @@
 "use client";
 
-import { useMotionEnabled } from "@pinky/primitives";
+import { useMotionEnabled, usePointerCapability } from "@pinky-ui/primitives";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef, type ReactNode } from "react";
 
@@ -14,8 +14,9 @@ export type FloatingColumnsProps = { columns: FloatingColumn[]; gap?: number; cl
 export function FloatingColumns({ columns, gap = 16, className, disabled = false }: FloatingColumnsProps) {
   const motionEnabled = useMotionEnabled();
   const compact = useCompactLayout();
+  const { hasHover } = usePointerCapability();
   const section = useRef<HTMLElement>(null);
-  const enabled = motionEnabled && !disabled && !compact;
+  const enabled = motionEnabled && !disabled && hasHover;
   const columnCount = compact ? 1 : Math.max(columns.length, 1);
   const { scrollYProgress } = useScroll({ target: section, offset: ["start end", "end start"] });
 

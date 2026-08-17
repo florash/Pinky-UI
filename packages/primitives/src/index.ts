@@ -19,7 +19,8 @@ export {
   type SurfaceLevel,
   type DepthStep,
 } from "./depth/depth-surface";
-export { useMotionEnabled } from "./internal/use-motion-enabled";
+export { useMotionEnabled, useReducedMotion } from "./internal/use-motion-enabled";
+export { usePointerCapability, type PointerCapability } from "./internal/use-pointer-capability";
 export { subscribeToPointer, type PointerSnapshot } from "./internal/pointer-store";
 export { scatterAt, signedNoise, type ScatterOptions, type ScatterTransform } from "./collection/scatter";
 export { useColumns, distribute, type ResponsiveColumns } from "./collection/use-columns";

@@ -1,13 +1,13 @@
 "use client";
 
 import { motionValue, type MotionValue } from "motion/react";
-import { useEffect, useState } from "react";
-import { subscribeToPointer } from "@pinky/primitives";
+import { useEffect } from "react";
+import { subscribeToPointer, usePointerCapability } from "@pinky-ui/primitives";
 
 /**
  * One pointer source for the whole cursor family.
  *
- * `@pinky/primitives` already collapses every `pointermove` in the app into a
+ * `@pinky-ui/primitives` already collapses every `pointermove` in the app into a
  * single frame-batched listener. This module goes one step further and
  * collapses every *cursor effect* into a single set of motion values: a page
  * running Soft Cursor, Cursor Trail and Cursor Blob together pays for one
@@ -145,19 +145,13 @@ export function usePointerSource(enabled = true): PointerSource {
  * layers then render nothing at all until the browser has told us a mouse
  * exists, which keeps hydration quiet and keeps decorative cursor DOM off
  * touch devices entirely rather than merely hidden.
+ *
+ * A thin re-export of `usePointerCapability().isFine` from `@pinky-ui/primitives`
+ * — the cursor family's naming, the shared package's one media-query
+ * subscription.
  */
 export function useFinePointer(): boolean {
-  const [fine, setFine] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia("(pointer: fine)");
-    const sync = () => setFine(query.matches);
-    sync();
-    query.addEventListener("change", sync);
-    return () => query.removeEventListener("change", sync);
-  }, []);
-
-  return fine;
+  return usePointerCapability().isFine;
 }
 
 function lerp(from: number, to: number, t: number) {
