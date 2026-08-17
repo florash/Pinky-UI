@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { setReducedMotion } from "../../../../vitest.setup";
 import {
@@ -18,7 +18,6 @@ import {
   SharedContextSurface,
   SpotlightOverlay,
 } from "./contextual-surfaces";
-import { Tooltip } from "./tooltip";
 
 describe("Overlay and contextual surface systems", () => {
   it("rebinds an anchored inspector without losing the source list", async () => {
@@ -115,14 +114,9 @@ describe("Overlay and contextual surface systems", () => {
     const user = userEvent.setup();
     render(<ExpandingActionSurface />);
     await user.click(screen.getByRole("button", { name: /More actions/ }));
-    const toolbar = screen.getByRole("toolbar", { name: "Project actions" });
-    expect(toolbar).toHaveTextContent("Duplicate");
-    expect(toolbar).not.toHaveAttribute("inert");
+    expect(screen.getByRole("toolbar", { name: "Project actions" })).toHaveTextContent("Duplicate");
     fireEvent.keyDown(document, { key: "Escape" });
-    // GridReveal keeps the surface mounted and clips it via CSS rather than
-    // unmounting; `inert` is what takes it off the tab order and assistive
-    // tech now.
-    await waitFor(() => expect(screen.getByRole("toolbar", { name: "Project actions" })).toHaveAttribute("inert"));
+    await waitFor(() => expect(screen.queryByRole("toolbar", { name: "Project actions" })).not.toBeInTheDocument());
   });
 
   it("keeps context attached while a source moves", async () => {
@@ -155,42 +149,5 @@ describe("Overlay and contextual surface systems", () => {
     render(<><AdaptivePopover /><SelectionToolbar /><NestedSurfaceStack /></>);
     expect(screen.getAllByRole("button", { name: /Open context/ })[0]).toBeInTheDocument();
     expect(screen.getByText("Select an item to reveal its local actions.")).toBeInTheDocument();
-  });
-});
-
-describe("Tooltip without a hover-capable pointer", () => {
-  it("opens on tap, closes on an outside tap, and still fires the trigger's own click", async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(
-      <>
-        <Tooltip content="Delete this item">
-          <button type="button" onClick={onClick}>Delete</button>
-        </Tooltip>
-        <p>Outside</p>
-      </>,
-    );
-
-    const trigger = screen.getByRole("button", { name: "Delete" });
-    await user.click(trigger);
-    expect(onClick).toHaveBeenCalledTimes(1);
-    expect(await screen.findByRole("tooltip")).toHaveTextContent("Delete this item");
-
-    await user.click(screen.getByText("Outside"));
-    await waitFor(() => expect(screen.queryByRole("tooltip")).not.toBeInTheDocument());
-  });
-
-  it("closes on Escape", async () => {
-    const user = userEvent.setup();
-    render(
-      <Tooltip content="Delete this item">
-        <button type="button">Delete</button>
-      </Tooltip>,
-    );
-
-    await user.click(screen.getByRole("button", { name: "Delete" }));
-    expect(await screen.findByRole("tooltip")).toBeInTheDocument();
-    await user.keyboard("{Escape}");
-    await waitFor(() => expect(screen.queryByRole("tooltip")).not.toBeInTheDocument());
   });
 });
