@@ -2,7 +2,7 @@
 
 import { BottomSheet } from "@pinky-ui/systems";
 import { cn, PillNav, type PillNavItem } from "@pinky-ui/components";
-import { springs, useMotionEnabled } from "@pinky-ui/primitives";
+import { GridReveal, springs, useMotionEnabled } from "@pinky-ui/primitives";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -21,6 +21,7 @@ export function SiteHeader() {
   const motionEnabled = useMotionEnabled();
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileOpenGroup, setMobileOpenGroup] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const triggerRefs = useRef<Record<string, HTMLButtonElement | HTMLAnchorElement | null>>({});
   const menuRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -30,6 +31,12 @@ export function SiteHeader() {
     setOpenGroup(null);
     setMobileOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const active = NAV_GROUPS.find((group) => group.children.some((child) => pathMatches(pathname, child.href)) || pathname === group.href);
+    setMobileOpenGroup(active?.href ?? null);
+  }, [mobileOpen, pathname]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -159,26 +166,41 @@ export function SiteHeader() {
         <div id="mobile-nav" className="space-y-6">
           <nav aria-label="Mobile navigation" className="flex flex-col gap-1">
             <MobileLink href={EXPLORE_LINK.href} label={EXPLORE_LINK.label} active={pathname === EXPLORE_LINK.href} onClick={() => setMobileOpen(false)} />
-            {NAV_GROUPS.map((group) => (
-              <div key={group.href} className="mt-4">
-                <Link
-                  href={group.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="block px-3 font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase transition-colors hover:text-ink-900"
-                >
-                  {group.label}
-                </Link>
-                {group.children.map((link) => (
-                  <MobileLink key={link.href} href={link.href} label={link.label} active={pathMatches(pathname, link.href)} onClick={() => setMobileOpen(false)} />
-                ))}
-              </div>
-            ))}
+            {NAV_GROUPS.map((group) => {
+              const expanded = mobileOpenGroup === group.href;
+              const groupActive = group.children.some((child) => pathMatches(pathname, child.href)) || pathname === group.href;
+              const panelId = `mobile-nav-group-${group.href.replace(/\W/g, "")}`;
+              return (
+                <div key={group.href} className="mt-2 border-b border-line/60 pb-2 last:border-b-0">
+                  <button
+                    type="button"
+                    aria-expanded={expanded}
+                    aria-controls={panelId}
+                    onClick={() => setMobileOpenGroup((current) => (current === group.href ? null : group.href))}
+                    className={cn(
+                      "flex min-h-12 w-full items-center justify-between rounded-xl px-3 py-3 text-left font-mono text-[0.625rem] tracking-[0.14em] uppercase transition-colors",
+                      groupActive ? "text-ink-900" : "text-ink-500 hover:text-ink-900",
+                    )}
+                  >
+                    {group.label}
+                    <span aria-hidden className={cn("text-xs transition-transform", expanded && "rotate-180")}>⌄</span>
+                  </button>
+                  <GridReveal open={expanded} contentProps={{ id: panelId, role: "group", "aria-label": `${group.label} sections` }}>
+                    <div className="flex flex-col gap-1 pb-1">
+                      {group.children.map((link) => (
+                        <MobileLink key={link.href} href={link.href} label={link.label} active={pathMatches(pathname, link.href)} onClick={() => setMobileOpen(false)} indent />
+                      ))}
+                    </div>
+                  </GridReveal>
+                </div>
+              );
+            })}
             <p className="mt-4 px-3 font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">More</p>
             {NAV_UTILITY_LINKS.map((link) => (
               <MobileLink key={link.href} href={link.href} label={link.label} active={pathMatches(pathname, link.href)} onClick={() => setMobileOpen(false)} />
             ))}
           </nav>
-          <a href={SITE.github} target="_blank" rel="noreferrer noopener" className="block rounded-xl px-3 py-3 text-base text-ink-700 hover:bg-cloud-50">GitHub</a>
+          <a href={SITE.github} target="_blank" rel="noreferrer noopener" className="block min-h-12 rounded-xl px-3 py-3 text-base text-ink-700 hover:bg-cloud-50">GitHub</a>
           <ThemeSwitch />
         </div>
       </BottomSheet>
@@ -239,8 +261,21 @@ function MegaMenuPanel({
   );
 }
 
-function MobileLink({ href, label, active, onClick }: { href: string; label: string; active: boolean; onClick?: () => void }) {
-  return <Link href={href} aria-current={active ? "page" : undefined} onClick={onClick} className={cn("rounded-xl px-3 py-3 text-base transition-colors hover:bg-cloud-50", active ? "font-medium text-ink-900" : "text-ink-700")}>{label}</Link>;
+function MobileLink({ href, label, active, onClick, indent = false }: { href: string; label: string; active: boolean; onClick?: () => void; indent?: boolean }) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      onClick={onClick}
+      className={cn(
+        "block min-h-12 w-full rounded-xl px-3 py-3 text-base transition-colors hover:bg-cloud-50",
+        indent && "pl-6",
+        active ? "font-medium text-ink-900" : "text-ink-700",
+      )}
+    >
+      {label}
+    </Link>
+  );
 }
 
 function pathMatches(pathname: string, href: string) {
