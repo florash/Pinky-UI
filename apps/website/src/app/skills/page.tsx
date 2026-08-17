@@ -1,3 +1,4 @@
+import { ScrollSpySidebar } from "@pinky-ui/experiences";
 import type { Metadata } from "next";
 
 import { CatalogueBrowser } from "@/components/skills/catalogue-browser";
@@ -18,6 +19,12 @@ export const metadata: Metadata = pageMetadata(
   "Pinky UI interaction recipes help people and coding agents choose, tune and ship motion responsibly.",
   "/skills",
 );
+
+/** Hoisted so ScrollSpySidebar's observer effect doesn't re-run — and reset its active section — on every render. */
+const SKILLS_TOC_SECTIONS = [
+  { id: "featured", label: "Featured" },
+  ...SKILL_PUBLIC_GROUPS.map((group) => ({ id: `skill-group-${group.label.toLowerCase()}`, label: group.label })),
+];
 
 export default async function SkillsPage() {
   const skills = await listAllSkills();
@@ -42,7 +49,10 @@ export default async function SkillsPage() {
             </p>
           </div>
           <aside className="rounded-[22px] border border-line bg-white/70 p-5 shadow-soft">
-            <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">Recipe shape</p>
+            <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">On this page</p>
+            <ScrollSpySidebar className="mt-3" aria-label="Skills table of contents" sections={SKILLS_TOC_SECTIONS} />
+
+            <p className="mt-8 font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">Recipe shape</p>
             <ol className="mt-4 flex flex-col gap-2 text-sm text-ink-700">
               <li><span className="mr-2 font-mono text-xs text-ink-500">01</span>What it does</li>
               <li><span className="mr-2 font-mono text-xs text-ink-500">02</span>Interaction anatomy</li>

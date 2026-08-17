@@ -12,6 +12,7 @@ export {
   LayeredNavigationMenu,
   MorphingMegaNavigation,
   NeighborShiftNavigation,
+  ScrollSpySidebar,
   SectionAwareNavigation,
   SlidingMegaPanel,
   SpotlightMegaMenu,

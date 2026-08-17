@@ -1,3 +1,4 @@
+import { ScrollSpySidebar } from "@pinky-ui/experiences";
 import {
   allEffects,
   allExperiences,
@@ -7,7 +8,7 @@ import {
   layouts,
   primitives,
   readyComponents,
-} from "@pinky/registry";
+} from "@pinky-ui/registry";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -32,13 +33,22 @@ export const metadata: Metadata = pageMetadata(
   "/docs",
 );
 
-const COMPOSITION = `import { Magnetic, Jelly } from "@pinky/primitives";
+const COMPOSITION = `import { Magnetic, Jelly } from "@pinky-ui/primitives";
 
 <Magnetic strength={0.4}>
   <Jelly elasticity={0.35}>
     <button type="button">Explore</button>
   </Jelly>
 </Magnetic>`;
+
+const DOCS_SECTIONS = [
+  { id: "installation", label: "Installation" },
+  { id: "composition", label: "Composition" },
+  { id: "motion", label: "Motion rules" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "theming", label: "Theming" },
+  { id: "status", label: "Status" },
+];
 
 const MOTION_RULES = [
   {
@@ -78,11 +88,10 @@ export default function DocsPage() {
             </p>
           </div>
           <nav aria-label="Docs sections" className="rounded-[22px] border border-line bg-white/70 p-5 shadow-soft">
-            <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">On this page</p>
+            <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">Start here</p>
             <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm text-ink-700">
-              {["installation", "composition", "motion", "accessibility", "theming", "status"].map((id) => (
-                <li key={id}><a href={`#${id}`} className="inline-flex min-h-10 items-center capitalize underline decoration-line-strong underline-offset-4 hover:text-ink-900 sm:min-h-0">{id}</a></li>
-              ))}
+              <li><Link href="/primitives" className="inline-flex min-h-10 items-center font-medium text-ink-900 underline decoration-line-strong underline-offset-4 sm:min-h-0">Primitives</Link></li>
+              <li><Link href="/playground" className="inline-flex min-h-10 items-center underline decoration-line-strong underline-offset-4 hover:text-ink-900 sm:min-h-0">Playground</Link></li>
             </ul>
           </nav>
         </header>
@@ -91,7 +100,7 @@ export default function DocsPage() {
           <div className="flex min-w-0 flex-col gap-16">
             <Section title="Installation" id="installation">
               <p className="text-sm leading-relaxed text-ink-700">
-                Pinky UI is source-first today. The seven <code className="font-mono text-xs">@pinky/*</code> packages
+                Pinky UI is source-first today. The seven <code className="font-mono text-xs">@pinky-ui/*</code> packages
                 are prepared for public release but are not published to npm yet. Clone the repository to run the
                 live site and copy a pattern into an application when you are ready; after npm publication, the
                 package READMEs will show the normal registry installation commands.
@@ -165,7 +174,10 @@ export default function DocsPage() {
           </div>
 
           <aside className="lg:sticky lg:top-28 lg:self-start">
-            <p className="font-mono text-[0.6875rem] tracking-[0.14em] text-ink-500 uppercase">Reference</p>
+            <p className="font-mono text-[0.6875rem] tracking-[0.14em] text-ink-500 uppercase">On this page</p>
+            <ScrollSpySidebar sections={DOCS_SECTIONS} className="mt-3" aria-label="Docs table of contents" />
+
+            <p className="mt-10 font-mono text-[0.6875rem] tracking-[0.14em] text-ink-500 uppercase">Reference</p>
             <p className="mt-3 text-sm leading-relaxed text-ink-700">The docs explain the system; the live catalogue is where each interaction can be tried.</p>
             <Link href="/explore" className="mt-4 inline-flex text-sm font-medium text-ink-700 underline decoration-line-strong underline-offset-4 hover:text-ink-900">Open the interaction wall →</Link>
 

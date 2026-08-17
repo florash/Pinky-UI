@@ -10,10 +10,11 @@ import {
   LiquidCard,
   MagneticButton,
   MorphCard,
+  PillNav,
   RippleButton,
   SpotlightCard,
   TiltCard,
-} from "@pinky/components";
+} from "@pinky-ui/components";
 import { useState, type ReactNode } from "react";
 
 /**
@@ -32,6 +33,7 @@ export const COMPONENT_PREVIEWS: Record<string, ReactNode> = {
   "ripple-button": <RippleButtonPreview />,
   "glow-border": <GlowBorderPreview />,
   "fluid-tabs": <FluidTabsPreview />,
+  "pill-nav": <PillNavPreview />,
   "gooey-menu": <GooeyMenuPreview />,
   "floating-dock": <FloatingDockPreview />,
   "elastic-toggle": <ElasticTogglePreview />,
@@ -259,6 +261,24 @@ function FluidTabsPreview() {
         ]}
       />
     </div>
+  );
+}
+
+function PillNavPreview() {
+  const [active, setActive] = useState("explore");
+  const ids = ["explore", "docs", "skills"];
+  return (
+    <PillNav
+      aria-label="Preview navigation"
+      size="sm"
+      items={ids.map((id) => ({
+        id,
+        label: id[0]!.toUpperCase() + id.slice(1),
+        href: `#${id}`,
+        active: active === id,
+        onClick: () => setActive(id),
+      }))}
+    />
   );
 }
 

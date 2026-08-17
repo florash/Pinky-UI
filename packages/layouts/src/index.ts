@@ -1,5 +1,6 @@
 export { PolaroidWall, type PolaroidWallProps } from "./galleries/polaroid-wall";
 export { MasonryGallery, type MasonryGalleryProps } from "./galleries/masonry-gallery";
+export { ScrollMorphWall, type ScrollMorphWallProps, type ScrollMorphWallItem } from "./galleries/scroll-morph-wall";
 export { StackGrid, type StackGridProps } from "./grids/stack-grid";
 export { ExpandableBento, type ExpandableBentoProps, type BentoItem } from "./grids/expandable-bento";
 export { DraggableCardStack, type DraggableCardStackProps } from "./stacks/draggable-card-stack";

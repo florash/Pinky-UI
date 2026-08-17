@@ -1,4 +1,4 @@
-import type { Preset, PropDef } from "@pinky/registry";
+import type { Preset, PropDef } from "@pinky-ui/registry";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -6,8 +6,12 @@ import { notFound } from "next/navigation";
 import { ExploreDetailPreview } from "@/components/previews/explore-previews";
 import { hasExplorePreview } from "@/components/previews/preview-manifest";
 import { Markdown } from "@/components/skills/markdown";
+import { Breadcrumbs } from "@/components/site/breadcrumbs";
 import { CodeBlock } from "@/components/site/code-block";
+import { FamilyLinks } from "@/components/site/family-links";
+import { InstallTabs } from "@/components/site/install-tabs";
 import { Container, Halo } from "@/components/site/layout";
+import { l1ForHref } from "@/config/navigation";
 import type { SkillKind } from "@/lib/skills";
 
 export type RegistryDetailRecord = {
@@ -30,6 +34,8 @@ export type RegistryDetailRecord = {
   whenToUse: string[];
   whenNotToUse: string[];
   related: Array<{ slug: string; name: string; href: string }>;
+  /** A guaranteed same-family list, independent of the curated `related` set. */
+  sameFamily?: Array<{ slug: string; name: string; href: string }>;
   discovery?: {
     role: "canonical" | "solid" | "preset" | "secondary" | "legacy";
     note?: string;
@@ -41,26 +47,18 @@ export type RegistryDetailRecord = {
 export function RegistryDetailPage({ entry }: { entry: RegistryDetailRecord }) {
   if (entry.status !== undefined && entry.status !== "ready") notFound();
 
+  const packageName = entry.importPath.match(/@pinky-ui\/[\w-]+/)?.[0] ?? "@pinky-ui/components";
+  const l1 = l1ForHref(entry.collectionHref);
+  const trail = l1 && l1.href !== entry.collectionHref
+    ? [l1, { href: entry.collectionHref, label: entry.collectionLabel }]
+    : [{ href: entry.collectionHref, label: entry.collectionLabel }];
+
   return (
     <article className="relative overflow-hidden pt-10 pb-20">
       <Halo className="-top-40 right-[-12rem] size-[28rem]" color="var(--pinky-halo-b)" />
 
       <Container>
-        <nav aria-label="Breadcrumb" className="text-xs text-ink-500">
-          <ol className="flex flex-wrap items-center gap-2">
-            <li>
-              <Link href="/" className="transition-colors hover:text-ink-900">Pinky UI</Link>
-            </li>
-            <li aria-hidden>/</li>
-            <li>
-              <Link href={entry.collectionHref} className="transition-colors hover:text-ink-900">
-                {entry.collectionLabel}
-              </Link>
-            </li>
-            <li aria-hidden>/</li>
-            <li className="text-ink-900">{entry.name}</li>
-          </ol>
-        </nav>
+        <Breadcrumbs trail={trail} current={entry.name} />
 
         <header className="mt-8 max-w-2xl">
           <div className="flex flex-wrap items-center gap-3">
@@ -128,14 +126,17 @@ export function RegistryDetailPage({ entry }: { entry: RegistryDetailRecord }) {
                 </Block>
               ) : null}
 
-              <Block title="Install from source" id="installation">
+              <Block title="Install" id="installation">
                 <p className="text-sm leading-relaxed text-ink-700">
-                  The <code className="font-mono text-xs">@pinky/*</code> packages are private source packages in this repository today,
-                  not published npm packages. Clone this repository to run the examples, or copy
-                  the component and its built-on source files into your own app.
+                  Add <code className="font-mono text-xs">{packageName}</code> as a dependency, or use the CLI to
+                  copy this component&apos;s source directly into your project — no dependency to manage, fully editable.
+                </p>
+                <InstallTabs className="mt-4" packageName={packageName} slug={entry.slug} />
+                <p className="mt-4 text-sm leading-relaxed text-ink-700">
+                  Prefer to run the whole repository locally instead?
                 </p>
                 <CodeBlock
-                  className="mt-4"
+                  className="mt-2"
                   copy={false}
                   label="repository"
                   code={"git clone https://github.com/florash/Pinky-UI.git\ncd Pinky-UI\nnpm install\nnpm run dev"}
@@ -203,6 +204,8 @@ export function RegistryDetailPage({ entry }: { entry: RegistryDetailRecord }) {
                   </ul>
                 </>
               ) : null}
+
+              <FamilyLinks heading={`More in ${entry.collectionLabel}`} items={(entry.sameFamily ?? []).filter((item) => item.slug !== entry.slug)} />
             </aside>
           </div>
       </Container>

@@ -10,8 +10,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 
 const EXPECTED = {
-  publicSkillRoutes: 284,
-  canonicalRecipes: 283,
+  publicSkillRoutes: 336,
+  canonicalRecipes: 335,
   legacyAliases: 1,
   minimumProductPages: 567,
   releaseVersion: "0.1.0",
@@ -24,12 +24,12 @@ const RELEASE_ENV = {
 };
 
 const PUBLIC_PACKAGE_LAYERS = [
-  ["@pinky/primitives", "@pinky/registry"],
-  ["@pinky/components", "@pinky/layouts", "@pinky/effects", "@pinky/systems"],
-  ["@pinky/experiences"],
+  ["@pinky-ui/primitives", "@pinky-ui/registry"],
+  ["@pinky-ui/components", "@pinky-ui/layouts", "@pinky-ui/effects", "@pinky-ui/systems", "@pinky-ui/ai-ui", "@pinky-ui/mobile"],
+  ["@pinky-ui/experiences"],
 ];
-const PUBLIC_PACKAGES = PUBLIC_PACKAGE_LAYERS.flatMap((layer) => layer.map((packageName) => packageName.replace("@pinky/", "")));
-const PUBLIC_PACKAGE_NAMES = new Set(PUBLIC_PACKAGES.map((name) => `@pinky/${name}`));
+const PUBLIC_PACKAGES = PUBLIC_PACKAGE_LAYERS.flatMap((layer) => layer.map((packageName) => packageName.replace("@pinky-ui/", "")));
+const PUBLIC_PACKAGE_NAMES = new Set(PUBLIC_PACKAGES.map((name) => `@pinky-ui/${name}`));
 
 function packageDirectory(name) {
   return path.join(root, "packages", name);
@@ -160,7 +160,7 @@ async function packageInfos() {
   return Promise.all(
     PUBLIC_PACKAGES.map(async (name) => ({
       name,
-      packageName: `@pinky/${name}`,
+      packageName: `@pinky-ui/${name}`,
       directory: packageDirectory(name),
       source: path.join(packageDirectory(name), "src"),
       dist: path.join(packageDirectory(name), "dist"),
@@ -239,7 +239,7 @@ async function assertPackageMetadata(infos) {
       if (!/\.(?:ts|tsx)$/.test(file)) continue;
       const source = await fs.readFile(file, "utf8");
       // Only inspect actual top-level import declarations. Registry metadata contains
-      // generated importPath strings such as `from "@pinky/components"` that are
+      // generated importPath strings such as `from "@pinky-ui/components"` that are
       // documentation, not runtime package dependencies.
       const importSpecifiers = [
         ...source.matchAll(/^\s*(?:import|export)\s+(?:[^;\n]*?\s+from\s+)?["'](@pinky\/[^"']+)["']/gm),
@@ -410,13 +410,13 @@ function consumerSource() {
   return `import { useState } from "react";
 import { createRoot } from "react-dom/client";
 
-import { FluidTabs, JellyCard, MagneticButton } from "@pinky/components";
-import { CursorSpotlight } from "@pinky/effects";
-import { BubbleField, FloatingIslandNav, HoverExpandNavigation, MorphMenu, MorphingHero } from "@pinky/experiences";
-import { CardFan } from "@pinky/layouts";
-import { Magnetic } from "@pinky/primitives";
-import { getComponent } from "@pinky/registry";
-import { InteractiveLineChart, SwipeActionRow, ValidationField } from "@pinky/systems";
+import { FluidTabs, JellyCard, MagneticButton } from "@pinky-ui/components";
+import { CursorSpotlight } from "@pinky-ui/effects";
+import { BubbleField, FloatingIslandNav, HoverExpandNavigation, MorphMenu, MorphingHero } from "@pinky-ui/experiences";
+import { CardFan } from "@pinky-ui/layouts";
+import { Magnetic } from "@pinky-ui/primitives";
+import { getComponent } from "@pinky-ui/registry";
+import { InteractiveLineChart, SwipeActionRow, ValidationField } from "@pinky-ui/systems";
 
 const data = [
   { id: "mon", label: "Mon", value: 18 },
@@ -526,6 +526,7 @@ async function runReleaseVerification() {
   }
   console.log(`[release] website build: PASS (${pageCount} generated pages; metadata routes are not frozen)`);
   await run(npmCommand, ["run", "verify:metadata"], { env: RELEASE_ENV });
+  await run(npmCommand, ["run", "verify:orphans"]);
   await run("git", ["diff", "--check"]);
   await assertTrackedHygiene();
   await assertSkillInvariants();

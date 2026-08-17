@@ -1,4 +1,4 @@
-import { allEffects, allExperiences, allProductSystems, allWorkflowSystems, components, layouts } from "@pinky/registry";
+import { allAi, allEffects, allExperiences, allProductSystems, allWorkflowSystems, components, layouts } from "@pinky-ui/registry";
 import type { MetadataRoute } from "next";
 
 import { hasComponentPreview, hasLayoutPreview } from "@/components/previews/preview-manifest";
@@ -25,6 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const layoutPaths = layouts
     .filter((entry) => entry.status === "ready" && hasLayoutPreview(entry.slug))
     .map((entry) => `/layouts/${entry.slug}`);
+  const aiPaths = allAi.map((entry) => `/ai/${entry.slug}`);
   const effectPaths = allEffects.map((entry) => `/effects/${entry.slug}`);
   const experiencePaths = allExperiences
     .filter((entry) => entry.status === "ready")
@@ -34,6 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return uniquePaths([
     ...PUBLIC_INDEXABLE_ROUTES,
+    ...aiPaths,
     ...componentPaths,
     ...layoutPaths,
     ...effectPaths,

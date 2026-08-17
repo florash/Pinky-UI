@@ -9,8 +9,8 @@ import { build } from "esbuild";
 
 const execFile = promisify(execFileCallback);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const packageNames = ["primitives", "components", "layouts", "effects", "experiences", "systems", "registry"];
-const packageNamesByScope = new Set(packageNames.map((name) => `@pinky/${name}`));
+const packageNames = ["primitives", "components", "layouts", "effects", "experiences", "systems", "ai-ui", "mobile", "registry"];
+const packageNamesByScope = new Set(packageNames.map((name) => `@pinky-ui/${name}`));
 
 const compilerOptions = {
   target: "ES2022",
@@ -47,7 +47,7 @@ async function readPackage(name) {
     packageJson,
     dependencies: Object.keys(packageJson.dependencies ?? {})
       .filter((dependency) => packageNamesByScope.has(dependency))
-      .map((dependency) => dependency.slice("@pinky/".length)),
+      .map((dependency) => dependency.slice("@pinky-ui/".length)),
   };
 }
 
@@ -79,7 +79,7 @@ function pathsFor(packageInfo, packages) {
   const paths = {};
   for (const dependency of packageInfo.dependencies) {
     const dependencyInfo = packages.get(dependency);
-    paths[`@pinky/${dependency}`] = [path.join(dependencyInfo.dist, "index.d.ts")];
+    paths[`@pinky-ui/${dependency}`] = [path.join(dependencyInfo.dist, "index.d.ts")];
   }
   return paths;
 }
@@ -115,7 +115,7 @@ async function runTypeScript(packageInfo, packages, tempRoot) {
     );
   } catch (error) {
     const output = [error.stdout, error.stderr].filter(Boolean).join("\n");
-    throw new Error(`TypeScript declaration build failed for @pinky/${packageInfo.name}\n${output}`);
+    throw new Error(`TypeScript declaration build failed for @pinky-ui/${packageInfo.name}\n${output}`);
   }
 }
 
@@ -163,7 +163,7 @@ async function buildPackage(packageInfo, packages, tempRoot) {
   await fs.access(javascript);
   const [declarationStat, javascriptStat] = await Promise.all([fs.stat(declaration), fs.stat(javascript)]);
   console.log(
-    `Built @pinky/${packageInfo.name}: ${javascriptStat.size} B JS, ${declarationStat.size} B declarations`,
+    `Built @pinky-ui/${packageInfo.name}: ${javascriptStat.size} B JS, ${declarationStat.size} B declarations`,
   );
 }
 

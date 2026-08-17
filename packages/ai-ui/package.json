@@ -1,0 +1,36 @@
+{
+  "name": "@pinky-ui/ai-ui",
+  "version": "0.1.0",
+  "description": "Animated interface primitives for AI and agent chat products: streaming text, tool calls, prompt input.",
+  "license": "MIT",
+  "keywords": ["react", "ui", "ai", "chat", "agent", "streaming", "motion"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/florash/Pinky-UI.git",
+    "directory": "packages/ai-ui"
+  },
+  "type": "module",
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "prepack": "node ../../scripts/build-packages.mjs --package ai-ui"
+  },
+  "dependencies": {
+    "@pinky-ui/primitives": "0.1.0"
+  },
+  "peerDependencies": {
+    "motion": ">=12",
+    "react": ">=19"
+  },
+  "sideEffects": false,
+  "publishConfig": { "access": "public" }
+}

@@ -22,6 +22,8 @@ export default defineConfig({
       "@pinky-ui/effects": path.join(root, "packages/effects/src/index.ts"),
       "@pinky-ui/experiences": path.join(root, "packages/experiences/src/index.ts"),
       "@pinky-ui/systems": path.join(root, "packages/systems/src/index.ts"),
+      "@pinky-ui/ai-ui": path.join(root, "packages/ai-ui/src/index.ts"),
+      "@pinky-ui/mobile": path.join(root, "packages/mobile/src/index.ts"),
     },
   },
   test: {

@@ -1,0 +1,36 @@
+{
+  "name": "@pinky-ui/mobile",
+  "version": "0.1.0",
+  "description": "Native-feeling mobile primitives for Pinky UI: glass layers, drag-to-dismiss and a Dynamic Island-style status pill.",
+  "license": "MIT",
+  "keywords": ["react", "ui", "mobile", "gesture", "glass", "haptics", "motion"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/florash/Pinky-UI.git",
+    "directory": "packages/mobile"
+  },
+  "type": "module",
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "prepack": "node ../../scripts/build-packages.mjs --package mobile"
+  },
+  "dependencies": {
+    "@pinky-ui/primitives": "0.1.0"
+  },
+  "peerDependencies": {
+    "motion": ">=12",
+    "react": ">=19"
+  },
+  "sideEffects": false,
+  "publishConfig": { "access": "public" }
+}

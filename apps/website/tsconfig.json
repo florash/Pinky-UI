@@ -34,7 +34,11 @@
       "@pinky-ui/experiences": ["../../packages/experiences/src/index.ts"],
       "@pinky-ui/experiences/*": ["../../packages/experiences/src/*"],
       "@pinky-ui/systems": ["../../packages/systems/src/index.ts"],
-      "@pinky-ui/systems/*": ["../../packages/systems/src/*"]
+      "@pinky-ui/systems/*": ["../../packages/systems/src/*"],
+      "@pinky-ui/ai-ui": ["../../packages/ai-ui/src/index.ts"],
+      "@pinky-ui/ai-ui/*": ["../../packages/ai-ui/src/*"],
+      "@pinky-ui/mobile": ["../../packages/mobile/src/index.ts"],
+      "@pinky-ui/mobile/*": ["../../packages/mobile/src/*"]
     }
   },
   "include": [

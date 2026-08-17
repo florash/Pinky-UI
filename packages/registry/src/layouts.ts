@@ -45,7 +45,7 @@ const foundationalLayouts: LayoutEntry[] = [
     status: "ready",
     tags: ["photos", "scatter", "editorial", "wall"],
     builtOn: ["scatter", "spring"],
-    importPath: 'import { PolaroidWall } from "@pinky/layouts";',
+    importPath: 'import { PolaroidWall } from "@pinky-ui/layouts";',
     usage: `<PolaroidWall spread="soft" rotation={6} overlap={0.12}>
   {photos.map((photo) => (
     <Polaroid key={photo.id} {...photo} />
@@ -94,7 +94,7 @@ const foundationalLayouts: LayoutEntry[] = [
     status: "ready",
     tags: ["shared layout", "expand", "signature", "transition"],
     builtOn: ["morph", "spring"],
-    importPath: 'import { StackGrid } from "@pinky/layouts";',
+    importPath: 'import { StackGrid } from "@pinky-ui/layouts";',
     usage: `<StackGrid defaultMode="stack" columns={3}>
   {items.map((item) => (
     <SpotlightCard key={item.id}>{item.title}</SpotlightCard>
@@ -141,7 +141,7 @@ const foundationalLayouts: LayoutEntry[] = [
     status: "ready",
     tags: ["masonry", "columns", "photos", "density"],
     builtOn: ["use-columns"],
-    importPath: 'import { MasonryGallery } from "@pinky/layouts";',
+    importPath: 'import { MasonryGallery } from "@pinky-ui/layouts";',
     usage: `<MasonryGallery
   columns={{ mobile: 2, tablet: 3, desktop: 4 }}
   gap={16}
@@ -179,6 +179,47 @@ const foundationalLayouts: LayoutEntry[] = [
     skill: "masonry-gallery",
   },
   {
+    slug: "scroll-morph-wall",
+    name: "Scroll Morph Wall",
+    description: "A gallery whose arrangement is a function of scroll — grid, ring and fanned deck, one continuous interpolation.",
+    family: "galleries",
+    status: "ready",
+    tags: ["scroll", "gallery", "morph", "spatial"],
+    builtOn: ["Motion useScroll", "useTransform"],
+    importPath: 'import { ScrollMorphWall } from "@pinky-ui/layouts";',
+    usage: `<ScrollMorphWall
+  items={items}
+  travel={2.4}
+/>`,
+    props: [
+      { name: "items", type: "ScrollMorphWallItem[]", description: "Keyed content with an optional label and meta." },
+      { name: "travel", type: "number", defaultValue: "2.4", description: "How much scroll the transformation takes, in viewport heights." },
+      { name: "label", type: "string", defaultValue: '"Scroll morph wall"', description: "Accessible name for the section." },
+    ],
+    itemRange: "4–9 items. The ring and fan positions are legible in that range; more items crowd the deck.",
+    mobile: "Falls back to a static two-column grid — the arrangement is the enhancement, not the content.",
+    accessibility: [
+      "Touch, reduced motion and narrow viewports render a plain static grid with no scroll hijacking.",
+      "Positions are transform-only; DOM order and any semantics inside `content` are untouched.",
+      "The section never traps scroll — native page scroll stays in charge throughout.",
+    ],
+    performance: [
+      "One shared scrollYProgress motion value drives every item; no per-item scroll listeners.",
+      "Position, scale, rotation and stacking order interpolate off motion values, not React state — no re-render while scrolling.",
+    ],
+    reducedMotion: "Items sit in a static grid immediately; nothing moves as the page scrolls.",
+    whenToUse: [
+      "A signature hero or showcase moment for a curated small set of images or cards",
+      "Sections meant to reward scrolling with a payoff, not just reveal content",
+    ],
+    whenNotToUse: [
+      "Long or unbounded collections — use Masonry Gallery",
+      "Utility browsing where users need to compare items quickly, not watch them move",
+    ],
+    related: ["depth-scroll-gallery", "polaroid-wall", "spatial-card-tunnel"],
+    skill: "scroll-morph-wall",
+  },
+  {
     slug: "draggable-card-stack",
     name: "Draggable Card Stack",
     description: "A stack whose top card can be thrown away — or advanced with a button.",
@@ -186,7 +227,7 @@ const foundationalLayouts: LayoutEntry[] = [
     status: "ready",
     tags: ["drag", "swipe", "deck", "review"],
     builtOn: ["spring"],
-    importPath: 'import { DraggableCardStack } from "@pinky/layouts";',
+    importPath: 'import { DraggableCardStack } from "@pinky-ui/layouts";',
     usage: `<DraggableCardStack threshold={110} loop>
   {cards.map((card) => (
     <JellyCard key={card.id}>{card.body}</JellyCard>
@@ -233,7 +274,7 @@ const foundationalLayouts: LayoutEntry[] = [
     status: "ready",
     tags: ["bento", "expand", "grid", "detail"],
     builtOn: ["spring"],
-    importPath: 'import { ExpandableBento } from "@pinky/layouts";',
+    importPath: 'import { ExpandableBento } from "@pinky-ui/layouts";',
     usage: `<ExpandableBento
   columns={3}
   items={features}
@@ -279,7 +320,7 @@ const foundationalLayouts: LayoutEntry[] = [
     status: "ready",
     tags: ["fan", "deck", "hand", "playful"],
     builtOn: ["spring"],
-    importPath: 'import { CardFan } from "@pinky/layouts";',
+    importPath: 'import { CardFan } from "@pinky-ui/layouts";',
     usage: `<CardFan spread={28} rotation={8} activeIndex={active}>
   {photos.map((photo) => (
     <TiltCard key={photo.id}>{photo.title}</TiltCard>
@@ -342,7 +383,7 @@ type ModernLayoutConfig = {
 const modernLayout = ({ component, primaryProp, accessibility, performance, reducedMotion, whenToUse, whenNotToUse, related, ...config }: ModernLayoutConfig): LayoutEntry => ({
   ...config,
   status: "ready",
-  importPath: `import { ${component} } from "@pinky/layouts";`,
+  importPath: `import { ${component} } from "@pinky-ui/layouts";`,
   props: [primaryProp, { name: "className", type: "string", description: "Styles the outer layout surface." }, { name: "disabled", type: "boolean", defaultValue: "false", description: "Keeps the content and interaction while removing spatial choreography." }],
   accessibility: accessibility ?? ["Visual depth never changes DOM or reading order.", "Hover states have a focus equivalent and controls remain native."],
   performance: performance ?? ["Uses transforms and MotionValues rather than pointer-frame React renders.", "The layout does not create a rendering or media dependency for its children."],
@@ -434,7 +475,7 @@ const editorialLayouts: LayoutEntry[] = [
 const expansionLayout = ({ component, ...entry }: Omit<LayoutEntry, "importPath"> & { component: string }): LayoutEntry => ({
   ...entry,
   status: "ready",
-  importPath: `import { ${component} } from "@pinky/layouts";`,
+  importPath: `import { ${component} } from "@pinky-ui/layouts";`,
 });
 
 const expansionLayouts: LayoutEntry[] = [

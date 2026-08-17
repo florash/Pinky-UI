@@ -5,6 +5,7 @@ import {
   AnchoredInspector,
   ContextMenuSurface,
   CursorActionSurface,
+  Dialog,
   EdgeDockedPanel,
   ExpandingActionSurface,
   FollowAnchorSurface,
@@ -14,8 +15,40 @@ import {
   SelectionToolbar,
   SharedContextSurface,
   SpotlightOverlay,
-} from "@pinky/systems";
-import type { ReactNode } from "react";
+  Tooltip,
+} from "@pinky-ui/systems";
+import { useState, type ReactNode } from "react";
+
+function DialogDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="inline-flex min-h-11 items-center rounded-pill bg-ink-900 px-4 text-sm font-medium text-milk"
+      >
+        Open dialog
+      </button>
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Delete project?"
+        description="This cannot be undone."
+        footer={
+          <>
+            <button type="button" onClick={() => setOpen(false)} className="inline-flex min-h-11 items-center rounded-pill border border-line px-4 text-sm">
+              Cancel
+            </button>
+            <button type="button" onClick={() => setOpen(false)} className="inline-flex min-h-11 items-center rounded-pill bg-ink-900 px-4 text-sm text-milk">
+              Delete
+            </button>
+          </>
+        }
+      />
+    </>
+  );
+}
 
 const OVERLAY_INSPECTOR_ITEMS = [
   { id: "source", label: "Source surface", meta: "Canvas / 01", value: "Selected", description: "The inspector remains next to the source." },
@@ -37,4 +70,12 @@ export const OVERLAY_PREVIEWS: Record<string, ReactNode> = {
   "follow-anchor-surface": <FollowAnchorSurface />,
   "shared-context-surface": <SharedContextSurface />,
   "morphing-context-surface": <MorphingContextSurface />,
+  tooltip: (
+    <Tooltip content="Copy to clipboard">
+      <button type="button" className="inline-flex min-h-11 items-center rounded-pill border border-line bg-white px-4 text-sm">
+        Hover or focus me
+      </button>
+    </Tooltip>
+  ),
+  dialog: <DialogDemo />,
 };

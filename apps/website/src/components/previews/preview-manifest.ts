@@ -11,12 +11,14 @@ export const COMPONENT_PREVIEW_SLUGS = [
   "gooey-menu",
   "floating-dock",
   "elastic-toggle",
+  "pill-nav",
 ] as const;
 
 export const LAYOUT_PREVIEW_SLUGS = [
   "polaroid-wall",
   "stack-grid",
   "masonry-gallery",
+  "scroll-morph-wall",
   "draggable-card-stack",
   "expandable-bento",
   "card-fan",
@@ -43,12 +45,24 @@ export const LAYOUT_PREVIEW_SLUGS = [
   "progressive-mosaic",
 ] as const;
 
+export const AI_PREVIEW_SLUGS = [
+  "streaming-text",
+  "thinking-panel",
+  "message-bubble",
+  "tool-call-card",
+  "prompt-input",
+  "streaming-actions",
+] as const;
+
 export const EXPLORE_PREVIEW_SLUGS = [
   ...COMPONENT_PREVIEW_SLUGS,
   ...LAYOUT_PREVIEW_SLUGS,
+  ...AI_PREVIEW_SLUGS,
   "cursor-spotlight",
   "hover-image-preview",
   "lens-cursor",
+  "link-preview",
+  "sibling-dim",
   "blur-reveal",
   "spring-reveal",
   "mask-reveal",
@@ -77,6 +91,7 @@ export const EXPLORE_PREVIEW_SLUGS = [
   "clip-reveal-menu",
   "edge-rail-navigation",
   "section-aware-navigation",
+  "scroll-spy-sidebar",
   "expandable-bottom-navigation",
   "compressing-scroll-navigation",
   "morph-menu",
@@ -151,6 +166,7 @@ export const EXPLORE_PREVIEW_SLUGS = [
   "morph-toast",
   "status-pill",
   "inline-feedback",
+  "empty-state",
   "action-undo-bar",
   "morph-search",
   "command-palette",
@@ -197,6 +213,8 @@ export const EXPLORE_PREVIEW_SLUGS = [
   "context-menu-surface",
   "selection-toolbar",
   "peek-overlay",
+  "tooltip",
+  "dialog",
   "nested-surface-stack",
   "spotlight-overlay",
   "cursor-action-surface",
@@ -240,6 +258,11 @@ export const EXPLORE_PREVIEW_SLUGS = [
   "mobile-undo-bar",
   "quick-action-sheet",
   "hold-to-reveal-actions",
+  "action-sheet",
+  "wheel-picker",
+  "swipe-back",
+  "long-press-context-menu",
+  "pinch-zoom-image",
 ] as const;
 
 export function hasComponentPreview(slug: string) {
@@ -248,6 +271,10 @@ export function hasComponentPreview(slug: string) {
 
 export function hasLayoutPreview(slug: string) {
   return LAYOUT_PREVIEW_SLUGS.includes(slug as (typeof LAYOUT_PREVIEW_SLUGS)[number]);
+}
+
+export function hasAiPreview(slug: string) {
+  return AI_PREVIEW_SLUGS.includes(slug as (typeof AI_PREVIEW_SLUGS)[number]);
 }
 
 export function hasExplorePreview(slug: string) {

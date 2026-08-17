@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@pinky/components";
+import { cn } from "@pinky-ui/components";
 
 import { THEMES, useTheme, type Theme } from "./theme-provider";
 
@@ -32,7 +32,11 @@ export function ThemeSwitch({ className }: { className?: string }) {
           title={option}
           onClick={() => setTheme(option)}
           className={cn(
-            "size-8 rounded-pill border transition-[transform,box-shadow,border-color] duration-300 ease-[var(--ease-soft)] sm:size-6",
+            // The visible swatch stays small on purpose; a transparent
+            // ::before pads the actual hit area out to 44×44 on a coarse
+            // pointer only, so it never grows the target — or overlaps a
+            // neighbour's — under a mouse, which needs no such padding.
+            "relative size-8 rounded-pill border transition-[transform,box-shadow,border-color] duration-300 ease-[var(--ease-soft)] [@media(pointer:coarse)]:before:absolute [@media(pointer:coarse)]:before:-inset-1.5 [@media(pointer:coarse)]:before:content-[''] sm:size-6 sm:[@media(pointer:coarse)]:before:-inset-2.5",
             theme === option
               ? "scale-105 border-ink-500/40 shadow-soft"
               : "border-line hover:border-line-strong",

@@ -26,10 +26,10 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <SkillsTeaser />
       <SignatureInteractions />
       <ExploreRail />
       <LayoutsSection />
-      <SkillsTeaser />
       <OpenSourceCta />
     </>
   );

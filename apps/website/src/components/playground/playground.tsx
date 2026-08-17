@@ -8,7 +8,7 @@ import {
   MagneticButton,
   TiltCard,
   type LiquidCardProps,
-} from "@pinky/components";
+} from "@pinky-ui/components";
 import { useId, useMemo, useState } from "react";
 
 import { CodeBlock } from "@/components/site/code-block";
