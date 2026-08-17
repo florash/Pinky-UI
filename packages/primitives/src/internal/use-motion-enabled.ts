@@ -22,3 +22,12 @@ export function useMotionEnabled(): boolean {
 
   return enabled;
 }
+
+/**
+ * The audit-vocabulary name for the same signal, inverted: `true` once
+ * reduced motion has been confirmed. Wraps {@link useMotionEnabled} rather
+ * than re-reading `matchMedia` a second time.
+ */
+export function useReducedMotion(): boolean {
+  return !useMotionEnabled();
+}
