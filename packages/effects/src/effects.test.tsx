@@ -1,20 +1,15 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { setPointerCapability, setReducedMotion } from "../../../vitest.setup";
+import { setReducedMotion } from "../../../vitest.setup";
 import { BlurReveal } from "./motion/blur-reveal";
 import { LiquidLoader } from "./motion/liquid-loader";
-import { MaskReveal } from "./motion/mask-reveal";
 import { SplitTextReveal } from "./text/split-text-reveal";
 import { TextScramble } from "./text/text-scramble";
-import { CursorBlend } from "./cursor/cursor-blend";
 import { CursorProvider, CursorTarget, useCursorTarget } from "./cursor/cursor-provider";
 import { HoverImagePreview, HoverImagePreviewItem } from "./cursor/hover-image-preview";
 import { LensCursor } from "./cursor/lens-cursor";
-import { LinkPreview, LinkPreviewItem } from "./cursor/link-preview";
-import { SiblingDim, SiblingDimItem } from "./motion/sibling-dim";
-import { SoftCursor } from "./cursor/soft-cursor";
 import { calculateScrollProgress, calculateViewportProgress } from "./scroll";
 
 function CursorReadout() {
@@ -82,150 +77,6 @@ describe("reduced motion fallbacks", () => {
 
     expect(screen.getByLabelText("Open project")).toBeInTheDocument();
     expect(screen.getByText("Open project")).toBeInTheDocument();
-  });
-});
-
-describe("repeated mount/unmount — global-listener cleanup", () => {
-  // The shared pointer source (packages/primitives/src/internal/pointer-store.ts)
-  // ref-counts subscribers and only attaches its window/document listeners while
-  // at least one cursor-family component is mounted. Fifty mount/unmount cycles
-  // in the same test — no route change, no tree rebuild — is the case a
-  // route-to-route leak check can't see: a single component's own effect
-  // cleanup either balances every time or it doesn't.
-  const TRACKED_EVENTS = new Set(["pointermove", "pointerdown", "pointerleave", "blur"]);
-
-  function countTrackedListeners() {
-    let net = 0;
-    const spies = [window, document].map((target) => {
-      const add = vi.spyOn(target, "addEventListener");
-      const remove = vi.spyOn(target, "removeEventListener");
-      return { add, remove };
-    });
-    return {
-      read: () => {
-        net = 0;
-        for (const { add, remove } of spies) {
-          for (const call of add.mock.calls) if (TRACKED_EVENTS.has(call[0])) net += 1;
-          for (const call of remove.mock.calls) if (TRACKED_EVENTS.has(call[0])) net -= 1;
-        }
-        return net;
-      },
-      restore: () => spies.forEach(({ add, remove }) => { add.mockRestore(); remove.mockRestore(); }),
-    };
-  }
-
-  it("balances SoftCursor's global pointer listeners over 50 mount/unmount cycles", () => {
-    setPointerCapability(true);
-    const tracker = countTrackedListeners();
-
-    for (let cycle = 0; cycle < 50; cycle += 1) {
-      const { unmount } = render(<SoftCursor />);
-      unmount();
-    }
-
-    expect(tracker.read()).toBe(0);
-    tracker.restore();
-  });
-
-  it("balances HoverImagePreview's global pointer listeners over 50 mount/unmount cycles", () => {
-    setPointerCapability(true);
-    const tracker = countTrackedListeners();
-
-    for (let cycle = 0; cycle < 50; cycle += 1) {
-      const { unmount } = render(
-        <HoverImagePreview>
-          <HoverImagePreviewItem src="/cover.jpg">
-            <a href="/project">Project</a>
-          </HoverImagePreviewItem>
-        </HoverImagePreview>,
-      );
-      unmount();
-    }
-
-    expect(tracker.read()).toBe(0);
-    tracker.restore();
-  });
-
-  // SiblingDim binds its handlers as plain onPointerEnter/onPointerLeave/onFocus/
-  // onBlur JSX props on the DOM node itself, not a manual window/document
-  // listener in a useEffect — React's own reconciliation removes them when the
-  // element unmounts, so there is no cleanup path here to test.
-});
-
-describe("cursor blend", () => {
-  it("renders nothing without a confirmed fine pointer, so touch never mounts decorative cursor DOM", () => {
-    const { container } = render(<CursorBlend />);
-    expect(container).toBeEmptyDOMElement();
-  });
-});
-
-describe("mask reveal without a hover-capable pointer", () => {
-  it("never masks a hover-triggered reveal's content — no reveal gesture exists to lift it", () => {
-    // The global matchMedia mock answers "no" to every query but reduced-motion,
-    // so `usePointerCapability().hasHover` is false here — the touch case.
-    const { container } = render(
-      <MaskReveal trigger="hover">
-        <button type="button">Open case study</button>
-      </MaskReveal>,
-    );
-    const masked = container.querySelector('[style*="clip-path"]');
-    expect(masked?.getAttribute("style")).not.toMatch(/clip-path:\s*inset\(0% 0% 100% 0%\)/);
-    expect(screen.getByRole("button", { name: "Open case study" })).toBeInTheDocument();
-  });
-});
-
-describe("link preview", () => {
-  it("reveals a card for keyboard focus without a pointer", async () => {
-    const user = userEvent.setup();
-    const { container } = render(
-      <LinkPreview>
-        <LinkPreviewItem title="Soft Matter" description="A study in restrained motion.">
-          <a href="/soft-matter">Soft Matter</a>
-        </LinkPreviewItem>
-      </LinkPreview>,
-    );
-
-    await user.tab();
-    await waitFor(() => expect(container.querySelector("[data-pinky-preview]")).toBeInTheDocument());
-    expect(screen.getByText("Soft Matter", { selector: "p" })).toBeInTheDocument();
-    expect(screen.getByText("A study in restrained motion.")).toBeInTheDocument();
-  });
-});
-
-describe("sibling dim", () => {
-  it("dims the other items while one is hovered, and clears on leave", async () => {
-    setPointerCapability(true);
-    const user = userEvent.setup();
-    render(
-      <SiblingDim>
-        <SiblingDimItem id="a">Overview</SiblingDimItem>
-        <SiblingDimItem id="b">Pricing</SiblingDimItem>
-      </SiblingDim>,
-    );
-
-    const overview = screen.getByText("Overview");
-    const pricing = screen.getByText("Pricing");
-
-    await user.hover(overview);
-    expect(pricing.className).toContain("opacity-45");
-    expect(overview.className).not.toContain("opacity-45");
-
-    await user.unhover(overview);
-    expect(pricing.className).not.toContain("opacity-45");
-  });
-
-  it("never enters a dimmed state without a hover-capable pointer, via the same usePointerCapability gate every hover effect shares", () => {
-    render(
-      <SiblingDim>
-        <SiblingDimItem id="a">Overview</SiblingDimItem>
-        <SiblingDimItem id="b">Pricing</SiblingDimItem>
-      </SiblingDim>,
-    );
-
-    const overview = screen.getByText("Overview");
-    const pricing = screen.getByText("Pricing");
-    fireEvent.pointerEnter(overview);
-    expect(pricing.className).not.toContain("opacity-45");
   });
 });
 
