@@ -14,14 +14,14 @@ export default defineConfig({
   resolve: {
     // Mirrors the path aliases in apps/website/tsconfig.json.
     alias: {
-      "@pinky/primitives": path.join(root, "packages/primitives/src/index.ts"),
-      "@pinky/components": path.join(root, "packages/components/src/index.ts"),
-      "@pinky/layouts": path.join(root, "packages/layouts/src/index.ts"),
-      "@pinky/registry": path.join(root, "packages/registry/src/index.ts"),
-      "@pinky/effects/internal": path.join(root, "packages/effects/src/internal"),
-      "@pinky/effects": path.join(root, "packages/effects/src/index.ts"),
-      "@pinky/experiences": path.join(root, "packages/experiences/src/index.ts"),
-      "@pinky/systems": path.join(root, "packages/systems/src/index.ts"),
+      "@pinky-ui/primitives": path.join(root, "packages/primitives/src/index.ts"),
+      "@pinky-ui/components": path.join(root, "packages/components/src/index.ts"),
+      "@pinky-ui/layouts": path.join(root, "packages/layouts/src/index.ts"),
+      "@pinky-ui/registry": path.join(root, "packages/registry/src/index.ts"),
+      "@pinky-ui/effects/internal": path.join(root, "packages/effects/src/internal"),
+      "@pinky-ui/effects": path.join(root, "packages/effects/src/index.ts"),
+      "@pinky-ui/experiences": path.join(root, "packages/experiences/src/index.ts"),
+      "@pinky-ui/systems": path.join(root, "packages/systems/src/index.ts"),
     },
   },
   test: {
