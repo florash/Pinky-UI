@@ -274,7 +274,12 @@ function PillNavPreview() {
       items={ids.map((id) => ({
         id,
         label: id[0]!.toUpperCase() + id.slice(1),
-        href: `#${id}`,
+        // No `href` here on purpose: this preview is embedded inside the
+        // gallery card's own <Link>, and PillNav renders a real <a> whenever
+        // an item has an href — nesting an anchor inside an anchor is
+        // invalid HTML and was failing hydration. onClick alone renders a
+        // <button>, which still demonstrates the sliding pill/active-state
+        // mechanic without the conflict.
         active: active === id,
         onClick: () => setActive(id),
       }))}
