@@ -18,7 +18,7 @@ Focus or move across the links in the preview. The active item expands within th
 ## Usage
 
 ```tsx
-import { NeighborShiftNavigation } from "@pinky/experiences";
+import { NeighborShiftNavigation } from "@pinky-ui/experiences";
 
 <NeighborShiftNavigation items={sections} aria-label="Project sections" />;
 ```

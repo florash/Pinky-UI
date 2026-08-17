@@ -18,7 +18,7 @@ Tap or focus different destinations in the preview. The selected label opens in 
 ## Usage
 
 ```tsx
-import { ExpandableBottomNavigation } from "@pinky/experiences";
+import { ExpandableBottomNavigation } from "@pinky-ui/experiences";
 
 <ExpandableBottomNavigation items={items} fixed aria-label="Primary mobile navigation" />;
 ```

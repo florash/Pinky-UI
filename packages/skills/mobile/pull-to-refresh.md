@@ -30,6 +30,10 @@ The button invokes the same callback as the gesture. The gesture only begins at
 ## Reduced motion and performance
 
 Use requestAnimationFrame for the visual offset and clean it on unmount.
+Release settles on Jelly's elastic spring (`springs.elastic`) — the same curve
+used for `Jelly` and `JellyCard` press/settle — so the chamber snaps back with
+a visible, springy overshoot rather than a linear ease-out; the drag itself
+stays a direct 1:1 resisted follow, only the release borrows the curve.
 Reduced motion keeps the threshold/armed state and direct content relationship,
 but removes the elastic settle and ambient spinner motion.
 

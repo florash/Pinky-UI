@@ -1,4 +1,4 @@
-# @pinky/skills
+# @pinky-ui/skills
 
 Usage guidance for coding agents, one file per component.
 

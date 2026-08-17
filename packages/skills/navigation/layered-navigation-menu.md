@@ -18,7 +18,7 @@ Open the preview and select different groups. The parent index remains part of t
 ## Usage
 
 ```tsx
-import { LayeredNavigationMenu } from "@pinky/experiences";
+import { LayeredNavigationMenu } from "@pinky-ui/experiences";
 
 <LayeredNavigationMenu groups={groups} aria-label="Product navigation" />;
 ```

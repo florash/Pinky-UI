@@ -18,7 +18,7 @@ Use the live navigation preview to move across destinations or focus them with T
 ## Usage
 
 ```tsx
-import { HoverExpandNavigation } from "@pinky/experiences";
+import { HoverExpandNavigation } from "@pinky-ui/experiences";
 
 <HoverExpandNavigation
   items={[

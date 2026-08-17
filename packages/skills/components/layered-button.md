@@ -20,7 +20,7 @@ The preview exposes the actual layered surfaces, so the relationship between sep
 ## Usage
 
 ```tsx
-import { LayeredButton } from "@pinky/components";
+import { LayeredButton } from "@pinky-ui/components";
 
 export function ContinueAction() {
   return <LayeredButton separation={5}>Continue</LayeredButton>;

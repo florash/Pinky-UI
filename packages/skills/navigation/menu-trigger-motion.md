@@ -21,7 +21,7 @@ The reference wall runs three real menu triggers together. Only the hovered, foc
 
 ```tsx
 import { useState } from "react";
-import { BracketMenu } from "@pinky/components";
+import { BracketMenu } from "@pinky-ui/components";
 
 export function CompactNavigation() {
   const [open, setOpen] = useState(false);

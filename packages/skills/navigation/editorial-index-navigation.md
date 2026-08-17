@@ -18,7 +18,7 @@ Move across the index or tab through it. Focus and pointer attention produce the
 ## Usage
 
 ```tsx
-import { EditorialIndexNavigation } from "@pinky/experiences";
+import { EditorialIndexNavigation } from "@pinky-ui/experiences";
 
 <EditorialIndexNavigation
   items={chapters.map((chapter, index) => ({

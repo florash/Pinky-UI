@@ -18,7 +18,7 @@ Open the panel, switch groups in either direction, and inspect the destination l
 ## Usage
 
 ```tsx
-import { SlidingMegaPanel } from "@pinky/experiences";
+import { SlidingMegaPanel } from "@pinky-ui/experiences";
 
 <SlidingMegaPanel groups={groups} aria-label="Browse the archive" />;
 ```

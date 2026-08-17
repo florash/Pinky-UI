@@ -20,7 +20,7 @@ The live preview uses the actual controlled trigger and resets when pointer or k
 ## Usage
 
 ```tsx
-import { BracketMenu } from "@pinky/components";
+import { BracketMenu } from "@pinky-ui/components";
 
 <BracketMenu
   open={menuOpen}

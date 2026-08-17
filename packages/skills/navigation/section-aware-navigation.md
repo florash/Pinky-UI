@@ -18,7 +18,7 @@ Scroll the preview through its sections or activate an anchor directly. The acti
 ## Usage
 
 ```tsx
-import { SectionAwareNavigation } from "@pinky/experiences";
+import { SectionAwareNavigation } from "@pinky-ui/experiences";
 
 <SectionAwareNavigation
   sections={[
