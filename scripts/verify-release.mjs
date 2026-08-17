@@ -512,6 +512,35 @@ async function verifyExternalConsumer(infos, tarballs, tempRoot) {
   console.log("[release] external consumer install/typecheck/build: PASS");
 }
 
+/**
+ * The plain `npm run build` above never catches a static-export-only
+ * failure — it happened this way once already: the opengraph-image route
+ * built fine under `next build` but broke `output: "export"` outright
+ * (missing `dynamic = "force-static""`), and nothing here would have
+ * noticed short of reproducing .github/workflows/pages.yml's exact command.
+ * This does that: same env vars as the real deploy (falling back to the
+ * current ones so this keeps working through the pinkyui.com migration,
+ * whenever pages.yml's env block changes), then asserts the one thing
+ * public/CNAME exists to guarantee — a custom domain deploy that silently
+ * lost its CNAME during the build would serve fine and just never bind the
+ * domain, which is a much quieter failure than a 404.
+ */
+async function assertStaticExportBuild() {
+  const env = {
+    ...RELEASE_ENV,
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://florash.github.io",
+    NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH?.trim() || "/Pinky-UI",
+    NEXT_PUBLIC_STATIC_EXPORT: "true",
+  };
+  await run(npmCommand, ["run", "build"], { env });
+
+  const cnamePath = path.join(root, "apps/website/out/CNAME");
+  const cname = await fs.readFile(cnamePath, "utf8").catch(() => null);
+  if (cname === null) fail(`static export build did not produce ${path.relative(root, cnamePath)} — public/CNAME must survive into out/`);
+  if (cname.trim() !== "pinkyui.com") fail(`out/CNAME is "${cname.trim()}", expected "pinkyui.com"`);
+  console.log("[release] static export build + CNAME: PASS");
+}
+
 async function runReleaseVerification() {
   console.log("Pinky UI release verification");
   await run(npmCommand, ["run", "verify:security"]);
@@ -528,6 +557,7 @@ async function runReleaseVerification() {
   await run(npmCommand, ["run", "verify:metadata"], { env: RELEASE_ENV });
   await run(npmCommand, ["run", "verify:orphans"]);
   await run(npmCommand, ["run", "verify:nested-anchors"]);
+  await assertStaticExportBuild();
   await run("git", ["diff", "--check"]);
   await assertTrackedHygiene();
   await assertSkillInvariants();
