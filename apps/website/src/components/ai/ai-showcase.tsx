@@ -120,7 +120,7 @@ function StreamingTextDemo() {
   return (
     <div className="space-y-4">
       <StreamingText key={seed} text="Pulling the last three deploys and comparing their build times…" speed={32} />
-      <button type="button" onClick={() => setSeed((value) => value + 1)} className="rounded-pill border border-line bg-white px-3 py-1.5 font-mono text-xs uppercase tracking-[0.08em] text-ink-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">
+      <button type="button" onClick={() => setSeed((value) => value + 1)} className="relative rounded-pill border border-line bg-white px-3 py-1.5 font-mono text-xs uppercase tracking-[0.08em] text-ink-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20 [@media(pointer:coarse)]:before:absolute [@media(pointer:coarse)]:before:-inset-y-2 [@media(pointer:coarse)]:before:inset-x-0 [@media(pointer:coarse)]:before:content-['']">
         Replay
       </button>
     </div>
@@ -162,7 +162,7 @@ function ToolCallCardDemo() {
       <ToolCallCard name="fetch_deploy_logs" status={status} summary={status === "done" ? "Found 3 deploys in the last hour" : undefined} defaultOpen>
         {'{ service: "web", limit: 3 }'}
       </ToolCallCard>
-      <button type="button" onClick={() => setStatus("running")} className="rounded-pill border border-line bg-white px-3 py-1.5 font-mono text-xs uppercase tracking-[0.08em] text-ink-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20">
+      <button type="button" onClick={() => setStatus("running")} className="relative rounded-pill border border-line bg-white px-3 py-1.5 font-mono text-xs uppercase tracking-[0.08em] text-ink-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20 [@media(pointer:coarse)]:before:absolute [@media(pointer:coarse)]:before:-inset-y-2 [@media(pointer:coarse)]:before:inset-x-0 [@media(pointer:coarse)]:before:content-['']">
         Run again
       </button>
     </div>

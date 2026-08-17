@@ -25,7 +25,7 @@ export function StreamingActions({ state, onStop, onRegenerate, className }: Str
       type="button"
       onClick={streaming ? onStop : onRegenerate}
       className={cn(
-        "inline-flex min-h-9 items-center gap-2 rounded-pill border border-line bg-white px-3.5 text-sm font-medium text-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20",
+        "relative inline-flex min-h-9 items-center gap-2 rounded-pill border border-line bg-white px-3.5 text-sm font-medium text-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20 [@media(pointer:coarse)]:before:absolute [@media(pointer:coarse)]:before:-inset-y-1 [@media(pointer:coarse)]:before:inset-x-0 [@media(pointer:coarse)]:before:content-['']",
         className,
       )}
     >

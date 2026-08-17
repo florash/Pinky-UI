@@ -135,7 +135,7 @@ export function PromptInput({
             type="button"
             onClick={onAttach}
             aria-label="Attach a file"
-            className="mb-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-pill text-ink-500 hover:bg-cloud-50 hover:text-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20"
+            className="relative mb-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-pill text-ink-500 hover:bg-cloud-50 hover:text-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/20 [@media(pointer:coarse)]:before:absolute [@media(pointer:coarse)]:before:-inset-1 [@media(pointer:coarse)]:before:content-['']"
           >
             +
           </button>
@@ -161,7 +161,7 @@ export function PromptInput({
           disabled={disabled || !value.trim()}
           onClick={submit}
           aria-label="Send message"
-          className="mb-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-pill bg-ink-900 text-milk transition-opacity disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2"
+          className="relative mb-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-pill bg-ink-900 text-milk transition-opacity disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2 [@media(pointer:coarse)]:before:absolute [@media(pointer:coarse)]:before:-inset-1 [@media(pointer:coarse)]:before:content-['']"
         >
           ↑
         </button>
