@@ -1,6 +1,8 @@
 # Pinky UI
 
-[![Live Demo](https://img.shields.io/badge/live%20demo-florash.github.io%2FPinky--UI-f4c7d7?style=flat-square)](https://florash.github.io/Pinky-UI)
+[![Live Demo](https://img.shields.io/badge/live%20demo-pinkyui.com-f4c7d7?style=flat-square)](https://pinkyui.com)
+
+Website: https://pinkyui.com
 
 ![Pinky UI hero preview](docs/hero.gif)
 

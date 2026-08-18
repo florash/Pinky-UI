@@ -17,8 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      NEXT_PUBLIC_SITE_URL: https://florash.github.io
-      NEXT_PUBLIC_BASE_PATH: /Pinky-UI
+      NEXT_PUBLIC_SITE_URL: https://pinkyui.com
       NEXT_PUBLIC_STATIC_EXPORT: "true"
     steps:
       - name: Check out repository

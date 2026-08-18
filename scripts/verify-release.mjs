@@ -594,8 +594,8 @@ async function verifyExternalConsumer(infos, tarballs, tempRoot) {
 async function assertStaticExportBuild() {
   const env = {
     ...RELEASE_ENV,
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://florash.github.io",
-    NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH?.trim() || "/Pinky-UI",
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://pinkyui.com",
+    NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH?.trim() || "",
     NEXT_PUBLIC_STATIC_EXPORT: "true",
   };
   await run(npmCommand, ["run", "build"], { env });
