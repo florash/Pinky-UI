@@ -520,10 +520,17 @@ async function verifyExternalConsumer(infos, tarballs, tempRoot) {
  * noticed short of reproducing .github/workflows/pages.yml's exact command.
  * This does that: same env vars as the real deploy (falling back to the
  * current ones so this keeps working through the pinkyui.com migration,
- * whenever pages.yml's env block changes), then asserts the one thing
- * public/CNAME exists to guarantee — a custom domain deploy that silently
- * lost its CNAME during the build would serve fine and just never bind the
- * domain, which is a much quieter failure than a 404.
+ * whenever pages.yml's env block changes).
+ *
+ * The CNAME half of this is intentionally conditional on public/CNAME
+ * existing, not just "run once the domain migrates": merging a CNAME file
+ * while pages.yml still deploys under /Pinky-UI with no DNS pointed at
+ * pinkyui.com is the one change in this class of work that can take the
+ * live site down (GitHub Pages reads the file's presence in the deployed
+ * artifact and starts treating it as the custom domain immediately,
+ * independent of whether DNS actually resolves there yet) — so the file
+ * and the switch to a root basePath both land together, atomically, in the
+ * dedicated migration change, not silently through this gate.
  */
 async function assertStaticExportBuild() {
   const env = {
@@ -533,12 +540,20 @@ async function assertStaticExportBuild() {
     NEXT_PUBLIC_STATIC_EXPORT: "true",
   };
   await run(npmCommand, ["run", "build"], { env });
+  console.log("[release] static export build: PASS");
+
+  const publicCnamePath = path.join(root, "apps/website/public/CNAME");
+  const hasSourceCname = await fs.access(publicCnamePath).then(() => true, () => false);
+  if (!hasSourceCname) {
+    console.log("[release] CNAME check: SKIPPED (apps/website/public/CNAME not present — pre-migration state)");
+    return;
+  }
 
   const cnamePath = path.join(root, "apps/website/out/CNAME");
   const cname = await fs.readFile(cnamePath, "utf8").catch(() => null);
   if (cname === null) fail(`static export build did not produce ${path.relative(root, cnamePath)} — public/CNAME must survive into out/`);
   if (cname.trim() !== "pinkyui.com") fail(`out/CNAME is "${cname.trim()}", expected "pinkyui.com"`);
-  console.log("[release] static export build + CNAME: PASS");
+  console.log("[release] CNAME: PASS");
 }
 
 async function runReleaseVerification() {

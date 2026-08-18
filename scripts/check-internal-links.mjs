@@ -11,10 +11,17 @@ const SKIP_SEGMENTS = new Set(["node_modules", "dist", ".next", "out", "__snapsh
 /**
  * Internal navigation must go through next/link's <Link> (or next/
  * navigation's router.push/replace) — both automatically get Next's
- * configured `basePath` prefixed on. A raw <a href="/..."> or
- * `window.location.href = "/..."` doesn't, so it 404s under any base path
- * (as several already were, silently, under the current /Pinky-UI
- * deployment — found by this exact scan, not by anyone clicking them).
+ * configured `basePath` prefixed on, whatever that base path currently is
+ * (a GitHub Pages project-pages prefix today, root once the pinkyui.com
+ * migration lands). A raw <a href="/..."> or `window.location.href =
+ * "/..."` doesn't get that prefix, so it 404s under any *non-empty* base
+ * path — which is exactly how several of these were already broken,
+ * silently, before this scan found them.
+ *
+ * This check never reads the actual basePath value and doesn't need to:
+ * the fix (use <Link>/the router) is the same regardless of what base path
+ * is configured, including none, so the check keeps working unchanged
+ * across the domain migration without any update here.
  *
  * A same-page hash (`href="#section"`, no leading slash) is fine as a
  * plain <a> — it resolves against the current, already-correctly-prefixed

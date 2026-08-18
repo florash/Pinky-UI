@@ -11,24 +11,43 @@ temporarily serves at a domain that doesn't resolve. See
 [the migration plan](#migration-plan-reference) below for the full
 investigation this checklist is based on.
 
+**This is its own PR, separate from any bug-fix branch.** Landing
+`apps/website/public/CNAME` on its own, ahead of the basePath switch, is
+the one change in this area that can take the live site down: GitHub
+Pages starts treating the file's mere presence in the deployed artifact as
+the custom domain the moment it's merged and deployed, regardless of
+whether DNS resolves there yet — so a stray CNAME merged early would point
+the live `florash.github.io/Pinky-UI` at a domain that doesn't work yet.
+`scripts/migrate-domain.mjs` creates the CNAME file itself (see its
+`CREATES` list), in the same run as the `pages.yml`/`verify-release.mjs`
+edits, so the file and the basePath switch always land atomically. Don't
+create or commit the CNAME file by hand ahead of running the script.
+
 ## Pre-flight
 
 - [ ] DNS at Cloudflare actually points `pinkyui.com` at GitHub Pages
       (an `A`/`AAAA` record set to GitHub's Pages IPs, or a `CNAME` record
       to `florash.github.io`, per GitHub's custom-domain docs) — confirm
       before running the script, not after
-- [ ] `git status` clean, on a fresh branch off `main` (or `split/
-      audit-and-components` if that hasn't merged yet)
+- [ ] `git status` clean, on a fresh branch off `main` — not stacked on
+      any other in-flight branch, so this migration can be reverted on its
+      own if DNS turns out not to be ready after all
+- [ ] Confirm no other branch or open PR already introduced
+      `apps/website/public/CNAME` ahead of this one (`git log --all
+      --oneline -- apps/website/public/CNAME`) — if one has, stop and
+      resolve that first rather than layering this on top
 
 ## Run the migration
 
 - [ ] `node scripts/migrate-domain.mjs --dry-run` — read the output, confirm
-      the 5 expected changes across `.github/workflows/pages.yml`,
-      `scripts/verify-release.mjs`, and `README.md` are all found (✓, not ✗)
+      the 5 expected edits across `.github/workflows/pages.yml`,
+      `scripts/verify-release.mjs`, and `README.md` are all found (✓, not
+      ✗), and that it plans to create `apps/website/public/CNAME`
 - [ ] `node scripts/migrate-domain.mjs` (no flag) — writes the changes
-- [ ] `git diff` — read it. Should be small: two env-var lines in
-      `pages.yml`, two fallback-default strings in `verify-release.mjs`,
-      one badge line in `README.md`
+- [ ] `git status` / `git diff` — read it. Should be small: two env-var
+      lines in `pages.yml`, two fallback-default strings in
+      `verify-release.mjs`, one badge line in `README.md`, and one new file
+      (`apps/website/public/CNAME`, containing exactly `pinkyui.com`)
 
 ## Build verification
 

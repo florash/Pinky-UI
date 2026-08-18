@@ -26,12 +26,24 @@ const DRY_RUN = process.argv.includes("--dry-run");
  * - package.json "repository"/"bugs" fields and every git-clone snippet in
  *   the docs pages — these point at the GitHub repo (github.com/florash/
  *   Pinky-UI), which does not rename when a custom domain is added
- * - the handful of raw <a href="/..."> internal links found during the
- *   audit (featured-interaction-wall.tsx, effects-showcase.tsx,
- *   workflow-showcase.tsx) that bypass next/link and so never got the
- *   /Pinky-UI prefix even today — a pre-existing bug, not a migration step;
- *   flagged in the checklist instead of silently fixed here
+ * - the raw <a href="/..."> / window.location.href internal links found
+ *   during the audit — already fixed directly (not through this script,
+ *   and not gated on the migration) since they were already broken under
+ *   the current deploy, not just the future one; scripts/check-internal-
+ *   links.mjs guards against the same mistake going forward
+ *
+ * apps/website/public/CNAME is deliberately created by *this* script
+ * rather than committed ahead of time: merging that file while pages.yml
+ * still deploys under /Pinky-UI with no DNS pointed at pinkyui.com is the
+ * one change in this whole area that can take the live site down (GitHub
+ * Pages starts treating the file's mere presence in the deployed artifact
+ * as the custom domain, independent of whether DNS resolves yet). Landing
+ * the file and the basePath switch in the same atomic change is the
+ * point — see docs/domain-migration-checklist.md's pre-flight section.
  */
+const CREATES = [
+  { file: "apps/website/public/CNAME", content: "pinkyui.com\n" },
+];
 const EDITS = [
   {
     file: ".github/workflows/pages.yml",
@@ -94,10 +106,17 @@ async function applyFile({ file, changes }) {
   return { file, fullPath, original, next, applied, missing, changed: next !== original };
 }
 
+async function checkCreate({ file, content }) {
+  const fullPath = path.join(root, file);
+  const alreadyExists = await fs.access(fullPath).then(() => true, () => false);
+  return { file, fullPath, content, alreadyExists };
+}
+
 async function main() {
   console.log(DRY_RUN ? "[migrate-domain] DRY RUN — no files will be written\n" : "[migrate-domain] applying changes\n");
 
   const results = await Promise.all(EDITS.map(applyFile));
+  const creates = await Promise.all(CREATES.map(checkCreate));
   let hadMissing = false;
 
   for (const result of results) {
@@ -111,9 +130,21 @@ async function main() {
     console.log("");
   }
 
+  for (const create of creates) {
+    console.log(`${create.file}`);
+    console.log(create.alreadyExists ? `  (already exists — leaving it as is)` : `  ✓ create with "${create.content.trim()}"`);
+    console.log("");
+  }
+
   if (!DRY_RUN) {
     for (const result of results) {
       if (result.changed) await fs.writeFile(result.fullPath, result.next);
+    }
+    for (const create of creates) {
+      if (!create.alreadyExists) {
+        await fs.mkdir(path.dirname(create.fullPath), { recursive: true });
+        await fs.writeFile(create.fullPath, create.content);
+      }
     }
     console.log("[migrate-domain] written. Next steps:");
     console.log("  1. npm run build   (plain build — confirms nothing else broke)");
