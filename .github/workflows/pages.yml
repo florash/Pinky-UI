@@ -33,6 +33,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # packages/cli/src/index.ts statically imports a generated,
+      # gitignored ./manifest.json — build:cli-manifest writes it, reading
+      # from packages/registry/dist, which build:packages produces. Without
+      # these first, `next build`'s typecheck (which pulls every package's
+      # .ts/.tsx in, cli included) fails with "Cannot find module
+      # './manifest.json'". verify-release.mjs already does this ordering
+      # for the CI release-gates job; this deploy workflow needs the same
+      # fix independently since it calls `npm run build` directly rather
+      # than going through verify:release.
+      - name: Build package manifests
+        run: |
+          npm run build:packages
+          npm run build:cli-manifest
+
       - name: Build static website
         run: npm run build
 
