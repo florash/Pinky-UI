@@ -2,28 +2,38 @@
 
 import {
   BasicCard,
+  BorderBeamCard,
   ElasticToggle,
+  EmptyStateCard,
+  ExpandCard,
+  FlipCard,
   FloatingDock,
   FluidTabs,
+  FormCard,
   GlowBorder,
+  GlowCard,
   GooeyMenu,
+  GradientBorderCard,
   HorizontalCard,
   JellyCard,
+  LiftCard,
   LiquidCard,
   ListCard,
   MagneticButton,
   MediaCard,
-  EmptyStateCard,
-  FormCard,
   MorphCard,
   NotificationCard,
   PillNav,
   PricingCard,
   ProfileCard,
+  RevealCard,
   RippleButton,
+  ShineCard,
   SpotlightCard,
+  StackCard,
   StatCard,
   TiltCard,
+  ZoomCard,
 } from "@pinky-ui/components";
 import { useState, type ReactNode } from "react";
 
@@ -41,6 +51,16 @@ export const COMPONENT_PREVIEWS: Record<string, ReactNode> = {
   "morph-card": <MorphCardPreview />,
   "spotlight-card": <SpotlightCardPreview />,
   "tilt-card": <TiltCardPreview />,
+  "lift-card": <LiftCardPreview />,
+  "zoom-card": <ZoomCardPreview />,
+  "gradient-border-card": <GradientBorderCardPreview />,
+  "border-beam-card": <BorderBeamCardPreview />,
+  "glow-card": <GlowCardPreview />,
+  "shine-card": <ShineCardPreview />,
+  "reveal-card": <RevealCardPreview />,
+  "flip-card": <FlipCardPreview />,
+  "expand-card": <ExpandCardPreview />,
+  "stack-card": <StackCardPreview />,
   "basic-card": <BasicCardPreview />,
   "media-card": <MediaCardPreview />,
   "horizontal-card": <HorizontalCardPreview />,
@@ -210,6 +230,105 @@ function TiltCardPreview() {
         </div>
       </div>
     </TiltCard>
+  );
+}
+
+function LiftCardPreview() {
+  return (
+    <LiftCard className="w-full max-w-[18rem]" onClick={() => {}}>
+      <p className="font-display text-lg font-semibold tracking-tight text-ink-900">Weekly digest</p>
+      <p className="mt-2 text-sm leading-relaxed text-ink-700">A plain lift, cheap enough for a grid of fifty.</p>
+    </LiftCard>
+  );
+}
+
+function ZoomCardPreview() {
+  return (
+    <ZoomCard
+      className="w-full max-w-[18rem]"
+      media={<img src={SOFT_MEDIA_SOURCES[0]} alt="" />}
+      title="Field notes"
+      description="Hover to look closer."
+    />
+  );
+}
+
+function GradientBorderCardPreview() {
+  return (
+    <GradientBorderCard className="w-full max-w-[18rem]">
+      <p className="font-display text-lg font-semibold tracking-tight text-ink-900">Studio plan</p>
+      <p className="mt-2 text-sm leading-relaxed text-ink-700">A static two-stop ring, no motion required.</p>
+    </GradientBorderCard>
+  );
+}
+
+function BorderBeamCardPreview() {
+  return (
+    <BorderBeamCard className="w-full max-w-[18rem]">
+      <p className="font-display text-lg font-semibold tracking-tight text-ink-900">Live users</p>
+      <p className="mt-2 text-3xl font-semibold tracking-tight text-ink-900 tabular-nums">1,204</p>
+    </BorderBeamCard>
+  );
+}
+
+function GlowCardPreview() {
+  return (
+    <GlowCard className="w-full max-w-[18rem]">
+      <p className="font-display text-lg font-semibold tracking-tight text-ink-900">Studio plan</p>
+      <p className="mt-2 text-sm leading-relaxed text-ink-700">A halo that widens on hover.</p>
+    </GlowCard>
+  );
+}
+
+function ShineCardPreview() {
+  return (
+    <ShineCard className="w-full max-w-[18rem]">
+      <p className="font-display text-lg font-semibold tracking-tight text-ink-900">Studio plan</p>
+      <p className="mt-2 text-sm leading-relaxed text-ink-700">A gloss streak on hover, nothing else.</p>
+    </ShineCard>
+  );
+}
+
+function RevealCardPreview() {
+  return (
+    <RevealCard
+      className="w-full max-w-[18rem]"
+      media={<img src={SOFT_MEDIA_SOURCES[1]} alt="" />}
+      title="Field notes"
+      description="Three weeks in the studio."
+    />
+  );
+}
+
+function FlipCardPreview() {
+  return (
+    <FlipCard
+      className="w-full max-w-[16rem]"
+      front={
+        <div className="flex h-full flex-col justify-between">
+          <span className="font-mono text-[0.6rem] tracking-[0.14em] text-ink-500 uppercase">Score</span>
+          <p className="font-display text-3xl font-semibold tracking-tight text-ink-900">94</p>
+        </div>
+      }
+      back={<p className="text-sm leading-relaxed text-ink-700">Up 12% from last quarter.</p>}
+    />
+  );
+}
+
+function ExpandCardPreview() {
+  return (
+    <ExpandCard className="w-full max-w-[18rem]" title="Shipping details" summary="Arrives in 3–5 days" defaultOpen>
+      <p className="text-sm leading-relaxed text-ink-700">Full carrier and tracking details once the order ships.</p>
+    </ExpandCard>
+  );
+}
+
+function StackCardPreview() {
+  return (
+    <StackCard className="w-full max-w-[18rem]" depth={2}>
+      <p className="font-display text-lg font-semibold tracking-tight text-ink-900">Design system audit</p>
+      <p className="mt-2 text-sm leading-relaxed text-ink-700">3 more saved searches behind this one.</p>
+    </StackCard>
   );
 }
 

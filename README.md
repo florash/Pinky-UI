@@ -16,7 +16,7 @@ it's deliberately not under the `@pinky-ui/*` scope, since it isn't one of the i
 itself.
 
 Explore jelly, liquid, magnetic, morph, glow, depth, elastic and proximity interactions —
-**291 implemented items across 12 primitives, 23 components, 28 layouts, 35 effects, 32
+**301 implemented items across 12 primitives, 33 components, 28 layouts, 35 effects, 32
 experiences and 161 product and workflow systems** — designed to stay composable, accessible
 and practical to use. The website puts those interactions directly in front of you as live
 previews instead of hiding the work behind a documentation-first catalogue.

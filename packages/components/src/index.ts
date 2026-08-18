@@ -17,6 +17,16 @@ export {
   type NotificationCardVariant,
 } from "./cards/notification-card";
 export { EmptyStateCard, type EmptyStateCardProps } from "./cards/empty-state-card";
+export { BorderBeamCard, type BorderBeamCardProps } from "./cards/border-beam-card";
+export { GlowCard, type GlowCardProps } from "./cards/glow-card";
+export { RevealCard, type RevealCardProps } from "./cards/reveal-card";
+export { ZoomCard, type ZoomCardProps } from "./cards/zoom-card";
+export { FlipCard, type FlipCardProps } from "./cards/flip-card";
+export { ExpandCard, type ExpandCardProps } from "./cards/expand-card";
+export { StackCard, type StackCardProps } from "./cards/stack-card";
+export { GradientBorderCard, type GradientBorderCardProps } from "./cards/gradient-border-card";
+export { ShineCard, type ShineCardProps } from "./cards/shine-card";
+export { LiftCard, type LiftCardProps } from "./cards/lift-card";
 export {
   MagneticButton,
   buttonSurface,
