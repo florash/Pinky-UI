@@ -1,14 +1,15 @@
 "use client";
 
-import { SpotlightCard, cn } from "@pinky/components";
+import { SpotlightCard, cn } from "@pinky-ui/components";
 import {
   CardFan,
   DraggableCardStack,
   ExpandableBento,
   MasonryGallery,
   PolaroidWall,
+  ScrollMorphWall,
   StackGrid,
-} from "@pinky/layouts";
+} from "@pinky-ui/layouts";
 import type { ReactNode } from "react";
 
 import { MODERN_LAYOUT_PREVIEWS } from "./modern-layout-previews";
@@ -25,6 +26,7 @@ export const LAYOUT_PREVIEWS: Record<string, ReactNode> = {
   "polaroid-wall": <PolaroidWallDemo />,
   "stack-grid": <StackGridDemo />,
   "masonry-gallery": <MasonryGalleryDemo />,
+  "scroll-morph-wall": <ScrollMorphWallDemo />,
   "draggable-card-stack": <DraggableCardStackDemo />,
   "expandable-bento": <ExpandableBentoDemo />,
   "card-fan": <CardFanDemo />,
@@ -128,6 +130,22 @@ function MasonryGalleryDemo() {
       ))}
     </MasonryGallery>
   );
+}
+
+function ScrollMorphWallDemo() {
+  const items = [
+    { id: "arrival", label: "Arrival", meta: "01" },
+    { id: "commons", label: "Commons", meta: "02" },
+    { id: "quiet", label: "Quiet", meta: "03" },
+    { id: "trace", label: "Trace", meta: "04" },
+    { id: "field", label: "Field", meta: "05" },
+    { id: "table", label: "Table", meta: "06" },
+  ].map((item, index) => ({
+    ...item,
+    content: <Swatch index={index} ratio="4 / 3" className="rounded-none" />,
+  }));
+
+  return <ScrollMorphWall items={items} travel={2.2} className="w-full max-w-2xl" />;
 }
 
 function DraggableCardStackDemo() {

@@ -9,3 +9,4 @@ export { SurfaceCompression, type SurfaceCompressionProps } from "./surface-comp
 export { DepthShift, type DepthShiftProps } from "./depth-shift";
 export { BorderTravel, type BorderTravelProps } from "./border-travel";
 export { ContentSwapMotion, type ContentSwapMotionProps } from "./content-swap-motion";
+export { SiblingDim, SiblingDimItem, type SiblingDimProps, type SiblingDimItemProps } from "./sibling-dim";

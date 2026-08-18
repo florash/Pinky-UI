@@ -1,0 +1,21 @@
+{
+  "name": "pinky-ui",
+  "version": "0.1.0",
+  "description": "CLI to add Pinky UI components as source code into your project.",
+  "license": "MIT",
+  "keywords": ["react", "ui", "cli", "components", "motion", "shadcn"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/florash/Pinky-UI.git",
+    "directory": "packages/cli"
+  },
+  "type": "module",
+  "bin": {
+    "pinky-ui": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "prepack": "node ../../scripts/build-cli.mjs"
+  },
+  "publishConfig": { "access": "public" }
+}

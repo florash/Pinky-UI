@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@pinky/components";
+import { cn } from "@pinky-ui/components";
 import type { ReactNode } from "react";
 
 type LayoutStudy = { id: string; label: string; description: string; kind: "hero" | "header" | "media" | "rail" | "feed" | "mosaic" | "focus" | "layered" | "story" | "context" };

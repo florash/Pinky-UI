@@ -1,4 +1,4 @@
-import { getComponent } from "@pinky/registry";
+import { getComponent } from "@pinky-ui/registry";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";

@@ -20,7 +20,7 @@ The live preview uses the real button, including hover, focus, press, and touch 
 ## Usage
 
 ```tsx
-import { ExtrudedButton } from "@pinky/components";
+import { ExtrudedButton } from "@pinky-ui/components";
 
 export function PublishAction() {
   return (

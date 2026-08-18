@@ -5,6 +5,7 @@ import type { Category, Interaction, RegistryEntry } from "./types";
 
 export * from "./types";
 export * from "./layouts";
+export * from "./ai";
 export * from "./effects";
 export * from "./experiences";
 export * from "./systems";

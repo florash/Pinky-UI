@@ -18,7 +18,7 @@ Scroll the page or use the preview's controlled state to compare the two header 
 ## Usage
 
 ```tsx
-import { CompressingScrollNavigation } from "@pinky/experiences";
+import { CompressingScrollNavigation } from "@pinky-ui/experiences";
 
 <CompressingScrollNavigation items={items} title="Pinky UI" compactAfter={96} />;
 ```

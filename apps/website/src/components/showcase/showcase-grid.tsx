@@ -1,7 +1,7 @@
 "use client";
 
-import { cn, FluidTabs, GlowBorder, JellyCard, MagneticButton } from "@pinky/components";
-import { CursorGlow, Magnetic, Tilt } from "@pinky/primitives";
+import { cn, FluidTabs, GlowBorder, JellyCard, MagneticButton } from "@pinky-ui/components";
+import { CursorGlow, Magnetic, Tilt } from "@pinky-ui/primitives";
 import { useState, type ReactNode } from "react";
 
 import { CodeBlock } from "@/components/site/code-block";

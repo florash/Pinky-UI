@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useMotionEnabled } from "@pinky/primitives";
+import { useMotionEnabled, usePointerCapability } from "@pinky-ui/primitives";
 import { useRef, useState, type ReactNode } from "react";
 
 import { useInView } from "../internal/in-view";
@@ -39,8 +39,13 @@ export function MaskReveal({
   const ref = useRef<HTMLDivElement>(null);
   const [interacting, setInteracting] = useState(false);
   const motionEnabled = useMotionEnabled();
+  const { hasHover } = usePointerCapability();
   const visible = useInView(ref, { amount, margin, once });
-  const active = trigger === "view" ? visible : interacting;
+  // A "hover" or "focus" trigger with no hover-capable pointer has no way to
+  // lift the mask before a first tap — and a tap that both reveals the mask
+  // and lands on newly-exposed content is a double-tap trap, not a fallback.
+  // Content stays fully visible there instead of ever masking in the first place.
+  const active = trigger === "view" ? visible : hasHover ? interacting : true;
   const target = trigger === "view" ? (active ? { clipPath: "inset(0% 0% 0% 0%)", scale: 1 } : undefined) : active ? { clipPath: "inset(0% 0% 0% 0%)", scale: 1 } : { clipPath: maskFor(direction), scale };
 
   return (

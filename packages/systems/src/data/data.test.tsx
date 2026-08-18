@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import { setReducedMotion } from "../../../../vitest.setup";
-import { allProductSystems } from "@pinky/registry";
+import { allProductSystems } from "@pinky-ui/registry";
 import { AnimatedNumber } from "./animated-number";
 import { ComparisonBars } from "./comparison-bars";
 import { DataLens } from "./data-lens";
@@ -54,8 +54,8 @@ describe("Data systems", () => {
   });
 
   it("registers all non-duplicative production systems with live demos", () => {
-    expect(allProductSystems).toHaveLength(71);
-    expect(new Set(allProductSystems.map((item) => item.slug))).toHaveProperty("size", 71);
+    expect(allProductSystems).toHaveLength(73);
+    expect(new Set(allProductSystems.map((item) => item.slug))).toHaveProperty("size", 73);
     expect(allProductSystems.every((item) => item.status === "ready")).toBe(true);
     expect(allProductSystems.every((item) => item.demoPath.endsWith(`#${item.slug}`))).toBe(true);
   });

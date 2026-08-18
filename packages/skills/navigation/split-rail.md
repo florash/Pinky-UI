@@ -20,7 +20,7 @@ The live preview shows the real rail geometry at its intended compact scale whil
 ## Usage
 
 ```tsx
-import { SplitRail } from "@pinky/components";
+import { SplitRail } from "@pinky-ui/components";
 
 <SplitRail
   open={open}

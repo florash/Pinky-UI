@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useMotionEnabled } from "@pinky/primitives";
+import { useMotionEnabled } from "@pinky-ui/primitives";
 import { type CSSProperties } from "react";
 
 export type LiquidLoaderProps = {

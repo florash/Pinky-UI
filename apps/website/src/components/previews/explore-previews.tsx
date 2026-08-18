@@ -11,14 +11,18 @@ import {
   HoverImagePreviewItem,
   HoverTextReveal,
   KineticUnderline,
+  LinkPreview,
+  LinkPreviewItem,
   LiquidLoader,
   MaskReveal,
+  SiblingDim,
+  SiblingDimItem,
   SpringReveal,
   SplitTextReveal,
   SurfaceCompression,
   StaggerReveal,
   TextScramble,
-} from "@pinky/effects";
+} from "@pinky-ui/effects";
 import {
   BlurRouteTransition,
   BubbleField,
@@ -39,6 +43,7 @@ import {
   MorphingMegaNavigation,
   MorphMenu,
   NeighborShiftNavigation,
+  ScrollSpySidebar,
   SectionAwareNavigation,
   SlidingMegaPanel,
   SoftMeshBackground,
@@ -46,7 +51,7 @@ import {
   SpotlightGrid,
   type NavigationGroup,
   type NavigationLink,
-} from "@pinky/experiences";
+} from "@pinky-ui/experiences";
 import {
   ActionUndoBar,
   AnimatedNumber,
@@ -60,6 +65,7 @@ import {
   DragReorderGrid,
   DropIndicator,
   EdgeSwipePanel,
+  EmptyState,
   ElasticSegmentedControl,
   ExpandableListRow,
   ExpandableMedia,
@@ -92,9 +98,10 @@ import {
   TimelineScrubber,
   ToastProvider,
   useToast,
-} from "@pinky/systems";
+} from "@pinky-ui/systems";
 import { useState, type ReactNode } from "react";
 
+import { AI_PREVIEWS } from "./ai-previews";
 import { COMPONENT_PREVIEWS } from "./component-previews";
 import { LAYOUT_PREVIEWS } from "./layout-previews";
 import { MODERN_LAYOUT_PREVIEWS } from "./modern-layout-previews";
@@ -137,6 +144,25 @@ const EFFECT_PREVIEWS: Record<string, ReactNode> = {
   ),
   "lens-cursor": (
     <span aria-hidden className="block h-28 w-full overflow-hidden rounded-xl" style={{ backgroundImage: SURFACE }} />
+  ),
+  "link-preview": (
+    <LinkPreview className="w-full space-y-1">
+      <LinkPreviewItem as="div" title="Soft Matter" description="A study in restrained motion." image={SOFT_MEDIA_SOURCES[0]}>
+        <span className="block rounded-lg px-3 py-2 text-sm text-ink-700 hover:bg-blush-50">Soft Matter</span>
+      </LinkPreviewItem>
+      <LinkPreviewItem as="div" title="Open Forms" description="Composable primitives, one motion vocabulary." image={SOFT_MEDIA_SOURCES[1]}>
+        <span className="block rounded-lg px-3 py-2 text-sm text-ink-700 hover:bg-blush-50">Open Forms</span>
+      </LinkPreviewItem>
+    </LinkPreview>
+  ),
+  "sibling-dim": (
+    <SiblingDim className="flex w-full flex-col gap-1.5">
+      {["Overview", "Pricing", "Changelog"].map((label) => (
+        <SiblingDimItem key={label} id={label} as="div" className="rounded-lg bg-cloud-50 px-3 py-2 text-sm text-ink-700">
+          {label}
+        </SiblingDimItem>
+      ))}
+    </SiblingDim>
   ),
   "blur-reveal": (
     <BlurReveal once={false}>
@@ -271,6 +297,12 @@ const SECTION_AWARE_PREVIEW_SECTIONS = [
   { id: "preview-nav-release", label: "Release", href: "#preview-nav-release" },
 ] satisfies NavigationLink[];
 
+const SCROLL_SPY_PREVIEW_SECTIONS = [
+  { id: "preview-spy-installation", label: "Installation", href: "#preview-spy-installation" },
+  { id: "preview-spy-composition", label: "Composition", href: "#preview-spy-composition" },
+  { id: "preview-spy-motion", label: "Motion", href: "#preview-spy-motion" },
+] satisfies NavigationLink[];
+
 const DATA_POINTS = [
   { label: "Mon", value: 12 },
   { label: "Tue", value: 15 },
@@ -306,6 +338,7 @@ const EXPERIENCE_PREVIEWS: Record<string, ReactNode> = {
   "clip-reveal-menu": <ClipRevealMenu items={NAVIGATION_ITEMS} aria-label="Clip preview menu" />,
   "edge-rail-navigation": <EdgeRailNavigation items={NAVIGATION_ITEMS} aria-label="Edge preview rail" />,
   "section-aware-navigation": <SectionAwarePreview />,
+  "scroll-spy-sidebar": <ScrollSpySidebarPreview />,
   "expandable-bottom-navigation": <ExpandableBottomNavigation items={NAVIGATION_ITEMS.slice(0, 4)} aria-label="Expandable preview navigation" />,
   "compressing-scroll-navigation": <CompressingScrollPreview />,
   "morph-menu": (
@@ -475,6 +508,14 @@ const WORKFLOW_PREVIEWS: Record<string, ReactNode> = {
     </div>
   ),
   "inline-feedback": <InlineFeedback tone="success">Saved locally</InlineFeedback>,
+  "empty-state": (
+    <EmptyState
+      title="No projects yet"
+      description="Create your first project to get started."
+      action={{ label: "New project", onClick: () => {} }}
+      className="w-full max-w-sm"
+    />
+  ),
   "action-undo-bar": <ActionUndoBar message="Task archived" onUndo={() => undefined} />,
   "morph-search": (
     <MorphSearch
@@ -591,6 +632,22 @@ function ComparisonSurface({ index, label, className = "" }: { index: number; la
 function LiquidNavbarPreview() {
   const [active, setActive] = useState("work");
   return <LiquidNavbar items={EXPERIENCE_ITEMS} activeId={active} onActiveChange={setActive} aria-label="Preview sections" />;
+}
+
+function ScrollSpySidebarPreview() {
+  return (
+    <div className="grid w-full grid-cols-[8rem_1fr] gap-4">
+      <ScrollSpySidebar sections={SCROLL_SPY_PREVIEW_SECTIONS} aria-label="Preview table of contents" />
+      <div className="max-h-40 space-y-3 overflow-auto rounded-xl border border-line bg-white p-3">
+        {SCROLL_SPY_PREVIEW_SECTIONS.map((section, index) => (
+          <section key={section.id} id={section.id} className="min-h-24 rounded-lg bg-cloud-50 p-3">
+            <p className="font-mono text-[0.6rem] tracking-[0.14em] text-ink-500 uppercase">0{index + 1}</p>
+            <h3 className="mt-1 text-sm font-semibold text-ink-900">{section.label} leads the reading window.</h3>
+          </section>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function SectionAwarePreview() {
@@ -766,6 +823,7 @@ function ContentSwapPreview() {
  * exactly one family map today.
  */
 const ALL_PREVIEWS: Record<string, ReactNode> = {
+  ...AI_PREVIEWS,
   ...COMPONENT_PREVIEWS,
   ...LAYOUT_PREVIEWS,
   ...MODERN_LAYOUT_PREVIEWS,

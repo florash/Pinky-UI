@@ -1,6 +1,6 @@
 "use client";
 
-import { springs, useMotionEnabled } from "@pinky/primitives";
+import { springs, useMotionEnabled } from "@pinky-ui/primitives";
 import { motion } from "motion/react";
 import { useState, type PointerEvent, type ReactNode } from "react";
 

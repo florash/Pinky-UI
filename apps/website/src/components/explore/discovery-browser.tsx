@@ -1,15 +1,16 @@
 "use client";
 
-import { allEffects, allExperiences, allProductSystems, allWorkflowSystems, components, layouts, type DiscoveryRole, type DiscoveryMetadata } from "@pinky/registry";
-import { cn } from "@pinky/components";
+import { allAi, allEffects, allExperiences, allProductSystems, allWorkflowSystems, components, layouts, type DiscoveryRole, type DiscoveryMetadata } from "@pinky-ui/registry";
+import { cn } from "@pinky-ui/components";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { FeaturedInteractionWall, MenuTriggerSampler as HomeMenuTriggerSampler } from "@/components/home/featured-interaction-wall";
 import { ExplorePreview, hasExplorePreview } from "@/components/previews/explore-previews";
 import { LazyMount } from "@/components/site/lazy-mount";
 
-type DiscoveryGroup = "Components" | "Collections" | "Editorial" | "Spatial" | "Experiences" | "Systems" | "Effects";
+type DiscoveryGroup = "AI" | "Components" | "Collections" | "Editorial" | "Spatial" | "Experiences" | "Systems" | "Effects";
 type DiscoveryItem = {
   slug: string;
   name: string;
@@ -24,6 +25,7 @@ type DiscoveryItem = {
 };
 
 const PUBLIC_SECTIONS: Array<{ id: DiscoveryGroup; description: string }> = [
+  { id: "AI", description: "Streaming text, tool calls and a chat composer for agent and assistant products." },
   { id: "Components", description: "Small pieces with an immediate physical response." },
   { id: "Collections", description: "Stacks, grids and galleries for a collection that wants a point of view." },
   { id: "Editorial", description: "Composed arrangements where rhythm and whitespace are part of the interface." },
@@ -44,6 +46,9 @@ const FILTERS = [
   "Forms",
   "Data",
   "Workflows",
+  "Overlays",
+  "Mobile",
+  "Controls",
   "Cursor",
   "Motion",
   "Text",
@@ -78,6 +83,15 @@ const CURATED_SLUGS = new Set([
 const title = (value: string) => `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
 
 const ITEMS: DiscoveryItem[] = [
+  ...allAi.map((item) => ({
+    slug: item.slug,
+    name: item.name,
+    description: item.description,
+    group: "AI" as const,
+    family: title(item.family),
+    href: `/ai/${item.slug}`,
+    tags: [item.family, ...item.tags],
+  })),
   ...components.map((item) => ({
     slug: item.slug,
     name: item.name,
@@ -212,16 +226,22 @@ function curateSection(items: DiscoveryItem[], limit = 4) {
  * public language rather than by implementation history.
  */
 export function DiscoveryBrowser() {
+  const searchParams = useSearchParams();
+  const requestedFilter = searchParams.get("filter");
+  const initialFilter = (FILTERS as readonly string[]).includes(requestedFilter ?? "")
+    ? (requestedFilter as DiscoveryFilter)
+    : "All";
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<DiscoveryFilter>("All");
+  const [filter, setFilter] = useState<DiscoveryFilter>(initialFilter);
   const needle = query.trim().toLowerCase();
   const curatedView = filter === "All" && needle.length === 0;
 
+  const filter_ = filter.toLowerCase();
   const filtered = useMemo(() => ORDERED.filter((item) => {
-    const matchesFilter = filter === "All" || item.group === filter || item.family === filter;
+    const matchesFilter = filter === "All" || item.group === filter || item.family === filter || item.tags.some((tag) => tag.toLowerCase() === filter_);
     const matchesQuery = !needle || [item.name, item.description, item.group, item.family, ...item.tags].join(" ").toLowerCase().includes(needle);
     return matchesFilter && matchesQuery;
-  }), [filter, needle]);
+  }), [filter, filter_, needle]);
 
   const live = filtered.filter((item) => hasExplorePreview(item.slug)).length;
 
@@ -240,6 +260,21 @@ export function DiscoveryBrowser() {
             <p className="font-mono text-xs text-ink-500">
               {curatedView ? `${filtered.length} in catalogue · curated by family` : `${filtered.length} results · ${live} running right here`}
             </p>
+          </div>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            <Link href="/systems" className="rounded-2xl border border-line bg-white/70 p-4 transition-colors hover:bg-cloud-50">
+              <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">Systems</p>
+              <p className="mt-1 text-sm font-medium text-ink-900">Product-stage interaction ↗</p>
+            </Link>
+            <Link href="/primitives" className="rounded-2xl border border-line bg-white/70 p-4 transition-colors hover:bg-cloud-50">
+              <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">Foundation</p>
+              <p className="mt-1 text-sm font-medium text-ink-900">Built on 12 primitives ↗</p>
+            </Link>
+            <Link href="/showcase" className="rounded-2xl border border-line bg-white/70 p-4 transition-colors hover:bg-cloud-50">
+              <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">Composed</p>
+              <p className="mt-1 text-sm font-medium text-ink-900">Showcase ↗</p>
+            </Link>
           </div>
 
           <label className="mt-8 block max-w-2xl">

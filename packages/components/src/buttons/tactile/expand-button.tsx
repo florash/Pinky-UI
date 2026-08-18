@@ -1,6 +1,6 @@
 "use client";
 
-import { springs, useMotionEnabled, usePressSpring } from "@pinky/primitives";
+import { GridReveal, usePressSpring } from "@pinky-ui/primitives";
 import { motion, useTransform } from "motion/react";
 import {
   forwardRef,
@@ -41,7 +41,6 @@ export const ExpandButton = forwardRef<HTMLButtonElement, ExpandButtonProps>(fun
   ref,
 ) {
   const [engaged, setEngaged] = useState(false);
-  const motionEnabled = useMotionEnabled();
   const press = usePressSpring({ scale: 1, disabled });
 
   const px = CONTROL_PX[size];
@@ -83,14 +82,15 @@ export const ExpandButton = forwardRef<HTMLButtonElement, ExpandButtonProps>(fun
       <span aria-hidden className="grid shrink-0 place-items-center" style={{ width: px, height: px }}>
         {icon}
       </span>
-      <motion.span
-        className="overflow-hidden whitespace-nowrap"
-        initial={false}
-        animate={{ width: engaged ? "auto" : 0 }}
-        transition={motionEnabled ? { type: "spring", ...springs.snappy } : { duration: 0 }}
+      <GridReveal
+        open={engaged}
+        axis="columns"
+        inertWhenClosed={false}
+        className="min-w-0"
+        contentProps={{ className: "whitespace-nowrap" }}
       >
         <span className="block pr-5">{label}</span>
-      </motion.span>
+      </GridReveal>
     </motion.button>
   );
 });

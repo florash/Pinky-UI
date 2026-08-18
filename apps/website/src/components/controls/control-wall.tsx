@@ -19,8 +19,8 @@ import {
   SpotlightBorderButton,
   SplitActionButton,
   TrailToggle,
-} from "@pinky/components";
-import { Proximity } from "@pinky/primitives";
+} from "@pinky-ui/components";
+import { Proximity } from "@pinky-ui/primitives";
 import type { ReactNode } from "react";
 
 import { MenuWall } from "./menu-wall";

@@ -1,6 +1,6 @@
 "use client";
 
-import { springs, useMotionEnabled, type SpringPreset } from "@pinky/primitives";
+import { springs, useMotionEnabled, type SpringPreset } from "@pinky-ui/primitives";
 import { useMotionValue, useSpring } from "motion/react";
 import { useMemo, type PointerEvent as ReactPointerEvent } from "react";
 

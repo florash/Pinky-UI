@@ -51,7 +51,7 @@ npm run verify:release
 - `packages/registry` describes the discoverable library and its relationships.
 - `packages/skills` contains the canonical Markdown interaction recipes.
 
-The `@pinky/*` packages have publish-like `dist` and declaration contracts, but are not
+The `@pinky-ui/*` packages have publish-like `dist` and declaration contracts, but are not
 published automatically. Do not publish packages or change package visibility without a
 dedicated release decision.
 

@@ -87,6 +87,7 @@ export function pageMetadata(
 export const PUBLIC_INDEXABLE_ROUTES = [
   "/",
   "/explore",
+  "/ai",
   "/components",
   "/controls",
   "/layouts",
@@ -112,74 +113,14 @@ export const PUBLIC_INDEXABLE_ROUTES = [
   "/spatial",
 ] as const;
 
-export const NAV_LINKS = [
-  { href: "/explore", label: "Explore", matchPrefixes: [] },
-  { href: "/primitives", label: "Primitives", matchPrefixes: [] },
-  { href: "/skills", label: "Skills", matchPrefixes: [] },
-  { href: "/docs", label: "Docs", matchPrefixes: [] },
-] as const;
-
 /**
- * Public taxonomy, as real links.
- *
- * These are intentionally coarser than the package folders. Visitors should
- * see interaction families; implementation names stay in the registry and
- * import paths. The header and footer both consume this array.
+ * Header, footer and breadcrumb navigation now read from
+ * `@/config/navigation` (NAV_GROUPS, EXPLORE_LINK, NAV_UTILITY_LINKS)
+ * instead of this file — that module is the single source of truth for the
+ * L1/L2 taxonomy. Nothing here duplicates it.
  */
-export const PUBLIC_TAXONOMY = [
-  {
-    label: "Components",
-    links: [
-      { href: "/components", label: "Components" },
-      { href: "/controls", label: "Menu Triggers" },
-    ],
-  },
-  {
-    label: "Layouts",
-    links: [
-      { href: "/layouts?family=collections", label: "Collections" },
-      { href: "/layouts?family=editorial", label: "Editorial" },
-      { href: "/layouts?family=spatial", label: "Spatial" },
-    ],
-  },
-  {
-    label: "Experiences",
-    links: [
-      { href: "/experiences", label: "Overview" },
-      { href: "/navigation", label: "Navigation" },
-      { href: "/heroes", label: "Heroes" },
-      { href: "/backgrounds", label: "Backgrounds" },
-      { href: "/transitions", label: "Transitions" },
-    ],
-  },
-  {
-    label: "Systems",
-    links: [
-      { href: "/media", label: "Media" },
-      { href: "/collections", label: "Collections" },
-      { href: "/forms", label: "Forms" },
-      { href: "/data", label: "Data" },
-      { href: "/workflows", label: "Workflows" },
-      { href: "/overlays", label: "Overlays" },
-      { href: "/mobile", label: "Mobile" },
-    ],
-  },
-  {
-    label: "Effects",
-    links: [
-      { href: "/effects", label: "Overview" },
-      { href: "/effects#cursor", label: "Cursor" },
-      { href: "/effects#motion", label: "Motion" },
-      { href: "/effects#text", label: "Text" },
-      { href: "/effects#scroll", label: "Scroll" },
-    ],
-  },
-] as const;
 
-/** The current header/footer contract; kept as a named export for old callers. */
-export const LIBRARY_SECTIONS = PUBLIC_TAXONOMY;
-
-/** Useful surfaces that are not public taxonomy families. Their routes stay live. */
+/** Useful surfaces that are not part of the L1/L2 taxonomy. Their routes stay live. */
 export const UTILITY_LINKS = [
   { href: "/showcase", label: "Showcase" },
   { href: "/playground", label: "Playground" },
@@ -220,29 +161,29 @@ export function publicLayoutFamilyFor(implementationFamily: string): PublicLayou
  * visitor-facing names; package and filename changes are not required.
  */
 export const TAXONOMY_MAPPING = [
-  { current: "cards / buttons / controls / navigation / surfaces / effects", route: "/components", package: "@pinky/components", canonicalCategory: "Components", canonicalName: "Components" },
-  { current: "Menu Trigger wall", route: "/controls", package: "@pinky/components + @pinky/experiences", canonicalCategory: "Components", canonicalName: "Menu Triggers" },
-  { current: "Morph Menu", route: "/navigation#navigation", package: "@pinky/experiences", canonicalCategory: "Experiences → Navigation", canonicalName: "Morph Menu" },
-  { current: "Gooey Menu", route: "/components/gooey-menu", package: "@pinky/components", canonicalCategory: "Components → Navigation preset", canonicalName: "Gooey Menu" },
-  { current: "Orbit Menu", route: "/experiences/orbit-menu", package: "@pinky/experiences", canonicalCategory: "Experiences → Navigation → radial action", canonicalName: "Orbit Menu" },
-  { current: "cursor effects", route: "/effects#cursor", package: "@pinky/effects", canonicalCategory: "Effects → Cursor", canonicalName: "Cursor effects" },
-  { current: "Magnetic Cursor Target", route: "/effects/magnetic-cursor-target", package: "@pinky/effects", canonicalCategory: "Effects → Cursor", canonicalName: "Magnetic Cursor Target" },
-  { current: "Morph primitive", route: "/primitives", package: "@pinky/primitives", canonicalCategory: "Primitives", canonicalName: "Morph (geometry primitive)" },
-  { current: "Morph Card", route: "/components/morph-card", package: "@pinky/components", canonicalCategory: "Components → Surfaces", canonicalName: "Morph Card (card → dialog)" },
-  { current: "Gallery ↔ List Morph", route: "/layouts/gallery-list-morph", package: "@pinky/layouts", canonicalCategory: "Layouts → Editorial", canonicalName: "Gallery ↔ List Morph (layout morph)" },
-  { current: "Morph Lightbox", route: "/systems/morph-lightbox", package: "@pinky/systems", canonicalCategory: "Systems → Media", canonicalName: "Morph Lightbox (media morph)" },
-  { current: "Jelly Card / Liquid Card", route: "/components/jelly-card and /components/liquid-card", package: "@pinky/primitives + @pinky/components", canonicalCategory: "Components → Surfaces", canonicalName: "Jelly / Liquid surfaces" },
-  { current: "galleries / grids / stacks / carousels / collections", route: "/layouts?family=collections", package: "@pinky/layouts", canonicalCategory: "Layouts → Collections", canonicalName: "Collection layouts" },
-  { current: "editorial layouts", route: "/layouts?family=editorial", package: "@pinky/layouts", canonicalCategory: "Layouts → Editorial", canonicalName: "Editorial layouts" },
-  { current: "spatial layouts", route: "/layouts?family=spatial", package: "@pinky/layouts", canonicalCategory: "Layouts → Spatial", canonicalName: "Spatial layouts" },
-  { current: "hero patterns", route: "/heroes", package: "@pinky/experiences", canonicalCategory: "Experiences → Heroes", canonicalName: "Hero patterns" },
-  { current: "scroll interactions", route: "/effects#scroll", package: "@pinky/effects", canonicalCategory: "Effects → Scroll", canonicalName: "Scroll interactions" },
-  { current: "transitions", route: "/transitions", package: "@pinky/experiences", canonicalCategory: "Experiences → Transitions", canonicalName: "Transitions" },
-  { current: "text effects", route: "/effects#text", package: "@pinky/effects", canonicalCategory: "Effects → Text", canonicalName: "Text effects" },
-  { current: "media / forms / data / collections / overlays / mobile", route: "/media, /overlays and /mobile", package: "@pinky/systems", canonicalCategory: "Systems", canonicalName: "Product systems" },
-  { current: "content browsing systems", route: "/collections", package: "@pinky/systems", canonicalCategory: "Systems → Collections", canonicalName: "Collection browsing systems" },
-  { current: "feedback / search / loading / lists / drag / onboarding / mobile", route: "/workflows", package: "@pinky/systems", canonicalCategory: "Systems → Workflows", canonicalName: "Workflow systems" },
-  { current: "implementation folders in packages/skills", route: "/skills", package: "@pinky/skills", canonicalCategory: "Skills", canonicalName: "Interaction recipes" },
+  { current: "cards / buttons / controls / navigation / surfaces / effects", route: "/components", package: "@pinky-ui/components", canonicalCategory: "Components", canonicalName: "Components" },
+  { current: "Menu Trigger wall", route: "/controls", package: "@pinky-ui/components + @pinky-ui/experiences", canonicalCategory: "Components", canonicalName: "Menu Triggers" },
+  { current: "Morph Menu", route: "/navigation#navigation", package: "@pinky-ui/experiences", canonicalCategory: "Experiences → Navigation", canonicalName: "Morph Menu" },
+  { current: "Gooey Menu", route: "/components/gooey-menu", package: "@pinky-ui/components", canonicalCategory: "Components → Navigation preset", canonicalName: "Gooey Menu" },
+  { current: "Orbit Menu", route: "/experiences/orbit-menu", package: "@pinky-ui/experiences", canonicalCategory: "Experiences → Navigation → radial action", canonicalName: "Orbit Menu" },
+  { current: "cursor effects", route: "/effects#cursor", package: "@pinky-ui/effects", canonicalCategory: "Effects → Cursor", canonicalName: "Cursor effects" },
+  { current: "Magnetic Cursor Target", route: "/effects/magnetic-cursor-target", package: "@pinky-ui/effects", canonicalCategory: "Effects → Cursor", canonicalName: "Magnetic Cursor Target" },
+  { current: "Morph primitive", route: "/primitives", package: "@pinky-ui/primitives", canonicalCategory: "Primitives", canonicalName: "Morph (geometry primitive)" },
+  { current: "Morph Card", route: "/components/morph-card", package: "@pinky-ui/components", canonicalCategory: "Components → Surfaces", canonicalName: "Morph Card (card → dialog)" },
+  { current: "Gallery ↔ List Morph", route: "/layouts/gallery-list-morph", package: "@pinky-ui/layouts", canonicalCategory: "Layouts → Editorial", canonicalName: "Gallery ↔ List Morph (layout morph)" },
+  { current: "Morph Lightbox", route: "/systems/morph-lightbox", package: "@pinky-ui/systems", canonicalCategory: "Systems → Media", canonicalName: "Morph Lightbox (media morph)" },
+  { current: "Jelly Card / Liquid Card", route: "/components/jelly-card and /components/liquid-card", package: "@pinky-ui/primitives + @pinky-ui/components", canonicalCategory: "Components → Surfaces", canonicalName: "Jelly / Liquid surfaces" },
+  { current: "galleries / grids / stacks / carousels / collections", route: "/layouts?family=collections", package: "@pinky-ui/layouts", canonicalCategory: "Layouts → Collections", canonicalName: "Collection layouts" },
+  { current: "editorial layouts", route: "/layouts?family=editorial", package: "@pinky-ui/layouts", canonicalCategory: "Layouts → Editorial", canonicalName: "Editorial layouts" },
+  { current: "spatial layouts", route: "/layouts?family=spatial", package: "@pinky-ui/layouts", canonicalCategory: "Layouts → Spatial", canonicalName: "Spatial layouts" },
+  { current: "hero patterns", route: "/heroes", package: "@pinky-ui/experiences", canonicalCategory: "Experiences → Heroes", canonicalName: "Hero patterns" },
+  { current: "scroll interactions", route: "/effects#scroll", package: "@pinky-ui/effects", canonicalCategory: "Effects → Scroll", canonicalName: "Scroll interactions" },
+  { current: "transitions", route: "/transitions", package: "@pinky-ui/experiences", canonicalCategory: "Experiences → Transitions", canonicalName: "Transitions" },
+  { current: "text effects", route: "/effects#text", package: "@pinky-ui/effects", canonicalCategory: "Effects → Text", canonicalName: "Text effects" },
+  { current: "media / forms / data / collections / overlays / mobile", route: "/media, /overlays and /mobile", package: "@pinky-ui/systems", canonicalCategory: "Systems", canonicalName: "Product systems" },
+  { current: "content browsing systems", route: "/collections", package: "@pinky-ui/systems", canonicalCategory: "Systems → Collections", canonicalName: "Collection browsing systems" },
+  { current: "feedback / search / loading / lists / drag / onboarding / mobile", route: "/workflows", package: "@pinky-ui/systems", canonicalCategory: "Systems → Workflows", canonicalName: "Workflow systems" },
+  { current: "implementation folders in packages/skills", route: "/skills", package: "@pinky-ui/skills", canonicalCategory: "Skills", canonicalName: "Interaction recipes" },
   { current: "installation / composition / motion / accessibility", route: "/docs", package: "apps/website", canonicalCategory: "Docs", canonicalName: "Pinky UI guide" },
 ] as const;
 

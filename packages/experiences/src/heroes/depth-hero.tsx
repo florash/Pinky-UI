@@ -1,6 +1,6 @@
 "use client";
 
-import { Parallax, ParallaxLayer, type SpringPreset } from "@pinky/primitives";
+import { Parallax, ParallaxLayer, type SpringPreset } from "@pinky-ui/primitives";
 import { type ReactNode } from "react";
 
 import { cn } from "../internal/cn";

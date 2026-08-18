@@ -207,18 +207,30 @@ export function skillPublicGroup(kind: SkillKind) {
   return SKILL_PUBLIC_GROUPS.find((group) => group.kinds.some((candidate) => candidate === kind))?.label ?? "Skills";
 }
 
-function parse(kind: SkillKind, slug: string, raw: string): Skill {
-  const title = raw.match(/^#\s+(.+)$/m)?.[1]?.trim() ?? slug;
+/**
+ * Skills are read by the website's parser below and, increasingly, by agents
+ * that want the YAML directly — so frontmatter is stripped before title and
+ * summary extraction (and from the rendered body) rather than parsed into
+ * the page. A file with no frontmatter block is returned unchanged.
+ */
+function stripFrontmatter(raw: string): string {
+  const match = raw.match(/^---\n[\s\S]*?\n---\n?/);
+  return match ? raw.slice(match[0].length) : raw;
+}
 
-  const purpose = raw.split(/^##\s+Purpose\s*$/m)[1];
-  const source = purpose ?? raw.replace(/^#\s+.+$/m, "");
+function parse(kind: SkillKind, slug: string, raw: string): Skill {
+  const content = stripFrontmatter(raw);
+  const title = content.match(/^#\s+(.+)$/m)?.[1]?.trim() ?? slug;
+
+  const purpose = content.split(/^##\s+Purpose\s*$/m)[1];
+  const source = purpose ?? content.replace(/^#\s+.+$/m, "");
   const summary =
     source
       .split("\n\n")
       .map((block) => block.trim())
       .find((block) => block.length > 0 && !block.startsWith("#") && !block.startsWith("```")) ?? "";
 
-  return { kind, slug, title, summary: summary.replace(/\n/g, " "), body: raw };
+  return { kind, slug, title, summary: summary.replace(/\n/g, " "), body: content };
 }
 
 export async function getSkill(kind: SkillKind, slug: string): Promise<Skill | null> {

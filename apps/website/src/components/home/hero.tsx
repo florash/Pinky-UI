@@ -1,7 +1,7 @@
 "use client";
 
-import { FluidTabs, GlowBorder, JellyCard, MagneticButton } from "@pinky/components";
-import { CursorGlow, subscribeToPointer, useMotionEnabled } from "@pinky/primitives";
+import { FluidTabs, GlowBorder, JellyCard, MagneticButton } from "@pinky-ui/components";
+import { CursorGlow, subscribeToPointer, useMotionEnabled } from "@pinky-ui/primitives";
 import { useEffect, useRef } from "react";
 
 import { ArrowRight } from "@/components/site/icons";

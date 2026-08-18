@@ -1,22 +1,22 @@
-# @pinky/components
+# @pinky-ui/components
 
-Composed React surfaces and controls built on `@pinky/primitives`: cards, buttons, tabs,
+Composed React surfaces and controls built on `@pinky-ui/primitives`: cards, buttons, tabs,
 toggles and menu/navigation controls with tactile, accessible feedback.
 
 ## Registry installation
 
-The `@pinky/*` `0.1.0` packages are prepared for public release but are not published to npm yet. Until publication, use Pinky UI from the repository source.
+The `@pinky-ui/*` `0.1.0` packages are prepared for public release but are not published to npm yet. Until publication, use Pinky UI from the repository source.
 
 ### After npm publication
 
 ```bash
-npm install @pinky/components @pinky/primitives react motion
+npm install @pinky-ui/components @pinky-ui/primitives react motion
 ```
 
 ## Use
 
 ```tsx
-import { MagneticButton } from "@pinky/components";
+import { MagneticButton } from "@pinky-ui/components";
 
 <MagneticButton>Open the project</MagneticButton>;
 ```

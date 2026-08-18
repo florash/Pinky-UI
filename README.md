@@ -1,15 +1,19 @@
 # Pinky UI
 
+[![Live Demo](https://img.shields.io/badge/live%20demo-florash.github.io%2FPinky--UI-f4c7d7?style=flat-square)](https://florash.github.io/Pinky-UI)
+
+![Pinky UI hero preview](docs/hero.gif)
+
 **An open-source React interaction and UI system for modern interfaces.**
 
 Pinky UI is an open-source collection of expressive React components, product systems and motion primitives built for interfaces that feel responsive, tactile and alive.
 
-Pinky UI `0.1.0` is available from source today. The seven `@pinky/*` packages are prepared
+Pinky UI `0.1.0` is available from source today. The seven `@pinky-ui/*` packages are prepared
 for public release but are not published to npm yet.
 
 Explore jelly, liquid, magnetic, morph, glow, depth, elastic and proximity interactions —
-**267 implemented items across 12 primitives, 12 components, 27 layouts, 32 effects, 31
-experiences and 153 product and workflow systems** — designed to stay composable, accessible
+**269 implemented items across 12 primitives, 13 components, 28 layouts, 32 effects, 31
+experiences and 153+ product and workflow systems** — designed to stay composable, accessible
 and practical to use. The website puts those interactions directly in front of you as live
 previews instead of hiding the work behind a documentation-first catalogue.
 
@@ -21,7 +25,7 @@ React · TypeScript · Tailwind CSS · Motion · Accessible · Open Source
 
 ## Get started
 
-Pinky UI is currently developed from source; the `@pinky/*` packages have publish-like build
+Pinky UI is currently developed from source; the `@pinky-ui/*` packages have publish-like build
 metadata and packed artifacts, but are not published npm packages yet. After npm publication,
 the package READMEs will show the normal registry installation commands.
 
@@ -51,10 +55,12 @@ not bundle font files.
 - Subtle animation tuned for real products, not demos
 - Reduced-motion aware: motion is the enhancement, never the content
 - Designed for composition rather than rigid themes
+- Zero WebGL dependency — every effect, including the spatial and 3D-feeling ones, is CSS and
+  `transform` under the hood: no `<canvas>`, no shader runtime, no low-end-device fallback to write
 
 ## What's inside
 
-### Primitives — `@pinky/primitives`
+### Primitives — `@pinky-ui/primitives`
 
 | Primitive | What it does |
 | --- | --- |
@@ -82,12 +88,13 @@ not bundle font files.
 - Ripple Button
 - Glow Border
 - Fluid Tabs
+- Pill Nav
 - Gooey Menu
 - Floating Dock
 - Elastic Toggle
 
 ```tsx
-import { MagneticButton } from "@pinky/components";
+import { MagneticButton } from "@pinky-ui/components";
 
 <MagneticButton strength={0.4}>Explore components</MagneticButton>
 ```
@@ -99,12 +106,13 @@ Ways to arrange many things, where the arrangement itself is the interaction.
 - Polaroid Wall
 - Stack to Grid
 - Masonry Gallery
+- Scroll Morph Wall
 - Draggable Card Stack
 - Expandable Bento
 - Card Fan
 
 ```tsx
-import { PolaroidWall, StackGrid } from "@pinky/layouts";
+import { PolaroidWall, StackGrid } from "@pinky-ui/layouts";
 ```
 
 The layouts package also includes an editorial family
@@ -112,7 +120,7 @@ The layouts package also includes an editorial family
 Horizontal Gallery, Broken / Offset Grid, Layered Editorial, Floating Columns)
 and a spatial family (Perspective Bento, Curved 3D Grid, Helix Gallery, Cylinder
 Gallery, Depth Scroll Gallery, Spatial Card Tunnel, Stack → Spatial, Infinite
-Spatial Canvas). All 27 layouts are implemented; see `packages/registry/src/layouts.ts`.
+Spatial Canvas). All 28 layouts are implemented; see `packages/registry/src/layouts.ts`.
 
 The spatial layouts use CSS 3D transforms and Motion only — there is no WebGL,
 Three.js or React Three Fiber anywhere in this repository. The full runtime

@@ -1,6 +1,6 @@
 "use client";
 
-import { springs, useMotionEnabled } from "@pinky/primitives";
+import { springs, useMotionEnabled } from "@pinky-ui/primitives";
 import { AnimatePresence, motion, useMotionValue, useTransform } from "motion/react";
 import { Children, useCallback, useState, type ReactNode } from "react";
 

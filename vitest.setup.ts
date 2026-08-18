@@ -14,10 +14,27 @@ export function setReducedMotion(value: boolean) {
   reducedMotion = value;
 }
 
+/**
+ * The default answer for `(hover: hover)` and `(pointer: fine)` is "no" —
+ * the same conservative, touch-first default `usePointerCapability` and
+ * `useFinePointer` ship with for a real browser before the first paint.
+ * Tests for the hover-capable path opt in per case with
+ * {@link setPointerCapability}.
+ */
+let hoverCapable = false;
+
+export function setPointerCapability(value: boolean) {
+  hoverCapable = value;
+}
+
 vi.stubGlobal(
   "matchMedia",
   vi.fn((query: string) => ({
-    matches: query.includes("prefers-reduced-motion") ? reducedMotion : false,
+    matches: query.includes("prefers-reduced-motion")
+      ? reducedMotion
+      : query.includes("hover: hover") || query.includes("pointer: fine")
+        ? hoverCapable
+        : false,
     media: query,
     onchange: null,
     addEventListener: vi.fn(),
@@ -45,4 +62,5 @@ vi.stubGlobal("scrollTo", vi.fn());
 afterEach(() => {
   cleanup();
   setReducedMotion(false);
+  setPointerCapability(false);
 });

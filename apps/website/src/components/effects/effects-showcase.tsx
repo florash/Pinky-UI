@@ -5,6 +5,7 @@ import {
   BlurReveal,
   ContentSwapMotion,
   CharacterStagger,
+  CursorBlend,
   CursorBlob,
   CursorProvider,
   CursorSpotlight,
@@ -35,8 +36,9 @@ import {
   SurfaceCompression,
   TextScramble,
   WordStagger,
-} from "@pinky/effects";
-import { allEffects } from "@pinky/registry";
+} from "@pinky-ui/effects";
+import { allEffects } from "@pinky-ui/registry";
+import Link from "next/link";
 import { useState } from "react";
 
 import { LazyMount } from "@/components/site/lazy-mount";
@@ -82,6 +84,7 @@ const CURSOR_LAYERS = [
   { id: "soft", label: "Soft Cursor" },
   { id: "trail", label: "Cursor Trail" },
   { id: "blob", label: "Cursor Blob" },
+  { id: "blend", label: "Cursor Blend" },
   { id: "none", label: "None" },
 ] as const;
 
@@ -100,6 +103,7 @@ export function EffectsShowcase() {
       <SoftCursor followerOnly disabled={layer !== "soft"} />
       <CursorTrail count={10} size={8} lifetime={520} disabled={layer !== "trail"} />
       <CursorBlob opacity={0.22} size={260} disabled={layer !== "blob"} />
+      <CursorBlend disabled={layer !== "blend"} />
       <CursorText />
       <ScrollProgress />
 
@@ -125,7 +129,7 @@ export function EffectsShowcase() {
             <KineticUnderline as="a" href="#scroll" className="px-2 py-3 text-sm text-ink-700">
               Jump to scroll stories
             </KineticUnderline>
-            <KineticUnderline as="a" href="/experiences" className="px-2 py-3 text-sm text-ink-700">
+            <KineticUnderline as={Link} href="/experiences" className="px-2 py-3 text-sm text-ink-700">
               Explore experience-level UI →
             </KineticUnderline>
             <KineticUnderline as="a" href="#browse-all" className="px-2 py-3 text-sm text-ink-700">

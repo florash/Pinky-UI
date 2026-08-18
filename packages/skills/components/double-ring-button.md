@@ -20,8 +20,8 @@ The live preview wraps the actual button in a bounded proximity field and keeps 
 ## Usage
 
 ```tsx
-import { DoubleRingButton } from "@pinky/components";
-import { Proximity } from "@pinky/primitives";
+import { DoubleRingButton } from "@pinky-ui/components";
+import { Proximity } from "@pinky-ui/primitives";
 import { Plus } from "lucide-react";
 
 export function AddAction() {

@@ -35,8 +35,8 @@ import {
   SpotlightGrid,
   type NavigationGroup,
   type NavigationLink,
-} from "@pinky/experiences";
-import { allExperiences, type ExperienceFamily } from "@pinky/registry";
+} from "@pinky-ui/experiences";
+import { allExperiences, type ExperienceFamily } from "@pinky-ui/registry";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { LazyMount } from "@/components/site/lazy-mount";

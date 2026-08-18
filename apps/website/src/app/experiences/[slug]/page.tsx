@@ -1,4 +1,4 @@
-import { allExperiences, getExperience } from "@pinky/registry";
+import { allExperiences, getExperience } from "@pinky-ui/registry";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -28,6 +28,10 @@ export default async function ExperienceDetailPage({ params }: PageProps) {
     .map((relatedSlug) => getExperience(relatedSlug))
     .filter((item) => item !== undefined)
     .map((item) => ({ slug: item.slug, name: item.name, href: `/experiences/${item.slug}` }));
+  const sameFamily = allExperiences
+    .filter((item) => item.family === entry.family && item.slug !== entry.slug)
+    .slice(0, 4)
+    .map((item) => ({ slug: item.slug, name: item.name, href: `/experiences/${item.slug}` }));
 
   const detail: RegistryDetailRecord = {
     slug: entry.slug,
@@ -49,6 +53,7 @@ export default async function ExperienceDetailPage({ params }: PageProps) {
     whenToUse: entry.whenToUse,
     whenNotToUse: entry.whenNotToUse,
     related,
+    sameFamily,
     skill: skill ? { kind: entry.family, slug: skill.slug, body: skill.body } : null,
   };
 

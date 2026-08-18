@@ -1,38 +1,42 @@
 "use client";
 
-import { BottomSheet } from "@pinky/systems";
-import { cn } from "@pinky/components";
+import { BottomSheet } from "@pinky-ui/systems";
+import { cn, PillNav, type PillNavItem } from "@pinky-ui/components";
+import { GridReveal, springs, useMotionEnabled } from "@pinky-ui/primitives";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 
-import { LIBRARY_SECTIONS, NAV_LINKS, SITE } from "@/lib/site";
+import { EXPLORE_LINK, NAV_GROUPS, NAV_UTILITY_LINKS, type NavGroup } from "@/config/navigation";
+import { SITE } from "@/lib/site";
 
 import { GitHubMark } from "./icons";
 import { Container } from "./layout";
 import { MagneticLink } from "./magnetic-link";
 import { ThemeSwitch } from "./theme-switch";
 
-const LIBRARY_MENU_ID = "library-menu";
-type LibraryLink = { href: string; label: string };
-const LIBRARY_LINKS: ReadonlyArray<LibraryLink> = LIBRARY_SECTIONS.reduce<LibraryLink[]>(
-  (links, section) => links.concat(Array.from(section.links as ReadonlyArray<LibraryLink>)),
-  [],
-);
-
 export function SiteHeader() {
   const pathname = usePathname();
-  const [libraryOpen, setLibraryOpen] = useState(false);
+  const motionEnabled = useMotionEnabled();
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileOpenGroup, setMobileOpenGroup] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
-  const libraryTrigger = useRef<HTMLButtonElement>(null);
-  const libraryMenu = useRef<HTMLDivElement>(null);
-  const libraryLinks = useRef<Array<HTMLAnchorElement | null>>([]);
+  const triggerRefs = useRef<Record<string, HTMLButtonElement | HTMLAnchorElement | null>>({});
+  const menuRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const linkRefs = useRef<HTMLAnchorElement[]>([]);
 
   useEffect(() => {
-    setLibraryOpen(false);
+    setOpenGroup(null);
     setMobileOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const active = NAV_GROUPS.find((group) => group.children.some((child) => pathMatches(pathname, child.href)) || pathname === group.href);
+    setMobileOpenGroup(active?.href ?? null);
+  }, [mobileOpen, pathname]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -42,44 +46,37 @@ export function SiteHeader() {
   }, []);
 
   useEffect(() => {
-    if (!libraryOpen) return;
-    const focusFirst = () => libraryLinks.current.find((link) => link)?.focus();
+    if (!openGroup) return;
+    const focusFirst = () => linkRefs.current[0]?.focus();
     const focusFrame = window.requestAnimationFrame(focusFirst);
     const onPointerDown = (event: PointerEvent) => {
       const target = event.target as Node;
-      if (!libraryMenu.current?.contains(target) && !libraryTrigger.current?.contains(target)) {
-        setLibraryOpen(false);
-      }
+      const menu = menuRefs.current[openGroup];
+      const trigger = triggerRefs.current[openGroup];
+      if (!menu?.contains(target) && !trigger?.contains(target)) setOpenGroup(null);
     };
     document.addEventListener("pointerdown", onPointerDown);
     return () => {
       window.cancelAnimationFrame(focusFrame);
       document.removeEventListener("pointerdown", onPointerDown);
     };
-  }, [libraryOpen]);
+  }, [openGroup]);
 
-  const closeLibrary = (restoreFocus = false) => {
-    setLibraryOpen(false);
-    if (restoreFocus) window.requestAnimationFrame(() => libraryTrigger.current?.focus());
+  const close = (restoreFocus = false, groupHref?: string) => {
+    setOpenGroup(null);
+    if (restoreFocus && groupHref) window.requestAnimationFrame(() => triggerRefs.current[groupHref]?.focus());
   };
 
-  const onLibraryTriggerKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
-    if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      setLibraryOpen(true);
-    }
-  };
-
-  const onLibraryMenuKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    const links = libraryLinks.current.filter((link): link is HTMLAnchorElement => Boolean(link));
+  const onMenuKeyDown = (event: KeyboardEvent<HTMLDivElement>, groupHref: string, itemCount: number) => {
+    const links = linkRefs.current;
     const currentIndex = links.indexOf(document.activeElement as HTMLAnchorElement);
     if (event.key === "Escape") {
       event.preventDefault();
-      closeLibrary(true);
+      close(true, groupHref);
       return;
     }
     if (event.key === "Tab") {
-      setLibraryOpen(false);
+      setOpenGroup(null);
       return;
     }
     if (event.key !== "ArrowDown" && event.key !== "ArrowUp" && event.key !== "Home" && event.key !== "End") return;
@@ -87,10 +84,46 @@ export function SiteHeader() {
     const nextIndex = event.key === "Home"
       ? 0
       : event.key === "End"
-        ? links.length - 1
-        : (currentIndex + (event.key === "ArrowDown" ? 1 : -1) + links.length) % links.length;
+        ? itemCount - 1
+        : (currentIndex + (event.key === "ArrowDown" ? 1 : -1) + itemCount) % itemCount;
     links[nextIndex]?.focus();
   };
+
+  const pillItems: PillNavItem[] = [
+    { id: EXPLORE_LINK.href, label: EXPLORE_LINK.label, href: EXPLORE_LINK.href, active: pathname === EXPLORE_LINK.href },
+    ...NAV_GROUPS.map((group) => {
+      const active = group.children.some((child) => pathMatches(pathname, child.href)) || pathname === group.href;
+      const menuId = `nav-menu-${group.href.replace(/\W/g, "")}`;
+      const open = openGroup === group.href;
+      return {
+        id: group.href,
+        label: (
+          <span className="inline-flex items-center gap-1">
+            {group.label}
+            <span aria-hidden className={cn("text-xs transition-transform", open && "rotate-180")}>⌄</span>
+          </span>
+        ),
+        active,
+        "aria-expanded": open,
+        "aria-haspopup": "menu" as const,
+        "aria-controls": open ? menuId : undefined,
+        onClick: () => setOpenGroup((current) => (current === group.href ? null : group.href)),
+        ref: (node: HTMLAnchorElement | HTMLButtonElement | null) => { triggerRefs.current[group.href] = node; },
+        panel: open ? (
+          <MegaMenuPanel
+            group={group}
+            menuId={menuId}
+            onKeyDown={(event) => onMenuKeyDown(event, group.href, group.children.length)}
+            onLinkClick={() => close()}
+            menuRef={(node) => { menuRefs.current[group.href] = node; }}
+            registerLinkRef={(node, index) => { linkRefs.current[index] = node; }}
+            motionEnabled={motionEnabled}
+          />
+        ) : null,
+      } satisfies PillNavItem;
+    }),
+    ...NAV_UTILITY_LINKS.map((link) => ({ id: link.href, label: link.label, href: link.href, active: pathMatches(pathname, link.href) })),
+  ];
 
   return (
     <header
@@ -101,73 +134,15 @@ export function SiteHeader() {
           : "border-b border-transparent",
       )}
     >
-      <Container className="flex h-16 items-center justify-between gap-4 sm:h-18">
+      <Container className={cn("flex items-center justify-between gap-4 transition-[height] duration-300", scrolled ? "h-14" : "h-16 sm:h-18")}>
         <Link href="/" className="group flex shrink-0 items-center gap-2.5" aria-label={`${SITE.name} home`}>
           <PinkyMark />
           <span className="font-display text-[0.9375rem] font-semibold tracking-tight whitespace-nowrap">{SITE.name}</span>
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
-          <DesktopLink href="/explore" label="Explore" active={pathname === "/explore"} />
-          <div className="relative">
-            <button
-              ref={libraryTrigger}
-              type="button"
-              aria-expanded={libraryOpen}
-              aria-controls={libraryOpen ? LIBRARY_MENU_ID : undefined}
-              onClick={() => setLibraryOpen((open) => !open)}
-              onKeyDown={onLibraryTriggerKeyDown}
-              className={cn(
-                "inline-flex items-center gap-1 rounded-pill px-3.5 py-2 text-sm transition-colors duration-200",
-                libraryIsActive(pathname) ? "text-ink-900" : "text-ink-500 hover:text-ink-900",
-              )}
-            >
-              Library
-              <span aria-hidden className={cn("text-xs transition-transform", libraryOpen && "rotate-180")}>⌄</span>
-            </button>
-            {libraryOpen ? (
-              <div
-                ref={libraryMenu}
-                id={LIBRARY_MENU_ID}
-                role="menu"
-                aria-label="Library sections"
-                onKeyDown={onLibraryMenuKeyDown}
-                className="fixed top-[calc(4.5rem+0.75rem)] left-1/2 z-50 max-h-[calc(100dvh-6rem)] w-[min(72rem,calc(100vw-2rem))] -translate-x-1/2 overflow-y-auto rounded-[24px] border border-line bg-white/95 p-5 shadow-soft backdrop-blur-xl"
-              >
-                <div className="grid gap-5 lg:grid-cols-5">
-                  {LIBRARY_SECTIONS.map((section) => (
-                    <div key={section.label}>
-                      <p className="font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">{section.label}</p>
-                      <ul className="mt-2 flex flex-col gap-1">
-                        {section.links.map((link) => (
-                          <li key={link.href}>
-                            <Link
-                              ref={(node) => { libraryLinks.current[LIBRARY_LINKS.findIndex((item) => item.href === link.href)] = node; }}
-                              role="menuitem"
-                              href={link.href}
-                              onClick={() => closeLibrary()}
-                              className="block rounded-xl px-3 py-2 text-sm text-ink-700 transition-colors hover:bg-cloud-50 hover:text-ink-900 focus-visible:bg-cloud-50"
-                            >
-                              {link.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-          </div>
-          {NAV_LINKS.filter((link) => link.href !== "/explore").map((link) => (
-            <DesktopLink
-              key={link.href}
-              href={link.href}
-              label={link.label}
-              active={pathMatches(pathname, link.href, link.matchPrefixes)}
-            />
-          ))}
-        </nav>
+        <div className="hidden lg:block">
+          <PillNav items={pillItems} size={scrolled ? "sm" : "md"} aria-label="Main" />
+        </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
           <ThemeSwitch className="hidden sm:inline-flex" />
@@ -180,27 +155,52 @@ export function SiteHeader() {
             aria-expanded={mobileOpen}
             aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
             onClick={() => setMobileOpen(true)}
-            className="inline-flex size-10 items-center justify-center rounded-pill border border-line bg-white/70 lg:hidden"
+            className="relative inline-flex size-10 items-center justify-center rounded-pill border border-line bg-white/70 [@media(pointer:coarse)]:before:absolute [@media(pointer:coarse)]:before:-inset-0.5 [@media(pointer:coarse)]:before:content-[''] lg:hidden"
           >
             <MenuGlyph open={mobileOpen} />
           </button>
         </div>
       </Container>
 
-      <BottomSheet open={mobileOpen} onOpenChange={setMobileOpen} title="Pinky UI navigation" snapPoints={[78, 94]}>
+      <BottomSheet open={mobileOpen} onOpenChange={setMobileOpen} title="Pinky UI navigation" snapPoints={[82, 96]}>
         <div id="mobile-nav" className="space-y-6">
           <nav aria-label="Mobile navigation" className="flex flex-col gap-1">
-            <MobileLink href="/explore" label="Explore" active={pathname === "/explore"} />
-            <p className="mt-4 px-3 font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">Library</p>
-            {LIBRARY_SECTIONS.map((section) => (
-              <div key={section.label} className="mt-2">
-                <p className="px-3 text-xs font-medium text-ink-500">{section.label}</p>
-                {section.links.map((link) => <MobileLink key={link.href} href={link.href} label={link.label} active={pathMatches(pathname, link.href, [])} onClick={() => setMobileOpen(false)} />)}
-              </div>
+            <MobileLink href={EXPLORE_LINK.href} label={EXPLORE_LINK.label} active={pathname === EXPLORE_LINK.href} onClick={() => setMobileOpen(false)} />
+            {NAV_GROUPS.map((group) => {
+              const expanded = mobileOpenGroup === group.href;
+              const groupActive = group.children.some((child) => pathMatches(pathname, child.href)) || pathname === group.href;
+              const panelId = `mobile-nav-group-${group.href.replace(/\W/g, "")}`;
+              return (
+                <div key={group.href} className="mt-2 border-b border-line/60 pb-2 last:border-b-0">
+                  <button
+                    type="button"
+                    aria-expanded={expanded}
+                    aria-controls={panelId}
+                    onClick={() => setMobileOpenGroup((current) => (current === group.href ? null : group.href))}
+                    className={cn(
+                      "flex min-h-12 w-full items-center justify-between rounded-xl px-3 py-3 text-left font-mono text-[0.625rem] tracking-[0.14em] uppercase transition-colors",
+                      groupActive ? "text-ink-900" : "text-ink-500 hover:text-ink-900",
+                    )}
+                  >
+                    {group.label}
+                    <span aria-hidden className={cn("text-xs transition-transform", expanded && "rotate-180")}>⌄</span>
+                  </button>
+                  <GridReveal open={expanded} contentProps={{ id: panelId, role: "group", "aria-label": `${group.label} sections` }}>
+                    <div className="flex flex-col gap-1 pb-1">
+                      {group.children.map((link) => (
+                        <MobileLink key={link.href} href={link.href} label={link.label} active={pathMatches(pathname, link.href)} onClick={() => setMobileOpen(false)} indent />
+                      ))}
+                    </div>
+                  </GridReveal>
+                </div>
+              );
+            })}
+            <p className="mt-4 px-3 font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">More</p>
+            {NAV_UTILITY_LINKS.map((link) => (
+              <MobileLink key={link.href} href={link.href} label={link.label} active={pathMatches(pathname, link.href)} onClick={() => setMobileOpen(false)} />
             ))}
-            {NAV_LINKS.filter((link) => link.href !== "/explore").map((link) => <MobileLink key={link.href} href={link.href} label={link.label} active={pathMatches(pathname, link.href, link.matchPrefixes)} onClick={() => setMobileOpen(false)} />)}
           </nav>
-          <a href={SITE.github} target="_blank" rel="noreferrer noopener" className="block rounded-xl px-3 py-3 text-base text-ink-700 hover:bg-cloud-50">GitHub</a>
+          <a href={SITE.github} target="_blank" rel="noreferrer noopener" className="block min-h-12 rounded-xl px-3 py-3 text-base text-ink-700 hover:bg-cloud-50">GitHub</a>
           <ThemeSwitch />
         </div>
       </BottomSheet>
@@ -208,21 +208,79 @@ export function SiteHeader() {
   );
 }
 
-function DesktopLink({ href, label, active }: { href: string; label: string; active: boolean }) {
-  return <Link href={href} aria-current={active ? "page" : undefined} className={cn("rounded-pill px-3.5 py-2 text-sm transition-colors duration-200", active ? "text-ink-900" : "text-ink-500 hover:text-ink-900")}>{label}</Link>;
+function MegaMenuPanel({
+  group,
+  menuId,
+  onKeyDown,
+  onLinkClick,
+  menuRef,
+  registerLinkRef,
+  motionEnabled,
+}: {
+  group: NavGroup;
+  menuId: string;
+  onKeyDown: (event: KeyboardEvent<HTMLDivElement>) => void;
+  onLinkClick: () => void;
+  menuRef: (node: HTMLDivElement | null) => void;
+  registerLinkRef: (node: HTMLAnchorElement, index: number) => void;
+  motionEnabled: boolean;
+}) {
+  const wide = group.children.length > 4;
+
+  return (
+    <motion.div
+      ref={menuRef}
+      id={menuId}
+      role="menu"
+      aria-label={`${group.label} sections`}
+      onKeyDown={onKeyDown}
+      initial={motionEnabled ? { opacity: 0, scale: 0.95, y: -6 } : false}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={motionEnabled ? { opacity: 0, scale: 0.95 } : undefined}
+      transition={motionEnabled ? { type: "spring", ...springs.snappy } : { duration: 0 }}
+      style={{ transformOrigin: "top left" }}
+      className={cn(
+        "absolute top-[calc(100%+0.5rem)] left-0 z-50 overflow-hidden rounded-[20px] border border-line bg-white/95 p-3 shadow-soft backdrop-blur-xl",
+        wide ? "grid w-[34rem] grid-cols-2 gap-1" : "w-64",
+      )}
+    >
+      {group.children.map((link, index) => (
+        <Link
+          key={link.href}
+          ref={(node) => { if (node) registerLinkRef(node, index); }}
+          role="menuitem"
+          href={link.href}
+          onClick={onLinkClick}
+          className="block rounded-xl px-3 py-2.5 transition-colors hover:bg-cloud-50 focus-visible:bg-cloud-50"
+        >
+          <span className="block text-sm font-medium text-ink-900">{link.label}</span>
+          {link.description ? <span className="mt-0.5 block text-xs leading-snug text-ink-500">{link.description}</span> : null}
+        </Link>
+      ))}
+    </motion.div>
+  );
 }
 
-function MobileLink({ href, label, active, onClick }: { href: string; label: string; active: boolean; onClick?: () => void }) {
-  return <Link href={href} aria-current={active ? "page" : undefined} onClick={onClick} className={cn("rounded-xl px-3 py-3 text-base transition-colors hover:bg-cloud-50", active ? "font-medium text-ink-900" : "text-ink-700")}>{label}</Link>;
+function MobileLink({ href, label, active, onClick, indent = false }: { href: string; label: string; active: boolean; onClick?: () => void; indent?: boolean }) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      onClick={onClick}
+      className={cn(
+        "block min-h-12 w-full rounded-xl px-3 py-3 text-base transition-colors hover:bg-cloud-50",
+        indent && "pl-6",
+        active ? "font-medium text-ink-900" : "text-ink-700",
+      )}
+    >
+      {label}
+    </Link>
+  );
 }
 
-function pathMatches(pathname: string, href: string, prefixes: readonly string[]) {
+function pathMatches(pathname: string, href: string) {
   const path = href.split(/[?#]/, 1)[0];
-  return pathname === path || pathname.startsWith(`${path}/`) || prefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
-}
-
-function libraryIsActive(pathname: string) {
-  return LIBRARY_SECTIONS.some((section) => section.links.some((link) => pathMatches(pathname, link.href, []))) || pathname.startsWith("/systems/") || pathname.startsWith("/spatial");
+  return pathname === path || pathname.startsWith(`${path}/`);
 }
 
 /** The mark: two soft overlapping fields, blush over milk blue. */

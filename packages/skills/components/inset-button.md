@@ -20,7 +20,7 @@ The live example keeps the surrounding surface quiet so the inset response can b
 ## Usage
 
 ```tsx
-import { InsetButton } from "@pinky/components";
+import { InsetButton } from "@pinky-ui/components";
 import { Bookmark } from "lucide-react";
 
 export function SaveAction() {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMotionEnabled } from "@pinky/primitives";
+import { useMotionEnabled } from "@pinky-ui/primitives";
 import { useCallback, useState } from "react";
 
 export { DISABLED, FOCUS_RING, useEngagement } from "../buttons/tactile/internal";

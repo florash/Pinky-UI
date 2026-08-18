@@ -20,7 +20,7 @@ The live preview compares backward and forward actions using the same component 
 ## Usage
 
 ```tsx
-import { DirectionalButton } from "@pinky/components";
+import { DirectionalButton } from "@pinky-ui/components";
 
 export function StepActions() {
   return (

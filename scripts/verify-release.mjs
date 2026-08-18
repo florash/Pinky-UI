@@ -10,8 +10,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 
 const EXPECTED = {
-  publicSkillRoutes: 284,
-  canonicalRecipes: 283,
+  publicSkillRoutes: 336,
+  canonicalRecipes: 335,
   legacyAliases: 1,
   minimumProductPages: 567,
   releaseVersion: "0.1.0",
@@ -24,12 +24,12 @@ const RELEASE_ENV = {
 };
 
 const PUBLIC_PACKAGE_LAYERS = [
-  ["@pinky/primitives", "@pinky/registry"],
-  ["@pinky/components", "@pinky/layouts", "@pinky/effects", "@pinky/systems"],
-  ["@pinky/experiences"],
+  ["@pinky-ui/primitives", "@pinky-ui/registry"],
+  ["@pinky-ui/components", "@pinky-ui/layouts", "@pinky-ui/effects", "@pinky-ui/systems", "@pinky-ui/ai-ui", "@pinky-ui/mobile"],
+  ["@pinky-ui/experiences"],
 ];
-const PUBLIC_PACKAGES = PUBLIC_PACKAGE_LAYERS.flatMap((layer) => layer.map((packageName) => packageName.replace("@pinky/", "")));
-const PUBLIC_PACKAGE_NAMES = new Set(PUBLIC_PACKAGES.map((name) => `@pinky/${name}`));
+const PUBLIC_PACKAGES = PUBLIC_PACKAGE_LAYERS.flatMap((layer) => layer.map((packageName) => packageName.replace("@pinky-ui/", "")));
+const PUBLIC_PACKAGE_NAMES = new Set(PUBLIC_PACKAGES.map((name) => `@pinky-ui/${name}`));
 
 function packageDirectory(name) {
   return path.join(root, "packages", name);
@@ -160,7 +160,7 @@ async function packageInfos() {
   return Promise.all(
     PUBLIC_PACKAGES.map(async (name) => ({
       name,
-      packageName: `@pinky/${name}`,
+      packageName: `@pinky-ui/${name}`,
       directory: packageDirectory(name),
       source: path.join(packageDirectory(name), "src"),
       dist: path.join(packageDirectory(name), "dist"),
@@ -239,7 +239,7 @@ async function assertPackageMetadata(infos) {
       if (!/\.(?:ts|tsx)$/.test(file)) continue;
       const source = await fs.readFile(file, "utf8");
       // Only inspect actual top-level import declarations. Registry metadata contains
-      // generated importPath strings such as `from "@pinky/components"` that are
+      // generated importPath strings such as `from "@pinky-ui/components"` that are
       // documentation, not runtime package dependencies.
       const importSpecifiers = [
         ...source.matchAll(/^\s*(?:import|export)\s+(?:[^;\n]*?\s+from\s+)?["'](@pinky\/[^"']+)["']/gm),
@@ -410,13 +410,13 @@ function consumerSource() {
   return `import { useState } from "react";
 import { createRoot } from "react-dom/client";
 
-import { FluidTabs, JellyCard, MagneticButton } from "@pinky/components";
-import { CursorSpotlight } from "@pinky/effects";
-import { BubbleField, FloatingIslandNav, HoverExpandNavigation, MorphMenu, MorphingHero } from "@pinky/experiences";
-import { CardFan } from "@pinky/layouts";
-import { Magnetic } from "@pinky/primitives";
-import { getComponent } from "@pinky/registry";
-import { InteractiveLineChart, SwipeActionRow, ValidationField } from "@pinky/systems";
+import { FluidTabs, JellyCard, MagneticButton } from "@pinky-ui/components";
+import { CursorSpotlight } from "@pinky-ui/effects";
+import { BubbleField, FloatingIslandNav, HoverExpandNavigation, MorphMenu, MorphingHero } from "@pinky-ui/experiences";
+import { CardFan } from "@pinky-ui/layouts";
+import { Magnetic } from "@pinky-ui/primitives";
+import { getComponent } from "@pinky-ui/registry";
+import { InteractiveLineChart, SwipeActionRow, ValidationField } from "@pinky-ui/systems";
 
 const data = [
   { id: "mon", label: "Mon", value: 18 },
@@ -512,9 +512,65 @@ async function verifyExternalConsumer(infos, tarballs, tempRoot) {
   console.log("[release] external consumer install/typecheck/build: PASS");
 }
 
+/**
+ * The plain `npm run build` above never catches a static-export-only
+ * failure — it happened this way once already: the opengraph-image route
+ * built fine under `next build` but broke `output: "export"` outright
+ * (missing `dynamic = "force-static""`), and nothing here would have
+ * noticed short of reproducing .github/workflows/pages.yml's exact command.
+ * This does that: same env vars as the real deploy (falling back to the
+ * current ones so this keeps working through the pinkyui.com migration,
+ * whenever pages.yml's env block changes).
+ *
+ * The CNAME half of this is intentionally conditional on public/CNAME
+ * existing, not just "run once the domain migrates": merging a CNAME file
+ * while pages.yml still deploys under /Pinky-UI with no DNS pointed at
+ * pinkyui.com is the one change in this class of work that can take the
+ * live site down (GitHub Pages reads the file's presence in the deployed
+ * artifact and starts treating it as the custom domain immediately,
+ * independent of whether DNS actually resolves there yet) — so the file
+ * and the switch to a root basePath both land together, atomically, in the
+ * dedicated migration change, not silently through this gate.
+ */
+async function assertStaticExportBuild() {
+  const env = {
+    ...RELEASE_ENV,
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://florash.github.io",
+    NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH?.trim() || "/Pinky-UI",
+    NEXT_PUBLIC_STATIC_EXPORT: "true",
+  };
+  await run(npmCommand, ["run", "build"], { env });
+  console.log("[release] static export build: PASS");
+
+  const publicCnamePath = path.join(root, "apps/website/public/CNAME");
+  const hasSourceCname = await fs.access(publicCnamePath).then(() => true, () => false);
+  if (!hasSourceCname) {
+    console.log("[release] CNAME check: SKIPPED (apps/website/public/CNAME not present — pre-migration state)");
+    return;
+  }
+
+  const cnamePath = path.join(root, "apps/website/out/CNAME");
+  const cname = await fs.readFile(cnamePath, "utf8").catch(() => null);
+  if (cname === null) fail(`static export build did not produce ${path.relative(root, cnamePath)} — public/CNAME must survive into out/`);
+  if (cname.trim() !== "pinkyui.com") fail(`out/CNAME is "${cname.trim()}", expected "pinkyui.com"`);
+  console.log("[release] CNAME: PASS");
+}
+
 async function runReleaseVerification() {
   console.log("Pinky UI release verification");
   await run(npmCommand, ["run", "verify:security"]);
+
+  // packages/cli/src/index.ts statically imports ./manifest.json, a
+  // generated, gitignored file — build:cli-manifest writes it, and needs
+  // packages/registry/dist to already exist to read from. A fresh CI
+  // checkout has neither, so typecheck (which the website's tsconfig pulls
+  // every package's .ts/.tsx into, cli included) fails there with "Cannot
+  // find module './manifest.json'" even though it passes on any machine
+  // that's ever run a build locally and still has the file lying around —
+  // exactly the gap that let this ship unnoticed until CI actually hit it.
+  await run(npmCommand, ["run", "build:packages"]);
+  await run(npmCommand, ["run", "build:cli-manifest"]);
+
   await run(npmCommand, ["run", "typecheck"]);
   await run(npmCommand, ["run", "lint"]);
   await run(npmCommand, ["test"]);
@@ -526,11 +582,17 @@ async function runReleaseVerification() {
   }
   console.log(`[release] website build: PASS (${pageCount} generated pages; metadata routes are not frozen)`);
   await run(npmCommand, ["run", "verify:metadata"], { env: RELEASE_ENV });
+  await run(npmCommand, ["run", "verify:orphans"]);
+  await run(npmCommand, ["run", "verify:nested-anchors"]);
+  await run(npmCommand, ["run", "verify:internal-links"]);
+  await assertStaticExportBuild();
   await run("git", ["diff", "--check"]);
   await assertTrackedHygiene();
   await assertSkillInvariants();
 
-  await run(npmCommand, ["run", "build:packages"]);
+  // build:packages already ran above (ahead of typecheck, for the CLI
+  // manifest's sake) — packageInfos() below reads from the dist/ output
+  // that produced, not from a second build.
   const infos = await packageInfos();
   await assertPackageMetadata(infos);
   assertPublicationOrder(infos);

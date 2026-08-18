@@ -1,6 +1,6 @@
 "use client";
 
-import { useMotionEnabled } from "@pinky/primitives";
+import { GridReveal, useMotionEnabled } from "@pinky-ui/primitives";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode, type RefObject } from "react";
 
@@ -234,28 +234,29 @@ export function MorphingMegaNavigation({
         </div>
       </div>
 
-      <AnimatePresence initial={false}>
-        {open && active ? (
-          <motion.div id={panelId} initial={motionEnabled ? { height: 0, opacity: 0 } : false} animate={{ height: "auto", opacity: 1 }} exit={motionEnabled ? { height: 0, opacity: 0 } : { opacity: 1 }} transition={motionEnabled ? { duration: 0.3 } : { duration: 0 }} className="overflow-hidden border-t border-line">
-            <div className="grid gap-6 bg-cloud-50/60 p-5 sm:grid-cols-[minmax(10rem,0.7fr)_1.3fr] sm:p-7">
-              <div>
-                <p className="font-mono text-[0.625rem] tracking-[0.16em] text-ink-500 uppercase">Browse by intent</p>
-                <div role="group" aria-label="Mega navigation sections" className="mt-4 flex gap-1 overflow-x-auto sm:block">
-                  {groups.map((group) => <button key={group.id} type="button" aria-pressed={group.id === activeId} onClick={() => setActiveId(group.id)} className={cn("block min-h-10 shrink-0 rounded-xl px-3 py-2 text-left text-sm transition-colors sm:w-full", group.id === activeId ? "bg-white text-ink-900 shadow-soft" : "text-ink-700 hover:bg-white/70", focusRing())}>{group.label}</button>)}
-                </div>
+      <GridReveal
+        open={open && Boolean(active)}
+        contentProps={{ id: panelId, className: "border-t border-line" }}
+      >
+        {active ? (
+          <div className="grid gap-6 bg-cloud-50/60 p-5 sm:grid-cols-[minmax(10rem,0.7fr)_1.3fr] sm:p-7">
+            <div>
+              <p className="font-mono text-[0.625rem] tracking-[0.16em] text-ink-500 uppercase">Browse by intent</p>
+              <div role="group" aria-label="Mega navigation sections" className="mt-4 flex gap-1 overflow-x-auto sm:block">
+                {groups.map((group) => <button key={group.id} type="button" aria-pressed={group.id === activeId} onClick={() => setActiveId(group.id)} className={cn("block min-h-10 shrink-0 rounded-xl px-3 py-2 text-left text-sm transition-colors sm:w-full", group.id === activeId ? "bg-white text-ink-900 shadow-soft" : "text-ink-700 hover:bg-white/70", focusRing())}>{group.label}</button>)}
               </div>
-              <motion.div key={active.id} initial={motionEnabled ? { opacity: 0, x: 12 } : false} animate={{ opacity: 1, x: 0 }} transition={motionEnabled ? { duration: 0.22 } : { duration: 0 }}>
-                <p className="font-mono text-[0.625rem] tracking-[0.16em] text-ink-500 uppercase">{active.meta ?? "Selected destination"}</p>
-                <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink-900">{active.label}</h3>
-                <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink-700">{active.description}</p>
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {active.links.map((item) => <a key={item.id} href={linkHref(item)} className={cn("rounded-pill border border-line bg-white px-3 py-2 text-sm text-ink-700 hover:border-line-strong hover:text-ink-900", focusRing())}>{item.label} <span aria-hidden>↗</span></a>)}
-                </div>
-              </motion.div>
             </div>
-          </motion.div>
+            <motion.div key={active.id} initial={motionEnabled ? { opacity: 0, x: 12 } : false} animate={{ opacity: 1, x: 0 }} transition={motionEnabled ? { duration: 0.22 } : { duration: 0 }}>
+              <p className="font-mono text-[0.625rem] tracking-[0.16em] text-ink-500 uppercase">{active.meta ?? "Selected destination"}</p>
+              <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink-900">{active.label}</h3>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink-700">{active.description}</p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {active.links.map((item) => <a key={item.id} href={linkHref(item)} className={cn("rounded-pill border border-line bg-white px-3 py-2 text-sm text-ink-700 hover:border-line-strong hover:text-ink-900", focusRing())}>{item.label} <span aria-hidden>↗</span></a>)}
+              </div>
+            </motion.div>
+          </div>
         ) : null}
-      </AnimatePresence>
+      </GridReveal>
     </motion.div>
   );
 }
@@ -342,9 +343,9 @@ export function SlidingMegaPanel({
         <span className="font-display text-base font-semibold tracking-tight">Library / browse</span>
         <button ref={triggerRef} type="button" aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((value) => !value)} className={cn("rounded-pill bg-ink-900 px-4 py-2 text-sm text-milk", focusRing())}>{open ? "Close" : "Open library"}</button>
       </div>
-      <AnimatePresence initial={false}>
-        {open && active ? (
-          <motion.div id={panelId} role="region" aria-label={ariaLabel} initial={motionEnabled ? { height: 0 } : false} animate={{ height: "auto" }} exit={motionEnabled ? { height: 0 } : { height: "auto" }} transition={motionEnabled ? { duration: 0.24 } : { duration: 0 }} className="overflow-hidden border-t border-line">
+      <GridReveal open={open && Boolean(active)} contentProps={{ id: panelId, role: "region", "aria-label": ariaLabel, className: "border-t border-line" }}>
+        {active ? (
+          <>
             <div className="flex gap-1 overflow-x-auto border-b border-line bg-cloud-50/60 p-3">
               {groups.map((group, index) => <button key={group.id} type="button" aria-pressed={index === activeIndex} onClick={() => selectGroup(index)} className={cn("min-h-10 shrink-0 rounded-xl px-3 py-2 text-sm", index === activeIndex ? "bg-white text-ink-900 shadow-soft" : "text-ink-700 hover:bg-white/70", focusRing())}>{group.label}</button>)}
             </div>
@@ -358,9 +359,9 @@ export function SlidingMegaPanel({
                 </motion.div>
               </AnimatePresence>
             </div>
-          </motion.div>
+          </>
         ) : null}
-      </AnimatePresence>
+      </GridReveal>
     </div>
   );
 }
@@ -535,6 +536,72 @@ export function SectionAwareNavigation({
         {sections.map((section) => {
           const active = section.id === activeId;
           return <li key={section.id} className="shrink-0"><a href={section.href ?? `#${section.id}`} aria-current={active ? "location" : undefined} onClick={() => setActiveId(section.id)} className={cn("relative flex min-h-11 items-center gap-2 px-3 text-sm text-ink-700", active ? "text-ink-900" : "hover:text-ink-900", focusRing())}>{section.label}{active ? <motion.span layout={motionEnabled} layoutId="section-aware-indicator" aria-hidden className="absolute inset-x-3 -bottom-px h-0.5 rounded-pill bg-ink-900" transition={motionEnabled ? { type: "spring", stiffness: 420, damping: 36 } : { duration: 0 }} /> : null}</a></li>;
+        })}
+      </ul>
+    </nav>
+  );
+}
+
+/**
+ * A vertical table of contents whose indicator bar tracks whichever heading
+ * is currently in the reading window — the same IntersectionObserver
+ * mechanic as Section-Aware Navigation, applied to a docked sidebar instead
+ * of a horizontal tab strip.
+ */
+export function ScrollSpySidebar({
+  sections,
+  className,
+  "aria-label": ariaLabel = "On this page",
+}: {
+  sections: NavigationLink[];
+  className?: string;
+  "aria-label"?: string;
+}) {
+  const [activeId, setActiveId] = useState(sections[0]?.id);
+  const motionEnabled = useMotionEnabled();
+
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+    const elements = sections.map((section) => document.getElementById(section.id)).filter(Boolean) as HTMLElement[];
+    if (!elements.length) return;
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+      if (visible[0]?.target instanceof HTMLElement) setActiveId(visible[0].target.id);
+    }, { rootMargin: "-10% 0px -70%", threshold: [0, 0.25, 0.55] });
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, [sections]);
+
+  return (
+    <nav aria-label={ariaLabel} className={cn("relative", className)}>
+      <ul className="flex flex-col gap-0.5 border-l border-line">
+        {sections.map((section) => {
+          const active = section.id === activeId;
+          return (
+            <li key={section.id} className="relative">
+              {active ? (
+                <motion.span
+                  aria-hidden
+                  layout={motionEnabled}
+                  layoutId="scroll-spy-indicator"
+                  className="absolute inset-y-1 left-0 w-0.5 rounded-pill bg-ink-900"
+                  transition={motionEnabled ? { type: "spring", stiffness: 420, damping: 36 } : { duration: 0 }}
+                />
+              ) : null}
+              <a
+                href={section.href ?? `#${section.id}`}
+                aria-current={active ? "location" : undefined}
+                onClick={() => setActiveId(section.id)}
+                className={cn(
+                  "block min-h-9 py-1.5 pl-4 text-sm transition-colors",
+                  active ? "font-medium text-ink-900" : "text-ink-500 hover:text-ink-900",
+                  focusRing(),
+                )}
+              >
+                {section.label}
+              </a>
+            </li>
+          );
         })}
       </ul>
     </nav>

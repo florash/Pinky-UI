@@ -21,7 +21,7 @@ export type ExperienceRegistryEntry = {
   tags: string[];
   interactions: ExperienceInteraction[];
   builtOn: string[];
-  importPath: 'import { COMPONENT } from "@pinky/experiences";';
+  importPath: 'import { COMPONENT } from "@pinky-ui/experiences";';
   usage: string;
   props: PropDef[];
   presets: Preset[];
@@ -50,7 +50,7 @@ const entry = ({ component, primaryProp, quietProps = { disabled: true }, ...con
   ...config,
   // Every entry below has a live section in the website experience gallery.
   status: "ready",
-  importPath: `import { ${component} } from "@pinky/experiences";` as ExperienceRegistryEntry["importPath"],
+  importPath: `import { ${component} } from "@pinky-ui/experiences";` as ExperienceRegistryEntry["importPath"],
   usage: config.usage,
   props: [
     primaryProp,
@@ -190,6 +190,17 @@ export const navigationExperiences = [
     reducedMotion: "The indicator changes position immediately while section state and anchor behavior remain intact.",
     performance: ["IntersectionObserver replaces scroll polling.", "The observer watches only the supplied section elements and disconnects on unmount."],
     whenToUse: ["Long editorial, documentation or case-study pages"], whenNotToUse: ["Short pages or interfaces where a persistent local index adds noise"], related: ["editorial-index-navigation", "sticky-story"],
+  }),
+  entry({
+    component: "ScrollSpySidebar", family: "navigation", slug: "scroll-spy-sidebar", name: "Scroll Spy Sidebar",
+    description: "A docked vertical table of contents whose indicator bar tracks whichever heading is currently in the reading window.",
+    tags: ["sidebar", "scroll", "toc", "docs"], interactions: ["scroll", "selection", "keyboard", "focus"], builtOn: ["IntersectionObserver", "shared indicator"],
+    usage: `<ScrollSpySidebar sections={sections} className="sticky top-24" />`,
+    primaryProp: { name: "sections", type: "NavigationLink[]", description: "Anchors whose ids correspond to headings in the document being read." },
+    accessibility: ["Each item is a native anchor with aria-current=location for the visible section.", "The indicator bar is supplemental; labels and anchor targets remain usable without scripting."],
+    reducedMotion: "The indicator jumps to its new position immediately while section state and anchor behavior remain intact.",
+    performance: ["IntersectionObserver replaces scroll polling.", "The observer watches only the supplied section elements and disconnects on unmount."],
+    whenToUse: ["Docs, skill pages and other long single documents read top to bottom"], whenNotToUse: ["Short pages, or navigation between separate documents rather than within one"], related: ["section-aware-navigation", "editorial-index-navigation"],
   }),
   entry({
     component: "ExpandableBottomNavigation", family: "navigation", slug: "expandable-bottom-navigation", name: "Expandable Bottom Navigation",

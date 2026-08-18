@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { allProductSystems } from "@pinky/registry";
+import { allProductSystems } from "@pinky-ui/registry";
 
 import { ProductSystemsExpansion } from "@/components/systems/product-expansion-showcase";
 import { DataVisualizationShowcase } from "@/components/systems/data-visualization-showcase";

@@ -5,6 +5,8 @@ dist/
 coverage/
 *.tsbuildinfo
 next-env.d.ts
+packages/cli/src/manifest.json
+.audit/
 
 .DS_Store
 .env*

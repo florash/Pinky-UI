@@ -18,7 +18,7 @@ Open the menu in the preview, tab through the links, and close it with Escape or
 ## Usage
 
 ```tsx
-import { ClipRevealMenu } from "@pinky/experiences";
+import { ClipRevealMenu } from "@pinky-ui/experiences";
 
 <ClipRevealMenu items={items} label="Browse" aria-label="Browse destinations" />;
 ```

@@ -16,7 +16,7 @@ import {
   type InlineCommand,
   type MultiValueCondition,
   type PropertyRailItem,
-} from "@pinky/systems";
+} from "@pinky-ui/systems";
 import { useState, type ReactNode } from "react";
 
 const commands: InlineCommand[] = [

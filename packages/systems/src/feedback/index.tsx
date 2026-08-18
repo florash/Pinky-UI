@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useMotionEnabled } from "@pinky/primitives";
+import { useMotionEnabled } from "@pinky-ui/primitives";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { cn } from "../internal/cn";
 
@@ -35,12 +35,16 @@ function ToastCard({ item, dismiss, motionEnabled }: { item: ToastItem; dismiss:
 
 export function StatusPill({ label, state = "idle", progress, icon, className }: { label: string; state?: "idle" | "working" | "success" | "error"; progress?: number; icon?: ReactNode; className?: string }) {
   const value = progress == null ? undefined : Math.max(0, Math.min(100, progress));
-  return <span role="status" className={cn("relative inline-flex min-w-24 items-center gap-2 overflow-hidden rounded-full border border-line bg-white px-3 py-1.5 text-sm", className)}>{value != null ? <motion.i aria-hidden className="absolute inset-y-0 left-0 bg-blush-100" animate={{ width: `${value}%` }} /> : null}<span className="relative" aria-hidden>{icon ?? (state === "success" ? "✓" : state === "error" ? "!" : state === "working" ? "◌" : "•")}</span><span className="relative">{label}</span>{value != null ? <span className="sr-only">{value}%</span> : null}</span>;
+  return <span role="status" className={cn("relative inline-flex min-w-24 items-center gap-2 overflow-hidden rounded-full border border-line bg-white px-3 py-1.5 text-sm", className)}>{value != null ? <motion.i aria-hidden className="absolute inset-0 bg-blush-100" style={{ originX: 0 }} animate={{ scaleX: value / 100 }} /> : null}<span className="relative" aria-hidden>{icon ?? (state === "success" ? "✓" : state === "error" ? "!" : state === "working" ? "◌" : "•")}</span><span className="relative">{label}</span>{value != null ? <span className="sr-only">{value}%</span> : null}</span>;
 }
 export function InlineFeedback({ children, tone = "info", onDismiss }: { children: ReactNode; tone?: ToastTone | "warning"; onDismiss?: () => void }) { return <div role={tone === "error" ? "alert" : "status"} className="flex items-center gap-2 rounded-xl bg-cloud-50 px-3 py-2 text-sm"><span aria-hidden>{tone === "success" ? "✓" : tone === "error" ? "!" : tone === "warning" ? "△" : "i"}</span><span className="flex-1">{children}</span>{onDismiss ? <button type="button" onClick={onDismiss} aria-label="Dismiss feedback">×</button> : null}</div>; }
 export function ActionUndoBar({ message, onUndo, duration = 0, onExpire, className }: { message: string; onUndo: () => void; duration?: number; onExpire?: () => void; className?: string }) {
   const [remaining, setRemaining] = useState(duration); useEffect(() => { if (!duration) return; const started = Date.now(); const timer = window.setInterval(() => { const next = Math.max(0, duration - (Date.now() - started)); setRemaining(next); if (!next) { clearInterval(timer); onExpire?.(); } }, 250); return () => clearInterval(timer); }, [duration, onExpire]);
   return <div role="status" className={cn("flex items-center gap-4 rounded-2xl bg-ink-900 px-4 py-3 text-milk shadow-xl", className)}><span className="flex-1">{message}</span>{duration ? <span aria-hidden className="font-mono text-xs">{Math.ceil(remaining / 1000)}s</span> : null}<button type="button" onClick={onUndo} className="inline-flex min-h-11 items-center rounded-lg bg-white/15 px-3 py-1.5 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-900">Undo</button></div>;
+}
+
+export function EmptyState({ title, description, icon, action, className }: { title: string; description?: string; icon?: ReactNode; action?: { label: string; onClick: () => void }; className?: string }) {
+  return <div role="status" className={cn("flex flex-col items-center gap-3 rounded-[24px] border border-dashed border-line bg-white/60 px-6 py-12 text-center", className)}>{icon ? <span aria-hidden className="grid size-12 place-items-center rounded-full bg-cloud-50 text-xl text-ink-500">{icon}</span> : null}<p className="font-display text-lg font-semibold tracking-tight">{title}</p>{description ? <p className="max-w-sm text-sm leading-relaxed text-ink-500">{description}</p> : null}{action ? <button type="button" onClick={action.onClick} className="mt-2 inline-flex min-h-11 items-center rounded-pill bg-ink-900 px-4 text-sm font-medium text-milk focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2">{action.label}</button> : null}</div>;
 }
 
 export * from "./response-expansion";

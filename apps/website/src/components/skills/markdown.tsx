@@ -1,4 +1,4 @@
-import { cn } from "@pinky/components";
+import { cn } from "@pinky-ui/components";
 import type { ReactNode } from "react";
 
 import { CodeBlock } from "@/components/site/code-block";
@@ -12,7 +12,7 @@ import { CodeBlock } from "@/components/site/code-block";
  * renders nodes, never HTML strings, so nothing can inject markup.
  */
 export function Markdown({ source, className }: { source: string; className?: string }) {
-  return <div className={cn("skill-markdown flex flex-col text-[0.9375rem]", className)}>{renderBlocks(source)}</div>;
+  return <div className={cn("skill-markdown prose flex flex-col text-[0.9375rem]", className)}>{renderBlocks(source)}</div>;
 }
 
 function renderBlocks(source: string): ReactNode[] {

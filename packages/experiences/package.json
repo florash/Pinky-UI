@@ -1,5 +1,5 @@
 {
-  "name": "@pinky/experiences",
+  "name": "@pinky-ui/experiences",
   "version": "0.1.0",
   "description": "Navigation, hero, background, transition and spatial experiences for Pinky UI.",
   "license": "MIT",
@@ -25,8 +25,8 @@
     "prepack": "node ../../scripts/build-packages.mjs --package experiences"
   },
   "dependencies": {
-    "@pinky/effects": "0.1.0",
-    "@pinky/primitives": "0.1.0"
+    "@pinky-ui/effects": "0.1.0",
+    "@pinky-ui/primitives": "0.1.0"
   },
   "peerDependencies": {
     "motion": ">=12",

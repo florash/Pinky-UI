@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
-import { springs, useMotionEnabled } from "@pinky/primitives";
+import { GridReveal, springs, useMotionEnabled } from "@pinky-ui/primitives";
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
 
 import { cn } from "../internal/cn";
@@ -173,7 +173,6 @@ export type ExpandableContentRowProps = {
 export function ExpandableContentRow({ items, openIds, defaultOpenIds = [], onOpenIdsChange, multiple = false, label = "Expandable content rows", className }: ExpandableContentRowProps) {
   const [shownIds, setShownIds] = useControllable(openIds, defaultOpenIds, onOpenIdsChange);
   const baseId = useId().replace(/:/g, "");
-  const motionEnabled = useMotionEnabled();
 
   const toggle = (id: string) => {
     const isOpen = shownIds.includes(id);
@@ -195,16 +194,12 @@ export function ExpandableContentRow({ items, openIds, defaultOpenIds = [], onOp
               {item.meta ? <span className="hidden shrink-0 text-xs text-ink-500 sm:block">{item.meta}</span> : null}
               <span aria-hidden className="grid size-8 shrink-0 place-items-center rounded-full border border-line text-lg leading-none text-ink-700">{isOpen ? "−" : "+"}</span>
             </button>
-            <AnimatePresence initial={false}>
-              {isOpen ? (
-                <motion.div id={panelId} role="region" aria-labelledby={triggerId} initial={motionEnabled ? { height: 0, opacity: 0 } : false} animate={{ height: "auto", opacity: 1 }} exit={motionEnabled ? { height: 0, opacity: 0 } : undefined} transition={motionEnabled ? { duration: 0.32, ease: [0.22, 1, 0.36, 1] } : { duration: 0 }} className="overflow-hidden">
-                  <div className="grid gap-5 border-t border-line bg-cloud-50/55 p-4 sm:grid-cols-[minmax(8rem,0.7fr)_minmax(0,1.3fr)] sm:p-5">
-                    {item.media ? <div className="overflow-hidden rounded-2xl bg-white">{item.media}</div> : null}
-                    <div className={cn("min-w-0", !item.media && "sm:col-span-2")}>{item.content}</div>
-                  </div>
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
+            <GridReveal open={isOpen} contentProps={{ id: panelId, role: "region", "aria-labelledby": triggerId }}>
+              <div className="grid gap-5 border-t border-line bg-cloud-50/55 p-4 sm:grid-cols-[minmax(8rem,0.7fr)_minmax(0,1.3fr)] sm:p-5">
+                {item.media ? <div className="overflow-hidden rounded-2xl bg-white">{item.media}</div> : null}
+                <div className={cn("min-w-0", !item.media && "sm:col-span-2")}>{item.content}</div>
+              </div>
+            </GridReveal>
           </li>
         );
       })}
@@ -560,12 +555,11 @@ export type AccordionGalleryProps = {
 /** A media-led accordion: title row, masked gallery region and caption stay one object. */
 export function AccordionGallery({ items, activeId, defaultActiveId = null, onActiveIdChange, label = "Accordion gallery", className }: AccordionGalleryProps) {
   const [selectedId, setSelectedId] = useControllable(activeId, defaultActiveId, onActiveIdChange);
-  const motionEnabled = useMotionEnabled();
   const baseId = useId().replace(/:/g, "");
   const toggle = (id: string) => setSelectedId(selectedId === id ? null : id);
   return (
     <ul aria-label={label} className={cn("m-0 list-none divide-y divide-line overflow-hidden rounded-[24px] border border-line bg-white/75 p-0", className)}>
-      {items.map((item, index) => { const open = selectedId === item.id; const triggerId = `${baseId}-${item.id}-trigger`; const panelId = `${baseId}-${item.id}-panel`; return <li key={item.id}><button id={triggerId} type="button" aria-expanded={open} aria-controls={panelId} onClick={() => toggle(item.id)} className="flex min-h-16 w-full items-center gap-4 px-4 py-4 text-left transition-colors hover:bg-cloud-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ink-900/25 sm:px-5"><span className="font-mono text-[0.625rem] text-ink-400">{String(index + 1).padStart(2, "0")}</span><span className="min-w-0 flex-1"><span className="block font-display text-lg font-semibold tracking-tight">{item.title}</span>{item.description ? <span className="mt-1 block truncate text-sm text-ink-500">{item.description}</span> : null}</span>{item.meta ? <span className="hidden text-xs text-ink-500 sm:block">{item.meta}</span> : null}<span aria-hidden className="grid size-8 place-items-center rounded-full border border-line text-lg">{open ? "−" : "+"}</span></button><AnimatePresence initial={false}>{open ? <motion.div id={panelId} role="region" aria-labelledby={triggerId} initial={motionEnabled ? { height: 0, opacity: 0 } : false} animate={{ height: "auto", opacity: 1 }} exit={motionEnabled ? { height: 0, opacity: 0 } : undefined} transition={motionEnabled ? { duration: 0.38, ease: [0.22, 1, 0.36, 1] } : { duration: 0 }} className="overflow-hidden"><div className="grid gap-5 border-t border-line bg-cloud-50/55 p-3 sm:grid-cols-[minmax(0,1.2fr)_minmax(12rem,0.8fr)] sm:p-5"><div className="overflow-hidden rounded-[20px] bg-white">{item.media}</div><div className="self-center p-2"><p className="font-display text-xl font-semibold tracking-tight">{item.title}</p>{item.meta ? <p className="mt-2 text-xs text-ink-500">{item.meta}</p> : null}{item.content ? <div className="mt-4 text-sm leading-relaxed text-ink-700">{item.content}</div> : null}</div></div></motion.div> : null}</AnimatePresence></li>; })}
+      {items.map((item, index) => { const open = selectedId === item.id; const triggerId = `${baseId}-${item.id}-trigger`; const panelId = `${baseId}-${item.id}-panel`; return <li key={item.id}><button id={triggerId} type="button" aria-expanded={open} aria-controls={panelId} onClick={() => toggle(item.id)} className="flex min-h-16 w-full items-center gap-4 px-4 py-4 text-left transition-colors hover:bg-cloud-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ink-900/25 sm:px-5"><span className="font-mono text-[0.625rem] text-ink-400">{String(index + 1).padStart(2, "0")}</span><span className="min-w-0 flex-1"><span className="block font-display text-lg font-semibold tracking-tight">{item.title}</span>{item.description ? <span className="mt-1 block truncate text-sm text-ink-500">{item.description}</span> : null}</span>{item.meta ? <span className="hidden text-xs text-ink-500 sm:block">{item.meta}</span> : null}<span aria-hidden className="grid size-8 place-items-center rounded-full border border-line text-lg">{open ? "−" : "+"}</span></button><GridReveal open={open} contentProps={{ id: panelId, role: "region", "aria-labelledby": triggerId }}><div className="grid gap-5 border-t border-line bg-cloud-50/55 p-3 sm:grid-cols-[minmax(0,1.2fr)_minmax(12rem,0.8fr)] sm:p-5"><div className="overflow-hidden rounded-[20px] bg-white">{item.media}</div><div className="self-center p-2"><p className="font-display text-xl font-semibold tracking-tight">{item.title}</p>{item.meta ? <p className="mt-2 text-xs text-ink-500">{item.meta}</p> : null}{item.content ? <div className="mt-4 text-sm leading-relaxed text-ink-700">{item.content}</div> : null}</div></div></GridReveal></li>; })}
     </ul>
   );
 }

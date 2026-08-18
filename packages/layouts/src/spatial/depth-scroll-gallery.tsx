@@ -1,6 +1,6 @@
 "use client";
 
-import { springs, useMotionEnabled } from "@pinky/primitives";
+import { springs, useMotionEnabled, usePointerCapability } from "@pinky-ui/primitives";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 
@@ -15,10 +15,11 @@ export type DepthScrollGalleryProps = { items: SpatialCollectionItem[]; top?: nu
 export function DepthScrollGallery({ items, top = 24, index, onIndexChange, label = "Depth scroll gallery", className, disabled = false }: DepthScrollGalleryProps) {
   const motionEnabled = useMotionEnabled();
   const compact = useCompactLayout();
+  const { hasHover } = usePointerCapability();
   const [internal, setInternal] = useState(index ?? 0);
   const selected = index ?? internal;
   const refs = useRef<Array<HTMLElement | null>>([]);
-  const enabled = motionEnabled && !disabled && !compact;
+  const enabled = motionEnabled && !disabled && hasHover;
 
   useEffect(() => {
     if (compact || disabled || typeof IntersectionObserver === "undefined") return;

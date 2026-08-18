@@ -18,7 +18,7 @@ Open the navigation, choose a group, and follow one of its links. The surface an
 ## Usage
 
 ```tsx
-import { MorphingMegaNavigation } from "@pinky/experiences";
+import { MorphingMegaNavigation } from "@pinky-ui/experiences";
 
 <MorphingMegaNavigation groups={groups} aria-label="Main navigation" />;
 ```

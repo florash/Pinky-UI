@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@pinky/components";
+import { cn } from "@pinky-ui/components";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 
 import { CheckMark, CopyMark } from "./icons";

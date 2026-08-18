@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { DiscoveryBrowser } from "@/components/explore/discovery-browser";
 import { pageMetadata } from "@/lib/site";
@@ -24,7 +25,9 @@ export default function ExplorePage() {
           organised by the way an interaction behaves.
         </p>
       </header>
-      <DiscoveryBrowser />
+      <Suspense fallback={null}>
+        <DiscoveryBrowser />
+      </Suspense>
     </main>
   );
 }

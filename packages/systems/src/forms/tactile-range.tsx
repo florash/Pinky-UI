@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { usePressSpring } from "@pinky/primitives";
+import { usePressSpring } from "@pinky-ui/primitives";
 
 import { cn } from "../internal/cn";
 import { useControllable } from "../internal/use-controllable";

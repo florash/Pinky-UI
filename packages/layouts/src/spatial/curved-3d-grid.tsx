@@ -1,6 +1,6 @@
 "use client";
 
-import { springs, useMotionEnabled } from "@pinky/primitives";
+import { springs, useMotionEnabled, usePointerCapability } from "@pinky-ui/primitives";
 import { motion } from "motion/react";
 import { useRef, type KeyboardEvent } from "react";
 
@@ -15,8 +15,9 @@ export type Curved3DGridProps = { items: SpatialCollectionItem[]; columns?: 2 | 
 export function Curved3DGrid({ items, columns = 4, curvature = 28, index, defaultIndex = 0, onIndexChange, label = "Curved 3D grid", className, disabled = false }: Curved3DGridProps) {
   const motionEnabled = useMotionEnabled();
   const compact = useCompactLayout();
+  const { hasHover } = usePointerCapability();
   const [selected, setSelected] = useControllable(index, clamp(defaultIndex, 0, Math.max(items.length - 1, 0)), onIndexChange);
-  const enabled = motionEnabled && !disabled && !compact;
+  const enabled = motionEnabled && !disabled && hasHover;
   const grid = useRef<HTMLUListElement>(null);
   const count = compact ? Math.min(columns, 2) : columns;
   const select = (next: number) => setSelected(clamp(next, 0, Math.max(items.length - 1, 0)));

@@ -11,7 +11,7 @@ export type EffectRegistryEntry = {
   name: string;
   family: EffectFamily;
   description: string;
-  importPath: "@pinky/effects";
+  importPath: "@pinky-ui/effects";
   skill: string;
   usage: string;
   whenToUse: string[];
@@ -31,7 +31,7 @@ const entry = (
   name,
   family,
   description,
-  importPath: "@pinky/effects",
+  importPath: "@pinky-ui/effects",
   skill,
   usage: `<${name.replace(/\s+/g, "")} />`,
   whenToUse: ["As a restrained enhancement to meaningful content."],
@@ -50,6 +50,8 @@ export const cursorEffects: EffectRegistryEntry[] = [
   entry("cursor", "hover-image-preview", "Hover Image Preview", "A floating preview for a focused list row."),
   entry("cursor", "lens-cursor", "Lens Cursor", "A small local magnifier for media."),
   entry("cursor", "magnetic-cursor-target", "Magnetic Cursor Target", "Composition of Magnetic and CursorTarget."),
+  entry("cursor", "cursor-blend", "Cursor Blend", "A mix-blend-mode:difference circle that inverts against whatever it crosses."),
+  entry("cursor", "link-preview", "Link Preview", "A floating thumbnail-and-summary card for a hovered or focused link."),
 ];
 
 export const motionEffects: EffectRegistryEntry[] = [
@@ -78,6 +80,7 @@ export const motionEffects: EffectRegistryEntry[] = [
   entry("motion", "depth-shift", "Depth Shift", "A small group of planes separates as one surface responds to proximity."),
   entry("motion", "border-travel", "Border Travel", "One restrained border segment travels along the nearest edge."),
   entry("motion", "content-swap-motion", "Content Swap Motion", "Keyed content changes hand off with directional clipping and travel."),
+  entry("motion", "sibling-dim", "Sibling Dim", "Hovering or focusing one item in a group fades the rest back."),
   // `shared-morph` used to be listed here. It never had an implementation or an
   // export — it was guidance for the existing `Morph` primitive. It now lives
   // where guidance belongs, in the shared Skills catalogue, so

@@ -1,5 +1,5 @@
-import { cn } from "@pinky/components";
-import { components } from "@pinky/registry";
+import { cn } from "@pinky-ui/components";
+import { components } from "@pinky-ui/registry";
 import Link from "next/link";
 
 import { ComponentPreview } from "@/components/previews/component-previews";
@@ -54,14 +54,26 @@ export function Featured() {
 
         <div className="mt-16 grid gap-3 lg:grid-cols-2">
           {ready.map((entry, index) => (
-            <Link
+            <article
               key={entry.slug}
-              href={`/components/${entry.slug}`}
               className="group relative isolate flex flex-col overflow-hidden rounded-2xl bg-white/60 ring-1 ring-line/60 transition-[box-shadow,background-color] duration-500 ease-[var(--ease-soft)] hover:bg-white/90 hover:shadow-soft"
             >
+              {/*
+                Stretched link, not a card-wide <Link>: ComponentPreview can
+                render any registry component, including ones that render a
+                real <a>/<button> of their own (Pill Nav, for example) —
+                nesting an anchor inside an anchor fails hydration. See the
+                identical fix in components/gallery/component-gallery.tsx.
+              */}
+              <Link
+                href={`/components/${entry.slug}`}
+                className="absolute inset-0 z-0 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25 focus-visible:ring-offset-2"
+              >
+                <span className="sr-only">{entry.name}</span>
+              </Link>
               <div
                 className={cn(
-                  "flex items-center justify-center overflow-hidden p-8",
+                  "relative z-10 flex items-center justify-center overflow-hidden p-8",
                   // The first exhibit gets more room — a gallery has a lead piece.
                   index === 0 ? "h-72" : "h-60",
                 )}
@@ -81,7 +93,7 @@ export function Featured() {
                   {entry.category}
                 </span>
               </div>
-            </Link>
+            </article>
           ))}
         </div>
 

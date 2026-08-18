@@ -1,22 +1,22 @@
-# @pinky/primitives
+# @pinky-ui/primitives
 
 Composable interaction behaviours for Pinky UI: magnetic pull, jelly response, tilt, morph,
 liquid surfaces, proximity, spotlight, parallax and shared press/motion helpers.
 
 ## Registry installation
 
-The `@pinky/*` `0.1.0` packages are prepared for public release but are not published to npm yet. Until publication, use Pinky UI from the repository source.
+The `@pinky-ui/*` `0.1.0` packages are prepared for public release but are not published to npm yet. Until publication, use Pinky UI from the repository source.
 
 ### After npm publication
 
 ```bash
-npm install @pinky/primitives react motion
+npm install @pinky-ui/primitives react motion
 ```
 
 ## Use
 
 ```tsx
-import { Magnetic } from "@pinky/primitives";
+import { Magnetic } from "@pinky-ui/primitives";
 
 <Magnetic strength={0.4}>
   <button type="button">Explore</button>
