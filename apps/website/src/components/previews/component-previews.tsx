@@ -13,10 +13,16 @@ import {
   ListCard,
   MagneticButton,
   MediaCard,
+  EmptyStateCard,
+  FormCard,
   MorphCard,
+  NotificationCard,
   PillNav,
+  PricingCard,
+  ProfileCard,
   RippleButton,
   SpotlightCard,
+  StatCard,
   TiltCard,
 } from "@pinky-ui/components";
 import { useState, type ReactNode } from "react";
@@ -39,6 +45,12 @@ export const COMPONENT_PREVIEWS: Record<string, ReactNode> = {
   "media-card": <MediaCardPreview />,
   "horizontal-card": <HorizontalCardPreview />,
   "list-card": <ListCardPreview />,
+  "profile-card": <ProfileCardPreview />,
+  "stat-card": <StatCardPreview />,
+  "pricing-card": <PricingCardPreview />,
+  "form-card": <FormCardPreview />,
+  "notification-card": <NotificationCardPreview />,
+  "empty-state-card": <EmptyStateCardPreview />,
   "magnetic-button": <MagneticButtonPreview />,
   "ripple-button": <RippleButtonPreview />,
   "glow-border": <GlowBorderPreview />,
@@ -248,6 +260,107 @@ function ListCardPreview() {
         { id: "two", content: "North star doc updated" },
         { id: "three", content: "Research log shared" },
       ]}
+    />
+  );
+}
+
+function ProfileCardPreview() {
+  return (
+    <ProfileCard
+      className="w-full max-w-[18rem]"
+      avatarSrc={SOFT_MEDIA_SOURCES[0]}
+      name="Mira Odaka"
+      subtitle="Product design, six years"
+      tags={["Design systems", "Motion", "Figma"]}
+    />
+  );
+}
+
+function StatCardPreview() {
+  return (
+    <StatCard
+      className="w-full max-w-[18rem]"
+      label="Monthly active users"
+      value="48,203"
+      trend={{ direction: "up", label: "12.4% this week" }}
+    />
+  );
+}
+
+function PricingCardPreview() {
+  return (
+    <PricingCard
+      className="w-full max-w-[18rem]"
+      name="Studio"
+      price="$24"
+      period="/mo"
+      features={["Unlimited projects", "Priority support"]}
+      footer={
+        <span className="inline-flex items-center rounded-pill bg-ink-900 px-3.5 py-2 text-sm text-milk">
+          Choose plan
+        </span>
+      }
+      highlight
+    />
+  );
+}
+
+function FormCardPreview() {
+  return (
+    <FormCard
+      className="w-full max-w-[18rem]"
+      title="Sign in"
+      footer={
+        <span className="inline-flex w-full items-center justify-center rounded-pill bg-ink-900 px-3.5 py-2 text-sm text-milk">
+          Continue
+        </span>
+      }
+    >
+      <label className="block text-sm text-ink-700">
+        Email
+        <input
+          type="email"
+          readOnly
+          value="mira@example.com"
+          className="mt-1.5 w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink-900"
+        />
+      </label>
+      <label className="block text-sm text-ink-700">
+        Password
+        <input
+          type="password"
+          readOnly
+          value="········"
+          className="mt-1.5 w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink-900"
+        />
+      </label>
+    </FormCard>
+  );
+}
+
+function NotificationCardPreview() {
+  return (
+    <NotificationCard
+      className="w-full max-w-[20rem]"
+      variant="success"
+      title="Changes saved"
+      description="Your profile is up to date."
+      onDismiss={() => {}}
+    />
+  );
+}
+
+function EmptyStateCardPreview() {
+  return (
+    <EmptyStateCard
+      className="w-full max-w-[18rem]"
+      title="No projects yet"
+      description="Create your first project to get started."
+      action={
+        <span className="inline-flex items-center rounded-pill bg-ink-900 px-3.5 py-2 text-sm text-milk">
+          New project
+        </span>
+      }
     />
   );
 }
