@@ -8,12 +8,16 @@
 
 Pinky UI is an open-source collection of expressive React components, product systems and motion primitives built for interfaces that feel responsive, tactile and alive.
 
-Pinky UI `0.1.0` is available from source today. The seven `@pinky-ui/*` packages are prepared
-for public release but are not published to npm yet.
+Pinky UI `0.1.0` is available from source today. The nine `@pinky-ui/*` packages — primitives,
+components, layouts, effects, experiences, systems, registry, ai-ui and mobile — are prepared
+for public release but are not published to npm yet. A tenth package, the `pinky-ui` CLI, installs
+individual components as source code into your own project rather than as a library dependency —
+it's deliberately not under the `@pinky-ui/*` scope, since it isn't one of the interaction packages
+itself.
 
 Explore jelly, liquid, magnetic, morph, glow, depth, elastic and proximity interactions —
-**269 implemented items across 12 primitives, 13 components, 28 layouts, 32 effects, 31
-experiences and 153+ product and workflow systems** — designed to stay composable, accessible
+**285 implemented items across 12 primitives, 17 components, 28 layouts, 35 effects, 32
+experiences and 161 product and workflow systems** — designed to stay composable, accessible
 and practical to use. The website puts those interactions directly in front of you as live
 previews instead of hiding the work behind a documentation-first catalogue.
 
@@ -79,6 +83,10 @@ not bundle font files.
 
 ## Components
 
+- Basic Card
+- Media Card
+- Horizontal Card
+- List Card
 - Jelly Card
 - Liquid Card
 - Morph Card

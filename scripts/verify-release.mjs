@@ -156,6 +156,65 @@ async function assertSkillInvariants() {
   );
 }
 
+/**
+ * README.md hand-writes its "N implemented items across ..." sentence as
+ * prose, not a generated block — regenerating natural-language text on
+ * every registry change is more likely to drift into something awkward
+ * than to stay readable. Asserting it instead, the same shape
+ * assertSkillInvariants() already uses for the Skill route counts above:
+ * compute the real numbers from the built registry, fail loudly with the
+ * actual values if the sentence doesn't match, so updating it is a
+ * one-line prompt instead of a silently stale claim someone has to notice
+ * by eye. Requires build:packages to have already run (reads
+ * packages/registry/dist), same precondition as build-cli-manifest.mjs.
+ */
+async function assertReadmeStats() {
+  const registryModule = await import(path.join(root, "packages/registry/dist/index.js"));
+  const sum = (...arrays) => arrays.reduce((total, array) => total + (array?.length ?? 0), 0);
+
+  const counts = {
+    primitives: registryModule.primitives?.length ?? 0,
+    components: registryModule.components?.length ?? 0,
+    layouts: registryModule.layouts?.length ?? 0,
+    effects: sum(registryModule.cursorEffects, registryModule.motionEffects, registryModule.textEffects, registryModule.scrollEffects),
+    experiences: sum(
+      registryModule.heroExperiences,
+      registryModule.navigationExperiences,
+      registryModule.transitionExperiences,
+      registryModule.backgroundExperiences,
+      registryModule.spatialExperiences,
+    ),
+    systems: sum(registryModule.allProductSystems, registryModule.allWorkflowSystems),
+  };
+  const total = Object.values(counts).reduce((sumTotal, value) => sumTotal + value, 0);
+
+  const readme = await fs.readFile(path.join(root, "README.md"), "utf8");
+  const match = readme.match(
+    /\*\*(\d+) implemented items across (\d+) primitives, (\d+) components, (\d+) layouts, (\d+) effects, (\d+)\s*\nexperiences and (\d+) product and workflow systems\*\*/,
+  );
+  if (!match) fail("README.md's implemented-items sentence not found in the expected shape — did its wording change?");
+
+  const [, readmeTotal, readmePrimitives, readmeComponents, readmeLayouts, readmeEffects, readmeExperiences, readmeSystems] = match.map(Number);
+  const readmeValues = {
+    total: readmeTotal,
+    primitives: readmePrimitives,
+    components: readmeComponents,
+    layouts: readmeLayouts,
+    effects: readmeEffects,
+    experiences: readmeExperiences,
+    systems: readmeSystems,
+  };
+  const actualValues = { total, ...counts };
+
+  const mismatches = Object.keys(actualValues).filter((key) => actualValues[key] !== readmeValues[key]);
+  if (mismatches.length > 0) {
+    const detail = mismatches.map((key) => `${key}: README says ${readmeValues[key]}, registry has ${actualValues[key]}`).join("; ");
+    fail(`README.md's implemented-items sentence is stale — ${detail}`);
+  }
+
+  console.log(`[release] README stats: PASS (${total} items match the registry)`);
+}
+
 async function packageInfos() {
   return Promise.all(
     PUBLIC_PACKAGES.map(async (name) => ({
@@ -589,6 +648,7 @@ async function runReleaseVerification() {
   await run("git", ["diff", "--check"]);
   await assertTrackedHygiene();
   await assertSkillInvariants();
+  await assertReadmeStats();
 
   // build:packages already ran above (ahead of typecheck, for the CLI
   // manifest's sake) — packageInfos() below reads from the dist/ output
