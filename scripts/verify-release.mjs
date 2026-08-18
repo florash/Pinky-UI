@@ -559,6 +559,18 @@ async function assertStaticExportBuild() {
 async function runReleaseVerification() {
   console.log("Pinky UI release verification");
   await run(npmCommand, ["run", "verify:security"]);
+
+  // packages/cli/src/index.ts statically imports ./manifest.json, a
+  // generated, gitignored file — build:cli-manifest writes it, and needs
+  // packages/registry/dist to already exist to read from. A fresh CI
+  // checkout has neither, so typecheck (which the website's tsconfig pulls
+  // every package's .ts/.tsx into, cli included) fails there with "Cannot
+  // find module './manifest.json'" even though it passes on any machine
+  // that's ever run a build locally and still has the file lying around —
+  // exactly the gap that let this ship unnoticed until CI actually hit it.
+  await run(npmCommand, ["run", "build:packages"]);
+  await run(npmCommand, ["run", "build:cli-manifest"]);
+
   await run(npmCommand, ["run", "typecheck"]);
   await run(npmCommand, ["run", "lint"]);
   await run(npmCommand, ["test"]);
@@ -578,7 +590,9 @@ async function runReleaseVerification() {
   await assertTrackedHygiene();
   await assertSkillInvariants();
 
-  await run(npmCommand, ["run", "build:packages"]);
+  // build:packages already ran above (ahead of typecheck, for the CLI
+  // manifest's sake) — packageInfos() below reads from the dist/ output
+  // that produced, not from a second build.
   const infos = await packageInfos();
   await assertPackageMetadata(infos);
   assertPublicationOrder(infos);
