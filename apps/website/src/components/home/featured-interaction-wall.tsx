@@ -5,6 +5,8 @@ import { StickyStory } from "@pinky-ui/effects";
 import { MorphingHero } from "@pinky-ui/experiences";
 import { CardFan, EditorialMosaic, GalleryListMorph, InfiniteSpatialCanvas, StackSpatial } from "@pinky-ui/layouts";
 import { CommandPalette, EdgeSwipePanel, MorphLightbox, PullToRefresh, useCommandShortcut } from "@pinky-ui/systems";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 
 import { SoftSurface } from "@/components/previews/soft-surface";
@@ -385,6 +387,7 @@ function TactileButtonSampler() {
 
 function CommandPaletteDemo() {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
   useCommandShortcut(() => setOpen(true));
 
   return (
@@ -399,11 +402,11 @@ function CommandPaletteDemo() {
           open={open}
           onOpenChange={setOpen}
           items={[
-            { id: "explore", label: "Explore interactions", group: "Navigate", onSelect: () => { window.location.href = "/explore"; } },
-            { id: "components", label: "Browse components", group: "Navigate", onSelect: () => { window.location.href = "/components"; } },
-            { id: "fluid-tabs", label: "Fluid Tabs", group: "Components · navigation", keywords: ["tabs", "segmented", "navigation"], onSelect: () => { window.location.href = "/components/fluid-tabs"; } },
-            { id: "progressive-workflow", label: "Progressive Step Workflow", group: "Systems · workflow", keywords: ["step", "workflow", "progress"], onSelect: () => { window.location.href = "/workflows/progressive-step-workflow"; } },
-            { id: "morph-lightbox", label: "Morph Lightbox", group: "Systems · media", keywords: ["lightbox", "gallery", "media"], onSelect: () => { window.location.href = "/systems/morph-lightbox"; } },
+            { id: "explore", label: "Explore interactions", group: "Navigate", onSelect: () => router.push("/explore") },
+            { id: "components", label: "Browse components", group: "Navigate", onSelect: () => router.push("/components") },
+            { id: "fluid-tabs", label: "Fluid Tabs", group: "Components · navigation", keywords: ["tabs", "segmented", "navigation"], onSelect: () => router.push("/components/fluid-tabs") },
+            { id: "progressive-workflow", label: "Progressive Step Workflow", group: "Systems · workflow", keywords: ["step", "workflow", "progress"], onSelect: () => router.push("/workflows/progressive-step-workflow") },
+            { id: "morph-lightbox", label: "Morph Lightbox", group: "Systems · media", keywords: ["lightbox", "gallery", "media"], onSelect: () => router.push("/systems/morph-lightbox") },
             { id: "copy", label: "Copy the current pattern", group: "Action", onSelect: () => undefined },
           ]}
         />
@@ -454,7 +457,7 @@ export function MenuTriggerSampler({ idPrefix = "menu-sampler" }: { idPrefix?: s
           <div key={entry.id} id={`${idPrefix}-${entry.id}-surface`} hidden={!open[entry.id]} className="rounded-xl border border-line bg-white p-3">
             <nav aria-label={`${entry.label} menu`} className="flex flex-wrap gap-3 text-sm text-ink-700">
               <a href="#featured-interactions" className="underline decoration-line-strong underline-offset-4">View interaction</a>
-              <a href="/controls" className="underline decoration-line-strong underline-offset-4">Open trigger wall</a>
+              <Link href="/controls" className="underline decoration-line-strong underline-offset-4">Open trigger wall</Link>
             </nav>
           </div>
         ))}

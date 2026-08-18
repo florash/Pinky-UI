@@ -38,6 +38,7 @@ import {
   WordStagger,
 } from "@pinky-ui/effects";
 import { allEffects } from "@pinky-ui/registry";
+import Link from "next/link";
 import { useState } from "react";
 
 import { LazyMount } from "@/components/site/lazy-mount";
@@ -128,7 +129,7 @@ export function EffectsShowcase() {
             <KineticUnderline as="a" href="#scroll" className="px-2 py-3 text-sm text-ink-700">
               Jump to scroll stories
             </KineticUnderline>
-            <KineticUnderline as="a" href="/experiences" className="px-2 py-3 text-sm text-ink-700">
+            <KineticUnderline as={Link} href="/experiences" className="px-2 py-3 text-sm text-ink-700">
               Explore experience-level UI →
             </KineticUnderline>
             <KineticUnderline as="a" href="#browse-all" className="px-2 py-3 text-sm text-ink-700">

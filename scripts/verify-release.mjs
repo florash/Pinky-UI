@@ -557,6 +557,7 @@ async function runReleaseVerification() {
   await run(npmCommand, ["run", "verify:metadata"], { env: RELEASE_ENV });
   await run(npmCommand, ["run", "verify:orphans"]);
   await run(npmCommand, ["run", "verify:nested-anchors"]);
+  await run(npmCommand, ["run", "verify:internal-links"]);
   await assertStaticExportBuild();
   await run("git", ["diff", "--check"]);
   await assertTrackedHygiene();

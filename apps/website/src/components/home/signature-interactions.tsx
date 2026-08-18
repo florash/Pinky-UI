@@ -16,6 +16,7 @@ import {
   SwipeActions,
   useCommandShortcut,
 } from "@pinky-ui/systems";
+import { useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 
 import { SoftSurface } from "@/components/previews/soft-surface";
@@ -164,6 +165,7 @@ function Piece({
 
 function CommandPaletteDemo() {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
   useCommandShortcut(() => setOpen(true));
 
   return (
@@ -190,44 +192,34 @@ function CommandPaletteDemo() {
               id: "explore",
               label: "Explore interactions",
               group: "Navigate",
-              onSelect: () => {
-                window.location.href = "/explore";
-              },
+              onSelect: () => router.push("/explore"),
             },
             {
               id: "components",
               label: "Browse components",
               group: "Navigate",
-              onSelect: () => {
-                window.location.href = "/components";
-              },
+              onSelect: () => router.push("/components"),
             },
             {
               id: "fluid-tabs",
               label: "Fluid Tabs",
               group: "Components · navigation",
               keywords: ["tabs", "segmented", "navigation"],
-              onSelect: () => {
-                window.location.href = "/components/fluid-tabs";
-              },
+              onSelect: () => router.push("/components/fluid-tabs"),
             },
             {
               id: "progressive-workflow",
               label: "Progressive Step Workflow",
               group: "Systems · workflow",
               keywords: ["step", "workflow", "progress"],
-              onSelect: () => {
-                window.location.href = "/workflows/progressive-step-workflow";
-              },
+              onSelect: () => router.push("/workflows/progressive-step-workflow"),
             },
             {
               id: "morph-lightbox",
               label: "Morph Lightbox",
               group: "Systems · media",
               keywords: ["lightbox", "gallery", "media"],
-              onSelect: () => {
-                window.location.href = "/systems/morph-lightbox";
-              },
+              onSelect: () => router.push("/systems/morph-lightbox"),
             },
             { id: "copy", label: "Copy the current pattern", group: "Action", onSelect: () => undefined },
           ]}
