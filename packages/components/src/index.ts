@@ -3,6 +3,10 @@ export { LiquidCard, type LiquidCardProps } from "./cards/liquid-card";
 export { MorphCard, type MorphCardProps } from "./cards/morph-card";
 export { SpotlightCard, type SpotlightCardProps } from "./cards/spotlight-card";
 export { TiltCard, type TiltCardProps } from "./cards/tilt-card";
+export { BasicCard, type BasicCardProps } from "./cards/basic-card";
+export { MediaCard, type MediaCardProps } from "./cards/media-card";
+export { HorizontalCard, type HorizontalCardProps } from "./cards/horizontal-card";
+export { ListCard, type ListCardProps, type ListCardItem } from "./cards/list-card";
 export {
   MagneticButton,
   buttonSurface,
