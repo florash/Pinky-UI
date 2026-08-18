@@ -160,6 +160,248 @@ export const components: RegistryEntry[] = [
     skill: "list-card",
   },
   {
+    slug: "profile-card",
+    name: "Profile Card",
+    description: "Avatar, name, subtitle, a tag group and an optional action region.",
+    status: "ready",
+    category: "cards",
+    interactions: [],
+    tags: ["card", "structural", "profile", "avatar"],
+    builtOn: [],
+    importPath: 'import { ProfileCard } from "@pinky-ui/components";',
+    usage: `<ProfileCard
+  avatarSrc="/mira.jpg"
+  name="Mira Odaka"
+  subtitle="Product design, six years"
+  tags={["Design systems", "Motion", "Figma"]}
+/>`,
+    props: [
+      { name: "avatarSrc", type: "string", description: "A photo URL. Takes priority over initials when both are given." },
+      { name: "avatarAlt", type: "string", description: "Alt text for avatarSrc." },
+      { name: "initials", type: "string", description: "Shown in a plain circle when there's no avatarSrc. Falls back to a generic silhouette when neither is given." },
+      { name: "name", type: "ReactNode", description: "Required." },
+      { name: "subtitle", type: "ReactNode", description: "Optional." },
+      { name: "tags", type: "string[]", description: "Optional tag group, rendered as pills." },
+      { name: "maxTags", type: "number", defaultValue: "3", description: "Tags beyond this count collapse into a single +N pill." },
+      { name: "actions", type: "ReactNode", description: "Optional region below the tags — a button row, a follow toggle." },
+      { name: "radius", type: '"md" | "lg" | "xl" | "2xl"', defaultValue: '"xl"', description: "Corner radius from the shape scale." },
+      { name: "padded", type: "boolean", defaultValue: "true", description: "Inner content padding." },
+      { name: "shadow", type: '"neutral" | "pink"', defaultValue: '"neutral"', description: "Shadow token pair. Structural cards should stay neutral." },
+      { name: "as", type: "ElementType", defaultValue: '"div"', description: "Pass Link from next/link to make the whole card navigable." },
+      { name: "href", type: "string", description: "Only meaningful when as renders an anchor." },
+      { name: "onClick", type: "() => void", description: "Makes the card a click target; adds the focus-visible ring automatically." },
+    ],
+    presets: [
+      { name: "Default", description: "Photo avatar with tags.", props: {} },
+      { name: "Initials", description: "No photo on hand yet.", props: {} },
+    ],
+    accessibility: [
+      "A plain <div> unless onClick/href is passed — then it's a real focusable, clickable surface with a focus-visible ring equivalent to its hover state.",
+      "The avatar image's alt text comes from avatarAlt; initials and the fallback silhouette are decorative (aria-hidden) since the name text beside them already carries the identity.",
+    ],
+    reducedMotion: "The only motion is the hover shadow transition, which is a colour/opacity change, not a transform — nothing to disable under prefers-reduced-motion: reduce.",
+    whenToUse: ["Team member tiles, author bylines, search results for people"],
+    whenNotToUse: ["A list of many rows in a row-dense layout — use List Card or Horizontal Card instead"],
+    related: ["horizontal-card", "basic-card"],
+    skill: "profile-card",
+  },
+  {
+    slug: "stat-card",
+    name: "Stat Card",
+    description: "A headline number with a label, an optional up/down/flat trend, and a mini-chart slot.",
+    status: "ready",
+    category: "cards",
+    interactions: [],
+    tags: ["card", "structural", "data", "metric"],
+    builtOn: [],
+    importPath: 'import { StatCard } from "@pinky-ui/components";',
+    usage: `<StatCard
+  label="Monthly active users"
+  value="48,203"
+  trend={{ direction: "up", label: "12.4% this week" }}
+/>`,
+    props: [
+      { name: "label", type: "ReactNode", description: "Required." },
+      { name: "value", type: "ReactNode", description: "Required. The headline number — rendered with tabular figures so it doesn't reflow as it updates." },
+      { name: "trend", type: '{ direction: "up" | "down" | "flat"; label: string }', description: "Optional. Direction is carried by the arrow's shape and by label's text, never by colour alone." },
+      { name: "description", type: "ReactNode", description: "Optional supporting text below the trend." },
+      { name: "chart", type: "ReactNode", description: "Optional mini-chart slot next to the value — this component doesn't draw one itself." },
+      { name: "radius", type: '"md" | "lg" | "xl" | "2xl"', defaultValue: '"xl"', description: "Corner radius from the shape scale." },
+      { name: "padded", type: "boolean", defaultValue: "true", description: "Inner content padding." },
+      { name: "shadow", type: '"neutral" | "pink"', defaultValue: '"neutral"', description: "Shadow token pair. Structural cards should stay neutral." },
+    ],
+    presets: [
+      { name: "Default", description: "Label and value only.", props: {} },
+      { name: "With trend", description: "Adds the up/down/flat indicator.", props: {} },
+    ],
+    accessibility: [
+      "Not focusable as a whole — a stat is something a page shows, not something it navigates from.",
+      "Trend direction is never colour-only: an arrow glyph and a text label (e.g. \"12.4% this week\") both carry it.",
+    ],
+    reducedMotion: "No motion of its own.",
+    whenToUse: ["Dashboards, KPI rows, anything reporting a single tracked number"],
+    whenNotToUse: ["Several related metrics that need to be compared side by side in one chart — use a systems chart component instead"],
+    related: ["basic-card"],
+    skill: "stat-card",
+  },
+  {
+    slug: "pricing-card",
+    name: "Pricing Card",
+    description: "Price, period, a feature list and a CTA, with an opt-in highlighted/recommended state.",
+    status: "ready",
+    category: "cards",
+    interactions: [],
+    tags: ["card", "structural", "pricing", "commerce"],
+    builtOn: [],
+    importPath: 'import { PricingCard } from "@pinky-ui/components";',
+    usage: `<PricingCard
+  name="Studio"
+  price="$24"
+  period="/mo"
+  features={["Unlimited projects", "Priority support"]}
+  footer={<PrimaryButton>Choose plan</PrimaryButton>}
+  highlight
+/>`,
+    props: [
+      { name: "name", type: "ReactNode", description: "Required." },
+      { name: "price", type: "ReactNode", description: "Required." },
+      { name: "period", type: "ReactNode", description: "e.g. \"/mo\" — rendered right after price." },
+      { name: "description", type: "ReactNode", description: "Optional." },
+      { name: "features", type: "ReactNode[]", description: "Optional. Rendered as a checkmarked list." },
+      { name: "footer", type: "ReactNode", description: "The CTA region — usually a button." },
+      { name: "highlight", type: "boolean", defaultValue: "false", description: "The recommended-plan treatment: a soft-pink surface and badge. Reuses the family's pink accent, no new hue." },
+      { name: "radius", type: '"md" | "lg" | "xl" | "2xl"', defaultValue: '"xl"', description: "Corner radius from the shape scale." },
+      { name: "padded", type: "boolean", defaultValue: "true", description: "Inner content padding." },
+      { name: "shadow", type: '"neutral" | "pink"', defaultValue: '"neutral"', description: "Shadow token pair. Ignored when highlight is true (highlight always uses the pink pair)." },
+      { name: "as", type: "ElementType", defaultValue: '"div"', description: "Pass Link from next/link to make the whole card navigable." },
+      { name: "href", type: "string", description: "Only meaningful when as renders an anchor." },
+      { name: "onClick", type: "() => void", description: "Makes the card a click target; adds the focus-visible ring automatically." },
+    ],
+    presets: [
+      { name: "Default", description: "Standard tier.", props: {} },
+      { name: "Highlighted", description: "The recommended tier in a pricing row.", props: { highlight: true } },
+    ],
+    accessibility: [
+      "A plain <div> unless onClick/href is passed — then it's a real focusable, clickable surface with a focus-visible ring equivalent to its hover state.",
+      "The \"Recommended\" badge is real text, not a colour swatch, so it survives without the pink accent too.",
+    ],
+    reducedMotion: "The only motion is the hover shadow transition, which is a colour/opacity change, not a transform — nothing to disable under prefers-reduced-motion: reduce.",
+    whenToUse: ["Pricing tables, plan comparisons"],
+    whenNotToUse: ["A single plan with no comparison context — Basic Card is simpler"],
+    related: ["basic-card"],
+    skill: "pricing-card",
+  },
+  {
+    slug: "form-card",
+    name: "Form Card",
+    description: "A form's visual container — title area, field slot, action footer. Never renders a <form> itself.",
+    status: "ready",
+    category: "cards",
+    interactions: [],
+    tags: ["card", "structural", "form"],
+    builtOn: [],
+    importPath: 'import { FormCard } from "@pinky-ui/components";',
+    usage: `<FormCard title="Sign in" footer={<PrimaryButton>Continue</PrimaryButton>}>
+  <TextField label="Email" />
+  <TextField label="Password" type="password" />
+</FormCard>`,
+    props: [
+      { name: "title", type: "ReactNode", description: "Optional." },
+      { name: "description", type: "ReactNode", description: "Optional." },
+      { name: "children", type: "ReactNode", description: "Required. The field area." },
+      { name: "footer", type: "ReactNode", description: "The action region below the fields — usually a submit button." },
+      { name: "radius", type: '"md" | "lg" | "xl" | "2xl"', defaultValue: '"xl"', description: "Corner radius from the shape scale." },
+      { name: "padded", type: "boolean", defaultValue: "true", description: "Inner content padding." },
+      { name: "shadow", type: '"neutral" | "pink"', defaultValue: '"neutral"', description: "Shadow token pair. Structural cards should stay neutral." },
+    ],
+    presets: [{ name: "Default", description: "Titled form container.", props: {} }],
+    accessibility: [
+      "Renders a plain <div>, never a <form> — the caller owns the real <form> element, so composing this inside a page that already has one never nests two forms.",
+      "Not focusable as a whole; every field inside owns its own label and focus behavior.",
+    ],
+    reducedMotion: "No motion of its own.",
+    whenToUse: ["Sign-in/sign-up panels, settings forms, any grouped set of fields with one submit action"],
+    whenNotToUse: ["A single inline field with no surrounding form structure — that doesn't need a card at all"],
+    related: ["basic-card"],
+    skill: "form-card",
+  },
+  {
+    slug: "notification-card",
+    name: "Notification Card",
+    description: "Icon, title, description, an optional close button and actions, in four semantic states.",
+    status: "ready",
+    category: "cards",
+    interactions: [],
+    tags: ["card", "structural", "notification", "alert", "status"],
+    builtOn: [],
+    importPath: 'import { NotificationCard } from "@pinky-ui/components";',
+    usage: `<NotificationCard
+  variant="success"
+  title="Changes saved"
+  description="Your profile is up to date."
+  onDismiss={() => setVisible(false)}
+/>`,
+    props: [
+      { name: "variant", type: '"info" | "success" | "warning" | "error"', defaultValue: '"info"', description: "Four semantic states within the family's three-hue palette — see the component's own doc comment for how they stay distinguishable." },
+      { name: "icon", type: "ReactNode", description: "Overrides the variant's default icon." },
+      { name: "title", type: "ReactNode", description: "Required." },
+      { name: "description", type: "ReactNode", description: "Optional." },
+      { name: "onDismiss", type: "() => void", description: "Renders a close button when given." },
+      { name: "actions", type: "ReactNode", description: "Optional region below the description." },
+      { name: "radius", type: '"md" | "lg" | "xl" | "2xl"', defaultValue: '"xl"', description: "Corner radius from the shape scale." },
+      { name: "padded", type: "boolean", defaultValue: "true", description: "Inner content padding." },
+      { name: "shadow", type: '"neutral" | "pink"', defaultValue: '"neutral"', description: "Shadow token pair." },
+    ],
+    presets: [
+      { name: "Info", description: "Default state.", props: {} },
+      { name: "Error", description: "Heavier border, distinct icon — never colour alone.", props: { variant: "error" } },
+    ],
+    accessibility: [
+      "role=\"alert\" for warning/error, role=\"status\" for info/success, so assistive tech announces the right urgency.",
+      "Semantic meaning is never colour-only: each variant has its own icon shape, and warning/error — the pair sharing the pink accent — are further told apart by border weight.",
+    ],
+    reducedMotion: "No motion of its own; the dismiss button's hover is a colour/opacity change only.",
+    whenToUse: ["Inline feedback after an action, form-level errors, status banners"],
+    whenNotToUse: ["A transient toast that should disappear on its own — this component has no auto-dismiss timer"],
+    related: ["basic-card"],
+    skill: "notification-card",
+  },
+  {
+    slug: "empty-state-card",
+    name: "Empty State Card",
+    description: "A centered icon/illustration slot, title, description and a guidance button for empty content areas.",
+    status: "ready",
+    category: "cards",
+    interactions: [],
+    tags: ["card", "structural", "empty-state"],
+    builtOn: [],
+    importPath: 'import { EmptyStateCard } from "@pinky-ui/components";',
+    usage: `<EmptyStateCard
+  title="No projects yet"
+  description="Create your first project to get started."
+  action={<PrimaryButton>New project</PrimaryButton>}
+/>`,
+    props: [
+      { name: "icon", type: "ReactNode", description: "An illustration or icon, sized by the caller — no built-in artwork." },
+      { name: "title", type: "ReactNode", description: "Required." },
+      { name: "description", type: "ReactNode", description: "Optional." },
+      { name: "action", type: "ReactNode", description: "The guidance CTA — usually a button." },
+      { name: "radius", type: '"md" | "lg" | "xl" | "2xl"', defaultValue: '"xl"', description: "Corner radius from the shape scale." },
+      { name: "padded", type: "boolean", defaultValue: "true", description: "Inner content padding." },
+      { name: "shadow", type: '"neutral" | "pink"', defaultValue: '"neutral"', description: "Shadow token pair." },
+    ],
+    presets: [{ name: "Default", description: "Title, description and a CTA.", props: {} }],
+    accessibility: [
+      "Not focusable as a whole; the action button carries its own accessible name.",
+      "The icon slot has no built-in alt text — a caller passing an <img> or decorative SVG owns its own accessible treatment.",
+    ],
+    reducedMotion: "No motion of its own.",
+    whenToUse: ["A list, table or dashboard section with genuinely no content yet"],
+    whenNotToUse: ["An error or failed-load state — that's Notification Card's job"],
+    related: ["basic-card", "notification-card"],
+    skill: "empty-state-card",
+  },
+  {
     slug: "jelly-card",
     name: "Jelly Card",
     description: "A soft elastic surface that responds naturally to pointer movement.",

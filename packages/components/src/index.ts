@@ -7,6 +7,16 @@ export { BasicCard, type BasicCardProps } from "./cards/basic-card";
 export { MediaCard, type MediaCardProps } from "./cards/media-card";
 export { HorizontalCard, type HorizontalCardProps } from "./cards/horizontal-card";
 export { ListCard, type ListCardProps, type ListCardItem } from "./cards/list-card";
+export { ProfileCard, type ProfileCardProps } from "./cards/profile-card";
+export { StatCard, type StatCardProps, type StatCardTrend } from "./cards/stat-card";
+export { PricingCard, type PricingCardProps } from "./cards/pricing-card";
+export { FormCard, type FormCardProps } from "./cards/form-card";
+export {
+  NotificationCard,
+  type NotificationCardProps,
+  type NotificationCardVariant,
+} from "./cards/notification-card";
+export { EmptyStateCard, type EmptyStateCardProps } from "./cards/empty-state-card";
 export {
   MagneticButton,
   buttonSurface,
