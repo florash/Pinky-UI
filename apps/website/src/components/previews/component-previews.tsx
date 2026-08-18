@@ -1,14 +1,18 @@
 "use client";
 
 import {
+  BasicCard,
   ElasticToggle,
   FloatingDock,
   FluidTabs,
   GlowBorder,
   GooeyMenu,
+  HorizontalCard,
   JellyCard,
   LiquidCard,
+  ListCard,
   MagneticButton,
+  MediaCard,
   MorphCard,
   PillNav,
   RippleButton,
@@ -16,6 +20,8 @@ import {
   TiltCard,
 } from "@pinky-ui/components";
 import { useState, type ReactNode } from "react";
+
+import { SOFT_MEDIA_SOURCES } from "./soft-surface";
 
 /**
  * One place where every component's live preview is defined.
@@ -29,6 +35,10 @@ export const COMPONENT_PREVIEWS: Record<string, ReactNode> = {
   "morph-card": <MorphCardPreview />,
   "spotlight-card": <SpotlightCardPreview />,
   "tilt-card": <TiltCardPreview />,
+  "basic-card": <BasicCardPreview />,
+  "media-card": <MediaCardPreview />,
+  "horizontal-card": <HorizontalCardPreview />,
+  "list-card": <ListCardPreview />,
   "magnetic-button": <MagneticButtonPreview />,
   "ripple-button": <RippleButtonPreview />,
   "glow-border": <GlowBorderPreview />,
@@ -188,6 +198,57 @@ function TiltCardPreview() {
         </div>
       </div>
     </TiltCard>
+  );
+}
+
+function BasicCardPreview() {
+  return (
+    <BasicCard
+      className="w-full max-w-[18rem]"
+      title="Studio plan"
+      description="Everything a small team needs to ship together."
+      footer={
+        <span className="inline-flex items-center rounded-pill bg-ink-900 px-3.5 py-2 text-sm text-milk">
+          Choose plan
+        </span>
+      }
+    />
+  );
+}
+
+function MediaCardPreview() {
+  return (
+    <MediaCard
+      className="w-full max-w-[18rem]"
+      media={<img src={SOFT_MEDIA_SOURCES[0]} alt="" />}
+      title="Field notes"
+      description="Three weeks in the studio."
+    />
+  );
+}
+
+function HorizontalCardPreview() {
+  return (
+    <HorizontalCard
+      className="w-full max-w-[20rem]"
+      media={<img src={SOFT_MEDIA_SOURCES[1]} alt="" />}
+      title="Mira Odaka"
+      description="Product design, six years."
+    />
+  );
+}
+
+function ListCardPreview() {
+  return (
+    <ListCard
+      className="w-full max-w-[18rem]"
+      title="Recent activity"
+      items={[
+        { id: "one", content: "Release notes published" },
+        { id: "two", content: "North star doc updated" },
+        { id: "three", content: "Research log shared" },
+      ]}
+    />
   );
 }
 

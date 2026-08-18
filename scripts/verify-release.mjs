@@ -10,8 +10,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 
 const EXPECTED = {
-  publicSkillRoutes: 336,
-  canonicalRecipes: 335,
+  publicSkillRoutes: 340,
+  canonicalRecipes: 339,
   legacyAliases: 1,
   minimumProductPages: 567,
   releaseVersion: "0.1.0",

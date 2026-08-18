@@ -2,6 +2,164 @@ import type { RegistryEntry } from "./types";
 
 export const components: RegistryEntry[] = [
   {
+    slug: "basic-card",
+    name: "Basic Card",
+    description: "A title, an optional description, an optional footer — the structural card the rest of the family builds on.",
+    status: "ready",
+    category: "cards",
+    interactions: [],
+    tags: ["card", "structural", "content"],
+    builtOn: [],
+    importPath: 'import { BasicCard } from "@pinky-ui/components";',
+    usage: `<BasicCard
+  title="Studio plan"
+  description="Everything a small team needs."
+  footer={<PrimaryButton>Choose plan</PrimaryButton>}
+/>`,
+    props: [
+      { name: "title", type: "ReactNode", description: "Required." },
+      { name: "description", type: "ReactNode", description: "Optional supporting text." },
+      { name: "footer", type: "ReactNode", description: "Optional region below the description — a button row, a price, a byline." },
+      { name: "radius", type: '"md" | "lg" | "xl" | "2xl"', defaultValue: '"xl"', description: "Corner radius from the shape scale." },
+      { name: "padded", type: "boolean", defaultValue: "true", description: "Inner content padding." },
+      { name: "shadow", type: '"neutral" | "pink"', defaultValue: '"neutral"', description: "Shadow token pair. Structural cards should stay neutral." },
+      { name: "as", type: "ElementType", defaultValue: '"div"', description: "Pass Link from next/link to make the whole card navigable." },
+      { name: "href", type: "string", description: "Only meaningful when as renders an anchor." },
+      { name: "onClick", type: "() => void", description: "Makes the card a click target; adds the focus-visible ring automatically." },
+    ],
+    presets: [
+      { name: "Default", description: "Title and description.", props: {} },
+      { name: "Compact", description: "Smaller radius, no footer room implied.", props: { radius: "md" } },
+    ],
+    accessibility: [
+      "A plain <div> unless onClick/href is passed — then it's a real focusable, clickable surface with a focus-visible ring equivalent to its hover state, not the browser default outline.",
+      "Title renders as an h3; nest inside a page's own heading hierarchy accordingly.",
+    ],
+    reducedMotion: "The only motion is the hover shadow transition, which is a colour/opacity change, not a transform — nothing to disable under prefers-reduced-motion: reduce.",
+    whenToUse: [
+      "Any content that's fundamentally title + description + optional action",
+      "The starting point before reaching for a more specific structural card",
+    ],
+    whenNotToUse: ["Content with its own top-level media — use Media Card or Horizontal Card instead"],
+    related: ["media-card", "horizontal-card", "list-card"],
+    skill: "basic-card",
+  },
+  {
+    slug: "media-card",
+    name: "Media Card",
+    description: "An image or video fills the top edge-to-edge, with title, description and footer below.",
+    status: "ready",
+    category: "cards",
+    interactions: [],
+    tags: ["card", "structural", "media", "image"],
+    builtOn: [],
+    importPath: 'import { MediaCard } from "@pinky-ui/components";',
+    usage: `<MediaCard
+  media={<img src="/cover.jpg" alt="" />}
+  title="Field notes"
+  description="Three weeks in the studio."
+/>`,
+    props: [
+      { name: "media", type: "ReactNode", description: "Required. An <img>, <video> or any block-level media — fills the slot via object-cover." },
+      { name: "title", type: "ReactNode", description: "Required." },
+      { name: "description", type: "ReactNode", description: "Optional." },
+      { name: "footer", type: "ReactNode", description: "Optional." },
+      { name: "mediaAspect", type: '"video" | "square" | "portrait"', defaultValue: '"video"', description: "Aspect ratio of the media slot." },
+      { name: "padded", type: "boolean", defaultValue: "true", description: "Applies to the text content only — the media slot is always edge-to-edge." },
+      { name: "radius", type: '"md" | "lg" | "xl" | "2xl"', defaultValue: '"xl"', description: "Corner radius from the shape scale." },
+      { name: "shadow", type: '"neutral" | "pink"', defaultValue: '"neutral"', description: "Shadow token pair." },
+      { name: "as", type: "ElementType", defaultValue: '"div"', description: "Pass Link from next/link to make the whole card navigable." },
+      { name: "href", type: "string", description: "Only meaningful when as renders an anchor." },
+    ],
+    presets: [
+      { name: "Default", description: "16:9 media.", props: {} },
+      { name: "Square", description: "For avatars or square photography.", props: { mediaAspect: "square" } },
+    ],
+    accessibility: [
+      "The media slot has no built-in alt text — that belongs on the <img> the caller passes in.",
+      "Same focus-visible rule as Basic Card once onClick/href is present.",
+    ],
+    reducedMotion: "No transform-based motion; the hover shadow is a colour/opacity change only.",
+    whenToUse: ["Article previews, product cards, anything photography-led"],
+    whenNotToUse: ["Media that should sit beside text rather than above it — use Horizontal Card"],
+    related: ["basic-card", "horizontal-card"],
+    skill: "media-card",
+  },
+  {
+    slug: "horizontal-card",
+    name: "Horizontal Card",
+    description: "Media on the left, content on the right — stacks to media-on-top below a configurable breakpoint.",
+    status: "ready",
+    category: "cards",
+    interactions: [],
+    tags: ["card", "structural", "media", "row", "responsive"],
+    builtOn: [],
+    importPath: 'import { HorizontalCard } from "@pinky-ui/components";',
+    usage: `<HorizontalCard
+  media={<img src="/avatar.jpg" alt="" />}
+  title="Mira Odaka"
+  description="Product design, six years."
+/>`,
+    props: [
+      { name: "media", type: "ReactNode", description: "Required." },
+      { name: "title", type: "ReactNode", description: "Required." },
+      { name: "description", type: "ReactNode", description: "Optional." },
+      { name: "footer", type: "ReactNode", description: "Optional." },
+      { name: "mediaWidth", type: '"sm" | "md" | "lg"', defaultValue: '"md"', description: "Width of the media column once the layout is a row." },
+      { name: "stackBelow", type: '"sm" | "md"', defaultValue: '"sm"', description: "Breakpoint below which media stacks on top of a full-width content block instead of sitting beside it." },
+      { name: "radius", type: '"md" | "lg" | "xl" | "2xl"', defaultValue: '"xl"', description: "Corner radius from the shape scale." },
+      { name: "padded", type: "boolean", defaultValue: "true", description: "Inner content padding." },
+      { name: "shadow", type: '"neutral" | "pink"', defaultValue: '"neutral"', description: "Shadow token pair." },
+    ],
+    presets: [
+      { name: "Default", description: "Row above sm, stacked below.", props: {} },
+      { name: "Wide media", description: "More room for the image.", props: { mediaWidth: "lg" } },
+    ],
+    accessibility: ["Same focus-visible rule as Basic Card once onClick/href is present."],
+    reducedMotion: "No transform-based motion; the hover shadow is a colour/opacity change only.",
+    whenToUse: ["Profile rows, search results, list items that need a thumbnail beside text"],
+    whenNotToUse: ["Media that's the point of the card, not an accent — use Media Card"],
+    related: ["basic-card", "media-card"],
+    skill: "horizontal-card",
+  },
+  {
+    slug: "list-card",
+    name: "List Card",
+    description: "A card whose body is a divided list of rows rather than prose.",
+    status: "ready",
+    category: "cards",
+    interactions: [],
+    tags: ["card", "structural", "list", "rows"],
+    builtOn: [],
+    importPath: 'import { ListCard } from "@pinky-ui/components";',
+    usage: `<ListCard
+  title="Recent activity"
+  items={activity.map((entry) => ({ id: entry.id, content: entry.summary }))}
+/>`,
+    props: [
+      { name: "title", type: "ReactNode", description: "Optional heading above the list." },
+      { name: "items", type: "ListCardItem[]", description: "Required. Each needs an id and content; rows are divided automatically." },
+      { name: "footer", type: "ReactNode", description: "Optional region below the list." },
+      { name: "emptyMessage", type: "ReactNode", defaultValue: '"Nothing here yet."', description: "Shown instead of the list when items is empty." },
+      { name: "radius", type: '"md" | "lg" | "xl" | "2xl"', defaultValue: '"xl"', description: "Corner radius from the shape scale." },
+      { name: "padded", type: "boolean", defaultValue: "true", description: "Horizontal padding on the title, rows and footer." },
+      { name: "shadow", type: '"neutral" | "pink"', defaultValue: '"neutral"', description: "Shadow token pair." },
+    ],
+    presets: [
+      { name: "Default", description: "Titled list.", props: {} },
+      { name: "Compact", description: "Smaller radius for a dense sidebar.", props: { radius: "md" } },
+    ],
+    accessibility: [
+      "Renders a real <ul>/<li> structure — a screen reader announces it as a list with its item count.",
+      "Not focusable as a whole; interactivity belongs to whatever's inside each row's content.",
+    ],
+    reducedMotion: "No motion of its own.",
+    whenToUse: ["Settings groups, short activity feeds, anything that's naturally items rather than a paragraph"],
+    whenNotToUse: ["Long or virtualised lists — this renders every row eagerly"],
+    related: ["basic-card"],
+    skill: "list-card",
+  },
+  {
     slug: "jelly-card",
     name: "Jelly Card",
     description: "A soft elastic surface that responds naturally to pointer movement.",
