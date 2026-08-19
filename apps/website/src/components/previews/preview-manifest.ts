@@ -283,6 +283,15 @@ export const EXPLORE_PREVIEW_SLUGS = [
   "swipe-back",
   "long-press-context-menu",
   "pinch-zoom-image",
+  "story-progress",
+  "double-tap-like",
+  "mini-player",
+  "swipe-to-reply",
+  "vertical-feed",
+  "voice-waveform",
+  "reaction-picker",
+  "live-activity-card",
+  "notification-stack",
 ] as const;
 
 export function hasComponentPreview(slug: string) {

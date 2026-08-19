@@ -55,8 +55,8 @@ describe("public discovery canonicalization", () => {
       "quick-action-sheet",
     ];
     const mobile = allWorkflowSystems.filter((entry) => entry.family === "mobile");
-    expect(mobileSystems).toHaveLength(45);
-    expect(mobile).toHaveLength(45);
+    expect(mobileSystems).toHaveLength(54);
+    expect(mobile).toHaveLength(54);
     expect(expected.every((slug) => mobile.some((entry) => entry.slug === slug && entry.discovery?.role === "canonical"))).toBe(true);
   });
 });

@@ -4,10 +4,14 @@ import {
   ActionSheet,
   AuthCompletionMorph,
   BottomSearchSheet,
+  DoubleTapLike,
   LongPressContextMenu,
+  MiniPlayer,
   PinchZoomImage,
   BottomToastStack,
   CardStackBrowse,
+  StoryProgress,
+  SwipeToReply,
   ContextualBottomBar,
   ContentAwareSheet,
   DetentSheet,
@@ -41,6 +45,11 @@ import {
   SwipeToConfirm,
   ThumbReachMenu,
   WheelPicker,
+  VerticalFeed,
+  VoiceWaveform,
+  ReactionPicker,
+  LiveActivityCard,
+  NotificationStack,
 } from "@pinky-ui/systems";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
@@ -80,6 +89,145 @@ function PinchZoomImagePreview() {
 function SwipeBackPreview() {
   const [screen, setScreen] = useState<"detail" | "list">("detail");
   return <div className="relative h-40 overflow-hidden rounded-xl border border-line bg-cloud-50">{screen === "detail" ? <SwipeBackGesture onBack={() => setScreen("list")} behind={<div className="grid size-full place-items-center bg-cloud-100 text-sm text-ink-500">Project list</div>} className="size-full"><div className="grid size-full place-items-center text-sm">Swipe from the left edge</div></SwipeBackGesture> : <button type="button" onClick={() => setScreen("detail")} className="grid size-full place-items-center text-sm text-ink-700">List — tap to reopen</button>}</div>;
+}
+
+const STORY_SLIDES = [
+  { color: "#f4c7d7", label: "Studio" },
+  { color: "#c8e4f7", label: "Draft" },
+  { color: "#eaf6fd", label: "Review" },
+];
+
+function StoryProgressPreview() {
+  return (
+    <StoryProgress count={STORY_SLIDES.length} duration={3200} label="Preview story">
+      <div className="flex h-64 items-center justify-center px-6 pt-10 text-center" style={{ background: STORY_SLIDES[0]?.color }}>
+        <p className="text-sm font-medium text-ink-900">Hold to pause · tap a side to step</p>
+      </div>
+    </StoryProgress>
+  );
+}
+
+function DoubleTapLikePreview() {
+  const [liked, setLiked] = useState(false);
+  return (
+    <div className="mx-auto max-w-xs">
+      <DoubleTapLike liked={liked} onLikedChange={setLiked}>
+        <img src={SAMPLE_IMAGE} alt="Sample product photo" className="aspect-[4/3] w-full rounded-2xl object-cover" />
+      </DoubleTapLike>
+      <p className="mt-2 text-center text-xs text-ink-500">Double-tap the photo, or use the corner button</p>
+    </div>
+  );
+}
+
+function MiniPlayerPreview() {
+  const [playing, setPlaying] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <MiniPlayer
+      title="Focus mix"
+      subtitle="Studio session · 24 min"
+      progress={0.35}
+      playing={playing}
+      onPlayingChange={setPlaying}
+      expanded={expanded}
+      onExpandedChange={setExpanded}
+      artwork={<span aria-hidden className="size-full bg-[linear-gradient(135deg,#f4c7d7,#c8e4f7)]" />}
+    >
+      <div className="flex h-40 items-center justify-center rounded-2xl bg-cloud-50 text-sm text-ink-500">Full player controls live here</div>
+    </MiniPlayer>
+  );
+}
+
+function SwipeToReplyPreview() {
+  const [replyCount, setReplyCount] = useState(0);
+  return (
+    <div className="space-y-2">
+      <SwipeToReply onReply={() => setReplyCount((count) => count + 1)}>
+        <div className="max-w-[16rem] rounded-2xl bg-cloud-100 px-4 py-2.5 text-sm text-ink-900">Studio's open until 6 — come by whenever.</div>
+      </SwipeToReply>
+      <p className="text-xs text-ink-500" role="status" aria-live="polite">{replyCount > 0 ? `Replied ${replyCount} time${replyCount > 1 ? "s" : ""}.` : "Swipe the bubble right, or use the corner button."}</p>
+    </div>
+  );
+}
+
+const FEED_SLIDES = [
+  { id: "one", color: "#f4c7d7", label: "Arrival" },
+  { id: "two", color: "#c8e4f7", label: "Commons" },
+  { id: "three", color: "#eaf6fd", label: "Threshold" },
+];
+
+function VerticalFeedPreview() {
+  return (
+    <div className="h-72 overflow-hidden rounded-2xl border border-line">
+      <VerticalFeed
+        items={FEED_SLIDES.map((slide) => ({
+          id: slide.id,
+          label: slide.label,
+          content: (
+            <div className="flex h-full w-full items-center justify-center text-sm font-medium text-ink-900" style={{ background: slide.color }}>
+              {slide.label}
+            </div>
+          ),
+        }))}
+      />
+    </div>
+  );
+}
+
+const VOICE_AMPLITUDES = [0.3, 0.5, 0.8, 0.4, 0.9, 0.6, 0.35, 0.7, 0.5, 0.25, 0.6, 0.8, 0.4, 0.5, 0.3];
+
+function VoiceWaveformPreview() {
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0.35);
+  return (
+    <VoiceWaveform
+      amplitudes={VOICE_AMPLITUDES}
+      duration="0:42"
+      playing={playing}
+      onPlayingChange={setPlaying}
+      progress={progress}
+      onSeek={setProgress}
+      className="mx-auto max-w-xs"
+    />
+  );
+}
+
+const REACTION_OPTIONS = [
+  { id: "heart", emoji: "❤️", label: "Love" },
+  { id: "laugh", emoji: "😂", label: "Haha" },
+  { id: "thumb", emoji: "👍", label: "Like" },
+  { id: "sad", emoji: "😢", label: "Sad" },
+];
+
+function ReactionPickerPreview() {
+  const [reaction, setReaction] = useState<string | null>(null);
+  return (
+    <div className="flex justify-center py-4">
+      <ReactionPicker options={REACTION_OPTIONS} value={reaction} onValueChange={setReaction} label="React to message">
+        <div className="max-w-[16rem] rounded-2xl bg-cloud-100 px-4 py-2.5 text-sm text-ink-900">Hold this message to react.</div>
+      </ReactionPicker>
+    </div>
+  );
+}
+
+function LiveActivityCardPreview() {
+  return <LiveActivityCard title="Delivery arriving" subtitle="12 min away · 4 stops left" progress={0.6} className="mx-auto max-w-xs" onDismiss={() => {}} />;
+}
+
+const NOTIFICATION_ITEMS = [
+  { id: "one", title: "Studio booking confirmed", body: "Room B, 2:00 PM today", time: "2m" },
+  { id: "two", title: "New comment on Draft brief", body: "Flora: looks good, ship it", time: "18m" },
+  { id: "three", title: "Release checklist updated", body: "3 items remaining", time: "1h" },
+];
+
+function NotificationStackPreview() {
+  const [items, setItems] = useState(NOTIFICATION_ITEMS);
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <div className="mx-auto max-w-sm">
+      <NotificationStack items={items} expanded={expanded} onExpandedChange={setExpanded} onDismiss={(id) => setItems((current) => current.filter((item) => item.id !== id))} />
+    </div>
+  );
 }
 
 export const MOBILE_PREVIEWS: Record<string, ReactNode> = {
@@ -123,4 +271,13 @@ export const MOBILE_PREVIEWS: Record<string, ReactNode> = {
   "mobile-selection-bar": <MobileSelectionBar />,
   "progressive-auth-surface": <ProgressiveAuthSurface />,
   "auth-completion-morph": <AuthCompletionMorph />,
+  "story-progress": <StoryProgressPreview />,
+  "double-tap-like": <DoubleTapLikePreview />,
+  "mini-player": <MiniPlayerPreview />,
+  "swipe-to-reply": <SwipeToReplyPreview />,
+  "vertical-feed": <VerticalFeedPreview />,
+  "voice-waveform": <VoiceWaveformPreview />,
+  "reaction-picker": <ReactionPickerPreview />,
+  "live-activity-card": <LiveActivityCardPreview />,
+  "notification-stack": <NotificationStackPreview />,
 };

@@ -51,6 +51,15 @@ const NEW_MOBILE_SLUGS = [
   "long-press-context-menu",
   "pinch-zoom-image",
   "pull-to-refresh",
+  "story-progress",
+  "double-tap-like",
+  "mini-player",
+  "swipe-to-reply",
+  "vertical-feed",
+  "voice-waveform",
+  "reaction-picker",
+  "live-activity-card",
+  "notification-stack",
 ] as const;
 
 const FEATURED = [
