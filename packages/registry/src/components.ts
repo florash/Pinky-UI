@@ -1545,7 +1545,7 @@ export const components: RegistryEntry[] = [
   {
     slug: "email-template",
     name: "Email Template",
-    description: "A simple transactional email body — subscription, password reset, welcome — one column, one primary action.",
+    description: "A simple transactional email body — subscription, password reset, welcome, order confirmation, security alert — one column, one primary action.",
     status: "ready",
     category: "surfaces",
     interactions: [],
@@ -1575,6 +1575,8 @@ export const components: RegistryEntry[] = [
       { name: "Subscription confirmation", description: "Eyebrow + CTA to manage the subscription.", props: { eyebrow: "Subscription confirmed", ctaLabel: "Manage subscription" } },
       { name: "Password reset", description: "Time-boxed CTA, no eyebrow.", props: { heading: "Reset your password", ctaLabel: "Reset password" } },
       { name: "Welcome", description: "No CTA — a plain first-touch note.", props: { heading: "Welcome to Pinky UI" } },
+      { name: "Order confirmation", description: "Eyebrow + order reference, CTA to the order detail.", props: { eyebrow: "Order confirmed", ctaLabel: "View order" } },
+      { name: "Security alert", description: "A new-device sign-in notice with a CTA to review activity.", props: { eyebrow: "New sign-in detected", ctaLabel: "Review activity" } },
     ],
     accessibility: [
       "Semantic h1 for the heading; a real <a> for the CTA, not a styled span.",

@@ -678,6 +678,28 @@ const EMAIL_TEMPLATE_VARIANTS = [
       footer: "Sent to you@example.com.",
     },
   },
+  {
+    id: "order",
+    label: "Order",
+    props: {
+      eyebrow: "Order confirmed",
+      heading: "Order #4821 is on its way.",
+      body: "We've charged your card on file and started packing. You'll get a tracking link the moment it ships.",
+      ctaLabel: "View order",
+      footer: "Sent to you@example.com about order #4821.",
+    },
+  },
+  {
+    id: "security",
+    label: "Security",
+    props: {
+      eyebrow: "New sign-in detected",
+      heading: "New sign-in from Chrome on macOS",
+      body: "We noticed a sign-in from a device we haven't seen before, near Sydney, Australia. If this was you, no action is needed.",
+      ctaLabel: "Review activity",
+      footer: "Sent to you@example.com. Wasn't you? Secure your account immediately.",
+    },
+  },
 ] as const;
 
 function EmailTemplatePreview() {
