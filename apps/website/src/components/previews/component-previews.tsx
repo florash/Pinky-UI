@@ -4,6 +4,7 @@ import {
   BasicCard,
   BorderBeamCard,
   ElasticToggle,
+  EmailTemplate,
   EmptyStateCard,
   ExpandCard,
   FlipCard,
@@ -79,6 +80,7 @@ export const COMPONENT_PREVIEWS: Record<string, ReactNode> = {
   "gooey-menu": <GooeyMenuPreview />,
   "floating-dock": <FloatingDockPreview />,
   "elastic-toggle": <ElasticTogglePreview />,
+  "email-template": <EmailTemplatePreview />,
 };
 
 export function ComponentPreview({ slug }: { slug: string }) {
@@ -636,6 +638,65 @@ function ElasticTogglePreview() {
         onCheckedChange={setNotifications}
       />
       <ElasticToggle label="Sounds" checked={sounds} onCheckedChange={setSounds} />
+    </div>
+  );
+}
+
+const EMAIL_TEMPLATE_VARIANTS = [
+  {
+    id: "subscription",
+    label: "Subscription",
+    props: {
+      eyebrow: "Subscription confirmed",
+      heading: "You're on the list.",
+      body: "We'll send the next release notes straight to this inbox — no spam, unsubscribe any time.",
+      ctaLabel: "Manage subscription",
+      footer: "Sent to you@example.com because you subscribed at pinkyui.com.",
+    },
+  },
+  {
+    id: "reset",
+    label: "Password reset",
+    props: {
+      eyebrow: undefined,
+      heading: "Reset your password",
+      body: "We got a request to reset your password. This link expires in 1 hour — if this wasn't you, you can ignore this email.",
+      ctaLabel: "Reset password",
+      footer: "Sent to you@example.com. Didn't request this? Contact support.",
+    },
+  },
+  {
+    id: "welcome",
+    label: "Welcome",
+    props: {
+      eyebrow: undefined,
+      heading: "Welcome to Pinky UI",
+      body: "Your account is ready. Explore the component library or jump straight into the docs to get building.",
+      ctaLabel: undefined,
+      footer: "Sent to you@example.com.",
+    },
+  },
+] as const;
+
+function EmailTemplatePreview() {
+  const [variant, setVariant] = useState<(typeof EMAIL_TEMPLATE_VARIANTS)[number]["id"]>("subscription");
+  const active = EMAIL_TEMPLATE_VARIANTS.find((item) => item.id === variant) ?? EMAIL_TEMPLATE_VARIANTS[0];
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-center gap-1.5">
+        {EMAIL_TEMPLATE_VARIANTS.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            aria-pressed={item.id === variant}
+            onClick={() => setVariant(item.id)}
+            className={`min-h-8 rounded-pill px-3 text-xs ${item.id === variant ? "bg-ink-900 text-milk" : "border border-line text-ink-700"}`}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <EmailTemplate brand="Pinky UI" {...active.props} />
     </div>
   );
 }

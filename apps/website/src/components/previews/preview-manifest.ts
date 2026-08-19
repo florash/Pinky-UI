@@ -32,6 +32,7 @@ export const COMPONENT_PREVIEW_SLUGS = [
   "floating-dock",
   "elastic-toggle",
   "pill-nav",
+  "email-template",
 ] as const;
 
 export const LAYOUT_PREVIEW_SLUGS = [

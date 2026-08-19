@@ -6,6 +6,7 @@ import { setReducedMotion } from "../../../vitest.setup";
 import { GlowBorder } from "./effects/glow-border";
 import { JellyCard } from "./cards/jelly-card";
 import { MagneticButton } from "./buttons/magnetic-button";
+import { EmailTemplate } from "./surfaces/email-template";
 
 describe("signature components", () => {
   it("render their content", () => {
@@ -15,6 +16,30 @@ describe("signature components", () => {
       </JellyCard>,
     );
     expect(screen.getByRole("heading", { name: "Elastic surface" })).toBeInTheDocument();
+  });
+
+  it("renders Email Template's heading, body and a real anchor for the CTA", () => {
+    render(
+      <EmailTemplate
+        brand="Pinky UI"
+        eyebrow="Subscription confirmed"
+        heading="You're on the list."
+        body="No spam, unsubscribe any time."
+        ctaLabel="Manage subscription"
+        ctaHref="/settings"
+        footer="Sent to you@example.com."
+      />,
+    );
+    expect(screen.getByRole("heading", { name: "You're on the list." })).toBeInTheDocument();
+    expect(screen.getByText("No spam, unsubscribe any time.")).toBeInTheDocument();
+    const cta = screen.getByRole("link", { name: "Manage subscription" });
+    expect(cta).toHaveAttribute("href", "/settings");
+    expect(screen.getByText("Sent to you@example.com.")).toBeInTheDocument();
+  });
+
+  it("omits the CTA and footer for Email Template when not given", () => {
+    render(<EmailTemplate heading="Welcome to Pinky UI" body="Your account is ready." />);
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 
   it("keeps Magnetic Button a real button", async () => {

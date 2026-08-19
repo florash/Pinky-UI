@@ -1542,4 +1542,48 @@ export const components: RegistryEntry[] = [
     related: ["magnetic-button", "elastic-toggle"],
     skill: "ripple-button",
   },
+  {
+    slug: "email-template",
+    name: "Email Template",
+    description: "A simple transactional email body — subscription, password reset, welcome — one column, one primary action.",
+    status: "ready",
+    category: "surfaces",
+    interactions: [],
+    tags: ["email", "transactional", "template", "notification"],
+    builtOn: [],
+    importPath: 'import { EmailTemplate } from "@pinky-ui/components";',
+    usage: `<EmailTemplate
+  brand="Pinky UI"
+  eyebrow="Subscription confirmed"
+  heading="You're on the list."
+  body="We'll send the next release notes straight to this inbox — no spam, unsubscribe any time."
+  ctaLabel="Manage subscription"
+  ctaHref="#"
+  footer="Sent to you@example.com because you subscribed at pinkyui.com."
+/>`,
+    props: [
+      { name: "heading", type: "ReactNode", description: "Required. The email's one-line subject line, repeated as the body heading." },
+      { name: "body", type: "ReactNode", description: "Required. The message." },
+      { name: "brand", type: "string", description: "Shown next to the logo mark in the header." },
+      { name: "logo", type: "ReactNode", description: "Overrides the default gradient mark." },
+      { name: "eyebrow", type: "string", description: "Small label above the heading, e.g. a status word." },
+      { name: "ctaLabel", type: "string", description: "Renders the primary button when given." },
+      { name: "ctaHref", type: "string", defaultValue: '"#"', description: "Only meaningful with ctaLabel." },
+      { name: "footer", type: "ReactNode", description: "Small print below a divider — recipient address, unsubscribe line, company address." },
+    ],
+    presets: [
+      { name: "Subscription confirmation", description: "Eyebrow + CTA to manage the subscription.", props: { eyebrow: "Subscription confirmed", ctaLabel: "Manage subscription" } },
+      { name: "Password reset", description: "Time-boxed CTA, no eyebrow.", props: { heading: "Reset your password", ctaLabel: "Reset password" } },
+      { name: "Welcome", description: "No CTA — a plain first-touch note.", props: { heading: "Welcome to Pinky UI" } },
+    ],
+    accessibility: [
+      "Semantic h1 for the heading; a real <a> for the CTA, not a styled span.",
+      "This is layout only, not email-safe markup — sending it as a real email needs a table-based renderer (e.g. react-email) for Outlook/Gmail's stripped CSS support.",
+    ],
+    reducedMotion: "Static — no motion to disable.",
+    whenToUse: ["A simple transactional email: confirmation, reset, receipt, welcome"],
+    whenNotToUse: ["Marketing/newsletter layouts with multiple sections — that needs a dedicated block-based template builder, not this component"],
+    related: ["notification-card", "empty-state-card"],
+    skill: "email-template",
+  },
 ];
