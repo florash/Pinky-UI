@@ -3,6 +3,7 @@
 import {
   BorderTravel,
   BlurReveal,
+  Confetti,
   ContentSwapMotion,
   CursorSpotlight,
   DepthShift,
@@ -14,6 +15,7 @@ import {
   LinkPreview,
   LinkPreviewItem,
   LiquidLoader,
+  Marquee,
   MaskReveal,
   SiblingDim,
   SiblingDimItem,
@@ -240,6 +242,14 @@ const EFFECT_PREVIEWS: Record<string, ReactNode> = {
     </p>
   ),
   "kinetic-underline": <KineticUnderline className="text-xl">Read the note →</KineticUnderline>,
+  marquee: (
+    <Marquee speed={16} label="Studio names">
+      {["Soft Matter", "Open Forms", "Quiet Studio", "North Star", "Commons"].map((label) => (
+        <span key={label} className="shrink-0 rounded-pill border border-line bg-white px-4 py-2 text-sm text-ink-700">{label}</span>
+      ))}
+    </Marquee>
+  ),
+  confetti: <ConfettiPreview />,
 };
 
 const EXPERIENCE_ITEMS = [
@@ -706,6 +716,16 @@ function FloatingPlayerPreview() {
     <FloatingMediaPlayer label="Lesson 01" mode={mode} onModeChange={setMode}>
       <div className="grid h-20 place-items-center bg-cloud-100 text-ink-700">Host media surface</div>
     </FloatingMediaPlayer>
+  );
+}
+
+function ConfettiPreview() {
+  const [trigger, setTrigger] = useState(0);
+  return (
+    <div className="relative flex min-h-24 items-center justify-center">
+      <button type="button" onClick={() => setTrigger((count) => count + 1)} className="rounded-pill bg-ink-900 px-4 py-2 text-sm text-milk">Celebrate</button>
+      <Confetti trigger={trigger} />
+    </div>
   );
 }
 

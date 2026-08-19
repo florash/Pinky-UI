@@ -100,6 +100,8 @@ export const EXPLORE_PREVIEW_SLUGS = [
   "hover-text-reveal",
   "text-scramble",
   "kinetic-underline",
+  "marquee",
+  "confetti",
   "liquid-navbar",
   "hover-expand-navigation",
   "neighbor-shift-navigation",

@@ -81,6 +81,14 @@ export const motionEffects: EffectRegistryEntry[] = [
   entry("motion", "border-travel", "Border Travel", "One restrained border segment travels along the nearest edge."),
   entry("motion", "content-swap-motion", "Content Swap Motion", "Keyed content changes hand off with directional clipping and travel."),
   entry("motion", "sibling-dim", "Sibling Dim", "Hovering or focusing one item in a group fades the rest back."),
+  entry("motion", "marquee", "Marquee", "A self-scrolling logo wall or testimonial strip — two copies under one continuous loop, pausable on hover or focus.", "marquee", {
+    role: "canonical",
+    note: "Reduced motion drops to a plain scrollable row; `pauseOnHover` is the WCAG pause mechanism for the auto-scroll.",
+  }),
+  entry("motion", "confetti", "Confetti", "A one-shot celebration particle burst fired by incrementing a trigger count.", "confetti", {
+    role: "canonical",
+    note: "Decorative reinforcement, aria-hidden — the calling component announces the success state itself.",
+  }),
   // `shared-morph` used to be listed here. It never had an implementation or an
   // export — it was guidance for the existing `Morph` primitive. It now lives
   // where guidance belongs, in the shared Skills catalogue, so

@@ -1,10 +1,12 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { setPointerCapability, setReducedMotion } from "../../../vitest.setup";
 import { BlurReveal } from "./motion/blur-reveal";
+import { Confetti } from "./motion/confetti";
 import { LiquidLoader } from "./motion/liquid-loader";
+import { Marquee } from "./motion/marquee";
 import { MaskReveal } from "./motion/mask-reveal";
 import { SplitTextReveal } from "./text/split-text-reveal";
 import { TextScramble } from "./text/text-scramble";
@@ -249,5 +251,47 @@ describe("scroll calculations", () => {
     expect(calculateScrollProgress(900, 1_000, 1_000)).toBe(0);
     expect(calculateViewportProgress(-200, 1_000, 500)).toBeCloseTo(0.4);
     expect(calculateViewportProgress(900, 1_000, 500)).toBe(0);
+  });
+});
+
+describe("marquee", () => {
+  afterEach(() => setReducedMotion(false));
+
+  it("renders two copies of the content for a seamless loop, the second hidden from assistive tech", () => {
+    render(
+      <Marquee label="Studio names">
+        <span>Soft Matter</span>
+      </Marquee>,
+    );
+    const copies = screen.getAllByText("Soft Matter");
+    expect(copies).toHaveLength(2);
+    expect(copies[1]!.closest('[aria-hidden="true"]')).toBeTruthy();
+  });
+
+  it("falls back to a plain scrollable row under reduced motion", () => {
+    setReducedMotion(true);
+    render(
+      <Marquee label="Studio names">
+        <span>Soft Matter</span>
+      </Marquee>,
+    );
+    expect(screen.getAllByText("Soft Matter")).toHaveLength(1);
+  });
+});
+
+describe("confetti", () => {
+  afterEach(() => setReducedMotion(false));
+
+  it("renders nothing until trigger increments past its initial value", () => {
+    const { container, rerender } = render(<Confetti trigger={0} />);
+    expect(container).toBeEmptyDOMElement();
+    rerender(<Confetti trigger={1} />);
+    expect(container.querySelector('[aria-hidden="true"]')).toBeTruthy();
+  });
+
+  it("stays inert under reduced motion even when triggered", () => {
+    setReducedMotion(true);
+    const { container } = render(<Confetti trigger={1} />);
+    expect(container).toBeEmptyDOMElement();
   });
 });
