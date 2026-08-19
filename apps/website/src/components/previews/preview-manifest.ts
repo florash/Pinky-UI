@@ -33,6 +33,7 @@ export const COMPONENT_PREVIEW_SLUGS = [
   "elastic-toggle",
   "pill-nav",
   "email-template",
+  "flip-digits",
 ] as const;
 
 export const LAYOUT_PREVIEW_SLUGS = [

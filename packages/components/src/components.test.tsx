@@ -7,6 +7,7 @@ import { GlowBorder } from "./effects/glow-border";
 import { JellyCard } from "./cards/jelly-card";
 import { MagneticButton } from "./buttons/magnetic-button";
 import { EmailTemplate } from "./surfaces/email-template";
+import { FlipDigits } from "./surfaces/flip-digits";
 
 describe("signature components", () => {
   it("render their content", () => {
@@ -40,6 +41,17 @@ describe("signature components", () => {
   it("omits the CTA and footer for Email Template when not given", () => {
     render(<EmailTemplate heading="Welcome to Pinky UI" body="Your account is ready." />);
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
+  });
+
+  it("hides Flip Digits' rolling strip from assistive tech and announces the settled value once", () => {
+    const { container } = render(<FlipDigits value={1249} label="Members" />);
+    expect(screen.getByText("Members: 1249")).toBeInTheDocument();
+    expect(container.querySelector('[aria-hidden="true"]')).toBeTruthy();
+  });
+
+  it("rolls only the digit characters of a Flip Digits string value, passing separators through", () => {
+    render(<FlipDigits value="00:12:45" label="Time remaining" />);
+    expect(screen.getByText("Time remaining: 00:12:45")).toBeInTheDocument();
   });
 
   it("keeps Magnetic Button a real button", async () => {
@@ -104,6 +116,12 @@ describe("reduced motion", () => {
     );
 
     expect(screen.getByText("Content survives")).toBeInTheDocument();
+  });
+
+  it("still announces Flip Digits' value with no roll", () => {
+    setReducedMotion(true);
+    render(<FlipDigits value={7} label="Count" />);
+    expect(screen.getByText("Count: 7")).toBeInTheDocument();
   });
 
   it("leaves the Magnetic Button untransformed", () => {

@@ -6,6 +6,7 @@ import {
   ElasticToggle,
   EmailTemplate,
   EmptyStateCard,
+  FlipDigits,
   ExpandCard,
   FlipCard,
   FloatingDock,
@@ -81,6 +82,7 @@ export const COMPONENT_PREVIEWS: Record<string, ReactNode> = {
   "floating-dock": <FloatingDockPreview />,
   "elastic-toggle": <ElasticTogglePreview />,
   "email-template": <EmailTemplatePreview />,
+  "flip-digits": <FlipDigitsPreview />,
 };
 
 export function ComponentPreview({ slug }: { slug: string }) {
@@ -697,6 +699,36 @@ function EmailTemplatePreview() {
         ))}
       </div>
       <EmailTemplate brand="Pinky UI" {...active.props} />
+    </div>
+  );
+}
+
+function FlipDigitsPreview() {
+  const [stat, setStat] = useState(1249);
+  const [seconds, setSeconds] = useState(45);
+
+  return (
+    <div className="flex flex-col items-center gap-6">
+      <div className="flex flex-col items-center gap-2">
+        <FlipDigits value={stat} size="lg" label="Members" />
+        <button
+          type="button"
+          onClick={() => setStat(100 + Math.floor(Math.random() * 9000))}
+          className="min-h-8 rounded-pill border border-line px-3 text-xs text-ink-700"
+        >
+          Randomize
+        </button>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <FlipDigits value={`00:${String(seconds).padStart(2, "0")}`} size="md" label="Time remaining" />
+        <button
+          type="button"
+          onClick={() => setSeconds((current) => Math.max(0, current - 1))}
+          className="min-h-8 rounded-pill border border-line px-3 text-xs text-ink-700"
+        >
+          Tick down
+        </button>
+      </div>
     </div>
   );
 }
