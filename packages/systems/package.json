@@ -27,7 +27,7 @@
   "dependencies": {
     "@pinky-ui/primitives": "0.1.0"
   },
-  "peerDependencies": { "motion": ">=12", "react": ">=19" },
+  "peerDependencies": { "motion": ">=12", "react": ">=19", "react-dom": ">=19" },
   "sideEffects": false,
   "publishConfig": { "access": "public" }
 }
