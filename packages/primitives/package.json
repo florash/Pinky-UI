@@ -26,7 +26,8 @@
   },
   "peerDependencies": {
     "motion": ">=12",
-    "react": ">=19"
+    "react": ">=19",
+    "react-dom": ">=19"
   },
   "sideEffects": false,
   "publishConfig": { "access": "public" }

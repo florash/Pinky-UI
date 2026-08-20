@@ -10,6 +10,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 
 import { useMotionEnabled } from "../internal/use-motion-enabled";
 import { springs } from "../spring/springs";
@@ -62,6 +63,10 @@ export function Morph({
   const motionEnabled = useMotionEnabled();
   const [uncontrolled, setUncontrolled] = useState(false);
   const open = controlledOpen ?? uncontrolled;
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -96,14 +101,16 @@ export function Morph({
   }, [open, setOpen]);
 
   // Focus moves into the panel on open and back to the trigger on close.
+  // Gated on `mounted` too: the panel only exists in the DOM once the portal
+  // has mounted, which happens one render after `open` first flips true.
   useEffect(() => {
-    if (!open) return;
+    if (!open || !mounted) return;
     const panel = panelRef.current;
     if (!panel) return;
 
     const first = panel.querySelector<HTMLElement>(FOCUSABLE);
     (first ?? panel).focus();
-  }, [open]);
+  }, [open, mounted]);
 
   const trapTab = useCallback((event: ReactKeyboardEvent<HTMLDivElement>) => {
     if (event.key !== "Tab") return;
@@ -152,36 +159,50 @@ export function Morph({
         {children}
       </motion.button>
 
-      <AnimatePresence onExitComplete={() => triggerRef.current?.focus()}>
-        {open ? (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8">
-            <motion.div
-              aria-hidden
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: motionEnabled ? 0.25 : 0 }}
-              onClick={() => setOpen(false)}
-              className="absolute inset-0 bg-[rgba(37,41,51,0.28)]"
-            />
+      {/*
+        Portalled to document.body: a `position: fixed` descendant of any
+        ancestor with a non-none filter/backdrop-filter/transform (e.g. a
+        scrolled header that gains backdrop-blur) becomes fixed relative to
+        that ancestor instead of the viewport, breaking the panel's position
+        and making its backdrop miss "click outside" entirely. Portalling
+        out of the caller's subtree sidesteps that regardless of what any
+        future ancestor does.
+      */}
+      {mounted
+        ? createPortal(
+            <AnimatePresence onExitComplete={() => triggerRef.current?.focus()}>
+              {open ? (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8">
+                  <motion.div
+                    aria-hidden
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: motionEnabled ? 0.25 : 0 }}
+                    onClick={() => setOpen(false)}
+                    className="absolute inset-0 bg-[rgba(37,41,51,0.28)]"
+                  />
 
-            <motion.div
-              ref={panelRef}
-              role="dialog"
-              aria-modal="true"
-              aria-label={label}
-              tabIndex={-1}
-              onKeyDown={trapTab}
-              {...layout}
-              transition={transition}
-              style={{ maxWidth, width: "100%" }}
-              className={`relative z-10 ${expandedClassName ?? ""}`}
-            >
-              {expanded}
-            </motion.div>
-          </div>
-        ) : null}
-      </AnimatePresence>
+                  <motion.div
+                    ref={panelRef}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label={label}
+                    tabIndex={-1}
+                    onKeyDown={trapTab}
+                    {...layout}
+                    transition={transition}
+                    style={{ maxWidth, width: "100%" }}
+                    className={`relative z-10 ${expandedClassName ?? ""}`}
+                  >
+                    {expanded}
+                  </motion.div>
+                </div>
+              ) : null}
+            </AnimatePresence>,
+            document.body,
+          )
+        : null}
     </>
   );
 }

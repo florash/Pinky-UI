@@ -58,6 +58,17 @@ describe("MorphCard", () => {
     expect(trigger).toHaveFocus();
   });
 
+  it("portals the dialog to document.body, so a filtered ancestor can't break its position", async () => {
+    const user = userEvent.setup();
+    const { container } = renderCard();
+
+    await user.click(screen.getByRole("button", { name: "Mira Odaka" }));
+
+    const dialog = screen.getByRole("dialog");
+    expect(container.contains(dialog)).toBe(false);
+    expect(dialog.closest("body")).toBe(document.body);
+  });
+
   it("moves focus into the panel when it opens", async () => {
     const user = userEvent.setup();
     renderCard();
