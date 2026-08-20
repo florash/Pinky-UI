@@ -32,6 +32,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: "/overlays", label: "Overlays", description: "Tooltips, dialogs and anchored contextual surfaces." },
       { href: "/forms", label: "Forms", description: "Fields and selectors that keep their context." },
       { href: "/data", label: "Data", description: "Charts and rows that stay inspectable while they move." },
+      { href: "/components/email-template", label: "Surfaces", description: "Email templates and a departures-board number roll." },
     ],
   },
   {
