@@ -6,7 +6,7 @@ import { setReducedMotion } from "../../../vitest.setup";
 import { GlowBorder } from "./effects/glow-border";
 import { JellyCard } from "./cards/jelly-card";
 import { MagneticButton } from "./buttons/magnetic-button";
-import { EmailTemplate } from "./surfaces/email-template";
+import { EmailTemplate, emailTemplateHtml } from "./surfaces/email-template";
 import { FlipDigits } from "./surfaces/flip-digits";
 
 describe("signature components", () => {
@@ -41,6 +41,29 @@ describe("signature components", () => {
   it("omits the CTA and footer for Email Template when not given", () => {
     render(<EmailTemplate heading="Welcome to Pinky UI" body="Your account is ready." />);
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
+  });
+
+  it("renders emailTemplateHtml as a table-based document with escaped content and a real href", () => {
+    const html = emailTemplateHtml({
+      brand: "Pinky UI",
+      eyebrow: "Order confirmed",
+      heading: "Order <#4821> is on its way",
+      body: "Track it & we'll email you.",
+      ctaLabel: "View order",
+      ctaHref: "https://pinkyui.com/orders/4821",
+      footer: "Sent to you@example.com.",
+    });
+    expect(html).toContain("<table");
+    expect(html).toContain('style="');
+    expect(html).not.toMatch(/display:\s*flex|display:\s*grid/);
+    expect(html).toContain("Order &lt;#4821&gt; is on its way");
+    expect(html).toContain('href="https://pinkyui.com/orders/4821"');
+    expect(html).toContain(">View order<");
+  });
+
+  it("omits emailTemplateHtml's optional blocks when not given", () => {
+    const html = emailTemplateHtml({ heading: "Welcome", body: "Your account is ready." });
+    expect(html).not.toContain("<a ");
   });
 
   it("hides Flip Digits' rolling strip from assistive tech and announces the settled value once", () => {

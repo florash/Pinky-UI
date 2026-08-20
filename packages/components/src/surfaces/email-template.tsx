@@ -48,3 +48,64 @@ export function EmailTemplate({ brand, logo, eyebrow, heading, body, ctaLabel, c
     </div>
   );
 }
+
+export type EmailTemplateHtmlProps = {
+  brand?: string;
+  eyebrow?: string;
+  heading: string;
+  body: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  footer?: string;
+};
+
+function escapeHtml(value: string): string {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+/**
+ * Renders the same content as `<EmailTemplate>` as real email-safe HTML —
+ * a table layout with every style inlined, no external stylesheet, no
+ * flexbox/grid — so it can actually go through a transactional email
+ * provider, not just preview on the site. Takes plain strings rather than
+ * `EmailTemplateProps`' `ReactNode` fields, since arbitrary JSX has no
+ * general email-safe serialization.
+ */
+export function emailTemplateHtml({ brand, eyebrow, heading, body, ctaLabel, ctaHref = "#", footer }: EmailTemplateHtmlProps): string {
+  const safe = {
+    brand: brand ? escapeHtml(brand) : "",
+    eyebrow: eyebrow ? escapeHtml(eyebrow) : "",
+    heading: escapeHtml(heading),
+    body: escapeHtml(body),
+    ctaLabel: ctaLabel ? escapeHtml(ctaLabel) : "",
+    footer: footer ? escapeHtml(footer) : "",
+  };
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>${safe.heading}</title>
+</head>
+<body style="margin:0;padding:0;background:#fdfbf8;font-family:Arial,Helvetica,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 16px;">
+<table role="presentation" width="420" cellpadding="0" cellspacing="0" style="width:100%;max-width:420px;background:#ffffff;border:1px solid #e6e2dd;border-radius:20px;overflow:hidden;">
+<tr><td style="padding:20px 24px;background:#eaf6fd;">
+<table role="presentation" cellpadding="0" cellspacing="0"><tr>
+<td style="width:24px;height:24px;border-radius:50%;background:#f4c7d7;font-size:0;line-height:0;">&nbsp;</td>
+<td style="padding-left:8px;font-size:14px;font-weight:600;color:#252933;">${safe.brand}</td>
+</tr></table>
+</td></tr>
+<tr><td style="padding:28px 24px;">
+${safe.eyebrow ? `<p style="margin:0 0 8px;font-family:monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#7b8492;">${safe.eyebrow}</p>` : ""}
+<h1 style="margin:0;font-size:20px;line-height:1.3;color:#252933;">${safe.heading}</h1>
+<p style="margin:12px 0 0;font-size:14px;line-height:1.6;color:#4b5563;">${safe.body}</p>
+${safe.ctaLabel ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:24px;"><tr><td style="border-radius:999px;background:#252933;"><a href="${ctaHref}" style="display:inline-block;padding:10px 20px;font-size:14px;font-weight:600;color:#ffffff;text-decoration:none;">${safe.ctaLabel}</a></td></tr></table>` : ""}
+</td></tr>
+${safe.footer ? `<tr><td style="padding:16px 24px;border-top:1px solid #e6e2dd;font-size:12px;line-height:1.6;color:#7b8492;">${safe.footer}</td></tr>` : ""}
+</table>
+</td></tr></table>
+</body>
+</html>`;
+}

@@ -46,7 +46,7 @@ export { TrailToggle, type TrailToggleProps } from "./controls/trail-toggle";
 /* Menu triggers — eight constructions sharing state and semantics, nothing else. */
 export * from "./menu-triggers";
 export { GlowBorder, type GlowBorderProps } from "./effects/glow-border";
-export { EmailTemplate, type EmailTemplateProps } from "./surfaces/email-template";
+export { EmailTemplate, emailTemplateHtml, type EmailTemplateHtmlProps, type EmailTemplateProps } from "./surfaces/email-template";
 export { FlipDigits, type FlipDigitsProps } from "./surfaces/flip-digits";
 export { FluidTabs, type FluidTabsProps, type FluidTabItem } from "./navigation/fluid-tabs";
 export { PillNav, type PillNavProps, type PillNavItem } from "./navigation/pill-nav";

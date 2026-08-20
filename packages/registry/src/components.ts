@@ -1577,10 +1577,12 @@ export const components: RegistryEntry[] = [
       { name: "Welcome", description: "No CTA — a plain first-touch note.", props: { heading: "Welcome to Pinky UI" } },
       { name: "Order confirmation", description: "Eyebrow + order reference, CTA to the order detail.", props: { eyebrow: "Order confirmed", ctaLabel: "View order" } },
       { name: "Security alert", description: "A new-device sign-in notice with a CTA to review activity.", props: { eyebrow: "New sign-in detected", ctaLabel: "Review activity" } },
+      { name: "Payment failed", description: "A billing notice with a CTA to fix the payment method.", props: { eyebrow: "Payment unsuccessful", ctaLabel: "Update payment method" } },
+      { name: "Workspace invite", description: "A collaboration invite naming who invited them and their role.", props: { eyebrow: "Workspace invitation", ctaLabel: "Join workspace" } },
     ],
     accessibility: [
       "Semantic h1 for the heading; a real <a> for the CTA, not a styled span.",
-      "This is layout only, not email-safe markup — sending it as a real email needs a table-based renderer (e.g. react-email) for Outlook/Gmail's stripped CSS support.",
+      "The React component itself is layout only, not email-safe markup (no table structure, no inlined styles) — it's for previewing on the site. The separate emailTemplateHtml() export renders the same content as a real table-based, inline-styled HTML document for sending through a transactional provider; it takes plain strings, not the component's ReactNode fields.",
     ],
     reducedMotion: "Static — no motion to disable.",
     whenToUse: ["A simple transactional email: confirmation, reset, receipt, welcome"],

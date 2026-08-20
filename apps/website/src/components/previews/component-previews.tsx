@@ -5,6 +5,7 @@ import {
   BorderBeamCard,
   ElasticToggle,
   EmailTemplate,
+  emailTemplateHtml,
   EmptyStateCard,
   FlipDigits,
   ExpandCard,
@@ -38,6 +39,8 @@ import {
   ZoomCard,
 } from "@pinky-ui/components";
 import { useState, type ReactNode } from "react";
+
+import { CodeBlock } from "@/components/site/code-block";
 
 import { SOFT_MEDIA_SOURCES } from "./soft-surface";
 
@@ -700,14 +703,37 @@ const EMAIL_TEMPLATE_VARIANTS = [
       footer: "Sent to you@example.com. Wasn't you? Secure your account immediately.",
     },
   },
+  {
+    id: "payment",
+    label: "Payment failed",
+    props: {
+      eyebrow: "Payment unsuccessful",
+      heading: "Your payment needs attention.",
+      body: "We couldn't process your latest subscription payment. Update your payment method to keep your Pro workspace active.",
+      ctaLabel: "Update payment method",
+      footer: "You're receiving this service email because you have a Pinky UI account.",
+    },
+  },
+  {
+    id: "invite",
+    label: "Workspace invite",
+    props: {
+      eyebrow: "Workspace invitation",
+      heading: "Mia invited you to join Atlas Studio.",
+      body: "You've been invited to a shared workspace where your team can build, review and ship together.",
+      ctaLabel: "Join workspace",
+      footer: "You received this email because Mia Chen invited you to a Pinky UI workspace.",
+    },
+  },
 ] as const;
 
 function EmailTemplatePreview() {
   const [variant, setVariant] = useState<(typeof EMAIL_TEMPLATE_VARIANTS)[number]["id"]>("subscription");
+  const [showHtml, setShowHtml] = useState(false);
   const active = EMAIL_TEMPLATE_VARIANTS.find((item) => item.id === variant) ?? EMAIL_TEMPLATE_VARIANTS[0];
   return (
     <div className="space-y-4">
-      <div className="flex justify-center gap-1.5">
+      <div className="flex flex-wrap justify-center gap-1.5">
         {EMAIL_TEMPLATE_VARIANTS.map((item) => (
           <button
             key={item.id}
@@ -721,6 +747,18 @@ function EmailTemplatePreview() {
         ))}
       </div>
       <EmailTemplate brand="Pinky UI" {...active.props} />
+      <div className="flex justify-center">
+        <button
+          type="button"
+          onClick={() => setShowHtml((current) => !current)}
+          className="text-xs text-ink-700 underline decoration-line-strong underline-offset-4"
+        >
+          {showHtml ? "Hide" : "View"} email-safe HTML
+        </button>
+      </div>
+      {showHtml ? (
+        <CodeBlock code={emailTemplateHtml({ brand: "Pinky UI", ...active.props })} language="html" label="Email-safe HTML" />
+      ) : null}
     </div>
   );
 }
