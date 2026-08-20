@@ -26,6 +26,7 @@ export const INTERACTIONS = [
   "depth",
   "elastic",
   "proximity",
+  "flip",
 ] as const;
 
 export type Interaction = (typeof INTERACTIONS)[number];
