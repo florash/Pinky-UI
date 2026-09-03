@@ -34,10 +34,9 @@ export function normalizeSiteUrl(value?: string) {
 /** Single place for site-wide constants. */
 export const SITE = {
   name: "Pinky UI",
-  tagline: "Soft, fluid and interactive React components for modern interfaces.",
+  tagline: "A React library for interactive motion.",
   description:
-    "Open-source React components and motion primitives for tactile, fluid interfaces and thoughtful interaction design.",
-  short: "UI that likes to move.",
+    "A React library for interactive motion — 75 components, layouts and primitives, each with a live preview and an import path.",
   github: "https://github.com/florash/Pinky-UI",
   /** Set NEXT_PUBLIC_SITE_URL in the deployment environment; localhost is local-only fallback. */
   url: normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),

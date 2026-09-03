@@ -32,19 +32,19 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   applicationName: SITE.name,
   title: {
-    default: "Pinky UI — Soft, fluid and interactive React components",
+    default: "Pinky UI — A React library for interactive motion",
     template: "%s — Pinky UI",
   },
   description,
   openGraph: {
-    title: "Pinky UI — Soft, fluid and interactive React components",
+    title: "Pinky UI — A React library for interactive motion",
     description,
     siteName: SITE.name,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pinky UI — Soft, fluid and interactive React components",
+    title: "Pinky UI — A React library for interactive motion",
     description,
   },
 };

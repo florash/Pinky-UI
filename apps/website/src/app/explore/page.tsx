@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import { DiscoveryBrowser } from "@/components/explore/discovery-browser";
+import { DiscoveryBrowserSkeleton } from "@/components/explore/discovery-browser-skeleton";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata(
@@ -10,9 +11,12 @@ export const metadata: Metadata = pageMetadata(
   "/explore",
 );
 
+// Not <main>: the root layout already wraps every page in one
+// <main id="main"> — nesting a second here made two elements share the
+// same id, so the header's skip-link target became ambiguous.
 export default function ExplorePage() {
   return (
-    <main id="main">
+    <div>
       <header className="mx-auto max-w-[76rem] px-5 pt-10 pb-2 sm:px-8 sm:pt-14">
         <p className="font-mono text-[0.6875rem] tracking-[0.18em] text-ink-500 uppercase">
           Explore · curated reference
@@ -25,9 +29,9 @@ export default function ExplorePage() {
           organised by the way an interaction behaves.
         </p>
       </header>
-      <Suspense fallback={null}>
+      <Suspense fallback={<DiscoveryBrowserSkeleton />}>
         <DiscoveryBrowser />
       </Suspense>
-    </main>
+    </div>
   );
 }

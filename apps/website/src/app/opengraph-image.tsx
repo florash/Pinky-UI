@@ -62,12 +62,12 @@ export default function OpengraphImage() {
         </div>
         <div style={{ display: "flex", marginTop: 48 }}>
           <span style={{ fontSize: 84, fontWeight: 700, color: "#252933", letterSpacing: "-0.02em", lineHeight: 1.05 }}>
-            UI that likes to move.
+            A React library for interactive motion.
           </span>
         </div>
         <div style={{ display: "flex", marginTop: 28 }}>
           <span style={{ fontSize: 28, color: "#7b8492" }}>
-            An open-source React interaction system — real UI, already moving.
+            75 building blocks — every one has a live preview and an import path.
           </span>
         </div>
       </div>

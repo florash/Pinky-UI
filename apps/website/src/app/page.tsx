@@ -9,7 +9,7 @@ import { SkillsTeaser } from "@/components/home/skills-teaser";
 import { pageMetadata, SITE } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata(
-  "Pinky UI — Soft, fluid and interactive React components",
+  "Pinky UI — A React library for interactive motion",
   SITE.description,
   "/",
   { absoluteTitle: true },

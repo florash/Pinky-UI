@@ -28,7 +28,10 @@
 
   --color-ink-900: #252933;
   --color-ink-700: #505865;
-  --color-ink-500: #7b8492;
+  /* Darkened from #7b8492 (2026-09) — that value failed WCAG AA (3.0-3.8:1
+     depending on background tint) everywhere it's used for small mono
+     labels sitewide. This clears 4.5:1 even against the pinkest blush tint. */
+  --color-ink-500: #5c636e;
 
   --color-line: rgba(70, 90, 115, 0.1);
   --color-line-strong: rgba(70, 90, 115, 0.18);
