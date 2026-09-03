@@ -115,6 +115,13 @@ export function LiquidNavbar({
         ref={listRef}
         className="relative flex max-w-full items-center gap-1 overflow-x-auto rounded-[999px] border border-[color:var(--color-line,rgba(70,90,115,.1))] bg-[color:color-mix(in_oklab,var(--color-white,#fff)_82%,transparent)] p-1.5"
       >
+        {/*
+          width still animates to real per-item pixel widths (labels vary in
+          length) — scaleX already carries the elastic travel stretch, and
+          stacking the base sizing onto scaleX too would compound into visible
+          corner distortion on this rounded-[999px] pill instead of a clean
+          resize. x/scaleX/skewX are transform already.
+        */}
         {slot ? (
           <motion.span
             aria-hidden

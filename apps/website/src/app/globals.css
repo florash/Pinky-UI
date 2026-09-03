@@ -148,6 +148,21 @@
   --pinky-halo-b: rgba(200, 228, 247, 0.75);
 }
 
+/*
+ * The shared grid for catalogue-style card walls (the Components gallery,
+ * Explore's browse grid) — not the homepage's editorial sections
+ * (Featured/Signature Interactions), which are deliberately asymmetric and
+ * opt out of this system on purpose. A 12-column track, one fixed gap, and
+ * three card-height tiers so a catalogue page reads as one grid instead of
+ * each card negotiating its own spacing and proportions.
+ */
+:root {
+  --pinky-grid-gap: 1.5rem; /* 24px, every catalogue grid's gap — not overridden locally */
+  --pinky-card-h-sm: 10rem; /* 160px */
+  --pinky-card-h-md: 15rem; /* 240px */
+  --pinky-card-h-lg: 22.5rem; /* 360px */
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;

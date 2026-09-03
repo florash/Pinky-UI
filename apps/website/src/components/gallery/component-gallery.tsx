@@ -66,11 +66,11 @@ export function ComponentGallery() {
           Nothing matches that yet. Try a different interaction.
         </p>
       ) : (
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 grid grid-cols-1 gap-[var(--pinky-grid-gap)] sm:grid-cols-12">
           {results.map((entry) => (
             <article
               key={entry.slug}
-              className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-white/80 transition-[transform,box-shadow] duration-500 ease-[var(--ease-soft)] hover:shadow-soft focus-within:shadow-lift active:translate-y-px"
+              className="group relative col-span-1 flex flex-col overflow-hidden rounded-xl border border-line bg-white/80 transition-[transform,box-shadow] duration-500 ease-[var(--ease-soft)] hover:shadow-soft focus-within:shadow-lift active:translate-y-px sm:col-span-6 lg:col-span-4"
             >
               {/*
                 A stretched link, not a card-wide <Link>: the preview below
@@ -87,12 +87,12 @@ export function ComponentGallery() {
               >
                 <span className="sr-only">{entry.name}</span>
               </Link>
-              <div className="relative z-10 flex h-52 items-center justify-center overflow-hidden border-b border-line bg-milk/50 p-6">
+              <div className="relative z-10 flex h-[var(--pinky-card-h-md)] items-center justify-center overflow-hidden border-b border-line bg-milk/50 p-6">
                 <ComponentPreview slug={entry.slug} />
               </div>
               <div className="flex flex-1 flex-col p-5">
                 <h2 className="font-display text-base font-semibold tracking-tight">{entry.name}</h2>
-                <p className="mt-1.5 text-sm leading-relaxed text-ink-700">{entry.description}</p>
+                <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-ink-700">{entry.description}</p>
                 <ul className="mt-4 flex flex-wrap gap-1.5">
                   {entry.interactions.map((tag) => (
                     <li

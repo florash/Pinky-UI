@@ -20,13 +20,25 @@ export function Hero() {
 
       <Container className="relative">
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-10">
-          <div className="max-w-xl">
-            <p className="flex items-center gap-2.5 font-mono text-[0.6875rem] tracking-[0.2em] text-ink-500 uppercase">
-              <span className="size-1.5 rounded-pill bg-blush-300" />
-              Pinky UI
-              <span className="h-px flex-1 bg-line" />
-              v0.1
-              <span className="normal-case text-ink-400">Source available · npm coming soon</span>
+          {/*
+            min-w-0: a grid item's default min-width is "auto" (its content's
+            intrinsic width), so without this the CodeBlock below — a single
+            un-wrapped `git clone` line — pushes this column wider than the
+            viewport on narrow screens instead of letting the code scroll
+            inside its own box.
+          */}
+          <div className="min-w-0 max-w-xl">
+            <p className="flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-[0.6875rem] tracking-[0.2em] text-ink-500 uppercase">
+              <span className="size-1.5 shrink-0 rounded-pill bg-blush-300" />
+              <span className="whitespace-nowrap">Pinky UI</span>
+              <span className="h-px min-w-4 flex-1 bg-line" />
+              <span className="whitespace-nowrap">v0.1</span>
+              {/*
+                w-full: on a row too narrow for all five pieces, flex-wrap
+                drops this note alone onto its own line instead of squeezing
+                every item down until "Pinky UI" itself wraps mid-word.
+              */}
+              <span className="w-full normal-case text-ink-400 sm:w-auto">Source available · npm coming soon</span>
             </p>
 
             {/*

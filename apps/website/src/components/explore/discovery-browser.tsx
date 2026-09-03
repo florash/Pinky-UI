@@ -328,8 +328,8 @@ export function DiscoveryBrowser() {
                   </div>
 
                   {curatedView ? (
-                    <div className="mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
-                      {displayedItems.map((item) => <DiscoveryCard key={`${item.group}-${item.slug}`} item={item} className="w-[82vw] shrink-0 snap-start sm:w-auto" />)}
+                    <div className="mt-6 flex snap-x snap-mandatory gap-[var(--pinky-grid-gap)] overflow-x-auto pb-3 sm:grid sm:grid-cols-12 sm:overflow-visible sm:pb-0">
+                      {displayedItems.map((item) => <DiscoveryCard key={`${item.group}-${item.slug}`} item={item} className="w-[82vw] shrink-0 snap-start sm:col-span-6 sm:w-auto lg:col-span-3" />)}
                     </div>
                   ) : <div className="mt-9 space-y-12">
                     {families.map((family) => {
@@ -341,8 +341,8 @@ export function DiscoveryBrowser() {
                             <span className="h-px flex-1 bg-line" />
                             <span className="font-mono text-[0.625rem] text-ink-500">{familyItems.length}</span>
                           </div>
-                          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                            {familyItems.map((item) => <DiscoveryCard key={`${item.group}-${item.slug}`} item={item} />)}
+                          <div className="mt-4 grid grid-cols-1 gap-[var(--pinky-grid-gap)] sm:grid-cols-12">
+                            {familyItems.map((item) => <DiscoveryCard key={`${item.group}-${item.slug}`} item={item} className="sm:col-span-6 lg:col-span-4" />)}
                           </div>
                         </div>
                       );
@@ -373,12 +373,12 @@ function ExperimentalShelf({ items }: { items: DiscoveryItem[] }) {
         <Link href="/controls" className="text-sm font-medium text-ink-700 underline decoration-line-strong underline-offset-4">Open the full Menu Trigger wall</Link>
       </div>
 
-      <div className={cn("mt-8 grid gap-4", visibleItems.length > 0 && "lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.9fr)]")}>
+      <div className={cn("mt-8 grid gap-[var(--pinky-grid-gap)]", visibleItems.length > 0 && "lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.9fr)]")}>
         <div className="rounded-[24px] border border-line bg-white/70 p-5 shadow-soft">
           <p className="font-mono text-[0.625rem] tracking-[0.15em] text-ink-500 uppercase">Menu Trigger sampler</p>
           <div className="mt-5"><HomeMenuTriggerSampler idPrefix="explore-experimental-menu" /></div>
         </div>
-        {visibleItems.length > 0 ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{visibleItems.map((item) => <DiscoveryCard key={item.slug} item={item} experimental />)}</div> : null}
+        {visibleItems.length > 0 ? <div className="grid grid-cols-1 gap-[var(--pinky-grid-gap)] sm:grid-cols-12">{visibleItems.map((item) => <DiscoveryCard key={item.slug} item={item} experimental className="sm:col-span-6 lg:col-span-4" />)}</div> : null}
       </div>
     </section>
   );
@@ -389,8 +389,8 @@ function DiscoveryCard({ item, experimental = false, className }: { item: Discov
   return (
     <article className={cn("group flex min-w-0 flex-col overflow-hidden rounded-[22px] border border-line bg-white/75 shadow-soft transition-shadow duration-500 ease-[var(--ease-soft)] hover:shadow-lift", className)}>
       {livePreview ? (
-        <LazyMount minHeight={176} className="bg-cloud-50/50">
-          <div className="grid min-h-44 place-items-center overflow-hidden bg-[radial-gradient(120%_90%_at_30%_0%,var(--color-blush-50),transparent_70%)] p-5">
+        <LazyMount minHeight={240} className="bg-cloud-50/50">
+          <div className="grid h-[var(--pinky-card-h-md)] place-items-center overflow-hidden bg-[radial-gradient(120%_90%_at_30%_0%,var(--color-blush-50),transparent_70%)] p-5">
             <div className="w-full origin-center scale-[0.86] [&_*]:max-w-full"><ExplorePreview slug={item.slug} /></div>
           </div>
         </LazyMount>
@@ -415,7 +415,7 @@ function DiscoveryCard({ item, experimental = false, className }: { item: Discov
         <h4 className="mt-2 text-lg">
           <Link href={item.href} className="rounded-sm outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ink-900">{item.name}</Link>
         </h4>
-        <p className="mt-2 text-sm leading-relaxed text-ink-700">{item.description}</p>
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-700">{item.description}</p>
       </div>
     </article>
   );

@@ -8,52 +8,50 @@
  * page) layered over routes that keep their existing URLs.
  */
 
-export type NavLeaf = { href: string; label: string; description?: string };
+export type NavLeaf = { href: string; label: string; description?: string; section?: string };
 
 export type NavGroup = {
   /** The L1 destination itself — its own overview page. */
   href: string;
   label: string;
-  /** L2 sections shown in the dropdown and on the L1 overview page. */
+  /**
+   * L2 sections shown in the dropdown and on the L1 overview page. When two
+   * or more children share a `section`, the dropdown groups them under that
+   * label instead of listing everything flat — used where an L1 now covers
+   * more than one former taxonomy branch (Components+Layouts, Docs+AI+Skills).
+   */
   children: NavLeaf[];
 };
 
 /**
  * L1 destinations, left to right. Explore has no dropdown — it is the
  * cross-cutting search/filter surface, not a taxonomy branch.
+ *
+ * Four groups, each answerable in one sentence: Components is what you drop
+ * into a UI (pieces and the ways to arrange them); Experiences is page- and
+ * site-level interaction; Mobile is the small-screen platform surface; Docs
+ * is everything written about the library, including the AI-pattern guide.
+ * Previously eight L1 entries (Components/AI/Layouts/Experiences/Mobile/
+ * Skills/Docs, plus Explore) mixed three different axes — component type,
+ * platform, and abstraction level — with no consistent way to guess which
+ * bucket a given page lived in.
  */
 export const NAV_GROUPS: NavGroup[] = [
   {
     href: "/components",
     label: "Components",
     children: [
-      { href: "/components", label: "Overview", description: "Small pieces with an immediate physical response." },
-      { href: "/controls", label: "Controls", description: "Toggles and menu triggers with tactile depth." },
-      { href: "/overlays", label: "Overlays", description: "Tooltips, dialogs and anchored contextual surfaces." },
-      { href: "/forms", label: "Forms", description: "Fields and selectors that keep their context." },
-      { href: "/data", label: "Data", description: "Charts and rows that stay inspectable while they move." },
-      { href: "/components/email-template", label: "Surfaces", description: "Email templates and a departures-board number roll." },
-    ],
-  },
-  {
-    href: "/ai",
-    label: "AI",
-    children: [
-      { href: "/ai", label: "Overview", description: "Motion-first building blocks for chat and agent products." },
-      { href: "/ai#streaming", label: "Streaming", description: "Token-by-token text and a Stop/Regenerate morph." },
-      { href: "/ai#composer", label: "Composer", description: "A prompt field with attachments and slash commands." },
-      { href: "/ai#structure", label: "Structure", description: "Message bubbles, thinking panels and tool calls." },
-    ],
-  },
-  {
-    href: "/layouts",
-    label: "Layouts",
-    children: [
-      { href: "/layouts", label: "Overview", description: "Arrangements for a collection with a point of view." },
-      { href: "/collections", label: "Collections", description: "Stacks, grids and galleries built for volume." },
-      { href: "/media", label: "Media", description: "Inspection and comparison for photos and video." },
-      { href: "/layouts?family=editorial", label: "Editorial", description: "Rhythm and whitespace as part of the interface." },
-      { href: "/layouts?family=spatial", label: "Spatial", description: "Depth experiments in CSS 3D, kept deliberately later." },
+      { href: "/components", label: "Overview", section: "Components", description: "Small pieces with an immediate physical response." },
+      { href: "/controls", label: "Controls", section: "Components", description: "Toggles and menu triggers with tactile depth." },
+      { href: "/overlays", label: "Overlays", section: "Components", description: "Tooltips, dialogs and anchored contextual surfaces." },
+      { href: "/forms", label: "Forms", section: "Components", description: "Fields and selectors that keep their context." },
+      { href: "/data", label: "Data", section: "Components", description: "Charts and rows that stay inspectable while they move." },
+      { href: "/components/email-template", label: "Surfaces", section: "Components", description: "Email templates and a departures-board number roll." },
+      { href: "/layouts", label: "Layouts", section: "Layouts", description: "Arrangements for a collection with a point of view." },
+      { href: "/collections", label: "Collections", section: "Layouts", description: "Stacks, grids and galleries built for volume." },
+      { href: "/media", label: "Media", section: "Layouts", description: "Inspection and comparison for photos and video." },
+      { href: "/layouts?family=editorial", label: "Editorial", section: "Layouts", description: "Rhythm and whitespace as part of the interface." },
+      { href: "/layouts?family=spatial", label: "Spatial", section: "Layouts", description: "Depth experiments in CSS 3D, kept deliberately later." },
     ],
   },
   {
@@ -81,16 +79,28 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: "/mobile#feedback", label: "Feedback", description: "Skeletons, empty states and status pipelines." },
     ],
   },
+  {
+    href: "/docs",
+    label: "Docs",
+    children: [
+      { href: "/docs", label: "Guide", section: "Docs", description: "Install, composition and the primitives API." },
+      { href: "/skills", label: "Skills", section: "Docs", description: "Agent-readable Markdown recipes for every item." },
+      { href: "/ai", label: "AI", section: "AI patterns", description: "Motion-first building blocks for chat and agent products." },
+      { href: "/ai#streaming", label: "Streaming", section: "AI patterns", description: "Token-by-token text and a Stop/Regenerate morph." },
+      { href: "/ai#composer", label: "Composer", section: "AI patterns", description: "A prompt field with attachments and slash commands." },
+      { href: "/ai#structure", label: "Structure", section: "AI patterns", description: "Message bubbles, thinking panels and tool calls." },
+    ],
+  },
 ];
 
 /** Explore is its own top-level link — the whole-registry search surface. */
 export const EXPLORE_LINK: NavLeaf = { href: "/explore", label: "Explore" };
 
-/** Right-aligned utility links, outside the L1/L2 taxonomy. */
-export const NAV_UTILITY_LINKS: NavLeaf[] = [
-  { href: "/skills", label: "Skills" },
-  { href: "/docs", label: "Docs" },
-];
+/**
+ * Right-aligned utility links, outside the L1/L2 taxonomy. Skills and Docs
+ * moved into the Docs group above; nothing else has needed this slot yet.
+ */
+export const NAV_UTILITY_LINKS: NavLeaf[] = [];
 
 /**
  * Routes that don't fit the L1/L2 shape but must never become orphans.

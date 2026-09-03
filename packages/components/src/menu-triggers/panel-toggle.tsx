@@ -49,6 +49,15 @@ export const PanelToggle = forwardRef<HTMLButtonElement, MenuTriggerBase>(functi
         aria-hidden
         className="relative block h-[18px] w-[22px] overflow-hidden rounded-[4px] border border-[color:var(--color-ink-900)]"
       >
+        {/*
+          Kept as left/right rather than a translateX transform: railWidth is
+          itself a second, independently-animating MotionValue (6-7.5px on
+          hover, via `engagement`), and this rail's x position depends on it
+          (open = containerWidth - railWidth). An equivalent transform would
+          need that coupling re-derived as its own reactive pipeline instead
+          of a plain animated number — real added complexity for a one-time
+          open/close animation inside an 18×22px icon glyph.
+        */}
         <motion.span
           className="absolute inset-y-0 block bg-ink-900"
           style={{ width: railWidth }}

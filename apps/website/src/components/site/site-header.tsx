@@ -8,7 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 
-import { EXPLORE_LINK, NAV_GROUPS, NAV_UTILITY_LINKS, type NavGroup } from "@/config/navigation";
+import { EXPLORE_LINK, NAV_GROUPS, NAV_UTILITY_LINKS, type NavGroup, type NavLeaf } from "@/config/navigation";
 import { SITE } from "@/lib/site";
 
 import { GitHubMark } from "./icons";
@@ -91,10 +91,14 @@ export function SiteHeader() {
 
   const pillItems: PillNavItem[] = [
     { id: EXPLORE_LINK.href, label: EXPLORE_LINK.label, href: EXPLORE_LINK.href, active: pathname === EXPLORE_LINK.href },
-    ...NAV_GROUPS.map((group) => {
+    ...NAV_GROUPS.map((group, groupIndex) => {
       const active = group.children.some((child) => pathMatches(pathname, child.href)) || pathname === group.href;
       const menuId = `nav-menu-${group.href.replace(/\W/g, "")}`;
       const open = openGroup === group.href;
+      // The last group sits near the header's right edge — a wide,
+      // section-grouped panel anchored to its left edge (the default) runs
+      // off the viewport there, so it anchors from the right instead.
+      const align = groupIndex === NAV_GROUPS.length - 1 ? "right" : "left";
       return {
         id: group.href,
         label: (
@@ -113,6 +117,7 @@ export function SiteHeader() {
           <MegaMenuPanel
             group={group}
             menuId={menuId}
+            align={align}
             onKeyDown={(event) => onMenuKeyDown(event, group.href, group.children.length)}
             onLinkClick={() => close()}
             menuRef={(node) => { menuRefs.current[group.href] = node; }}
@@ -195,7 +200,9 @@ export function SiteHeader() {
                 </div>
               );
             })}
-            <p className="mt-4 px-3 font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">More</p>
+            {NAV_UTILITY_LINKS.length > 0 ? (
+              <p className="mt-4 px-3 font-mono text-[0.625rem] tracking-[0.14em] text-ink-500 uppercase">More</p>
+            ) : null}
             {NAV_UTILITY_LINKS.map((link) => (
               <MobileLink key={link.href} href={link.href} label={link.label} active={pathMatches(pathname, link.href)} onClick={() => setMobileOpen(false)} />
             ))}
@@ -211,6 +218,7 @@ export function SiteHeader() {
 function MegaMenuPanel({
   group,
   menuId,
+  align = "left",
   onKeyDown,
   onLinkClick,
   menuRef,
@@ -219,6 +227,7 @@ function MegaMenuPanel({
 }: {
   group: NavGroup;
   menuId: string;
+  align?: "left" | "right";
   onKeyDown: (event: KeyboardEvent<HTMLDivElement>) => void;
   onLinkClick: () => void;
   menuRef: (node: HTMLDivElement | null) => void;
@@ -226,6 +235,46 @@ function MegaMenuPanel({
   motionEnabled: boolean;
 }) {
   const wide = group.children.length > 4;
+  const hasSections = group.children.some((child) => child.section);
+
+  // A merged L1 (Components+Layouts, Docs+AI+Skills) groups its children by
+  // `section` into side-by-side columns instead of one interleaved list, so
+  // the two former taxonomy branches stay visually distinct in the menu.
+  const sections = hasSections
+    ? group.children.reduce((map, child) => {
+        const key = child.section ?? "";
+        (map.get(key) ?? map.set(key, []).get(key)!).push(child);
+        return map;
+      }, new Map<string, NavLeaf[]>())
+    : null;
+
+  const panelClassName = cn(
+    // Fully opaque: a translucent (bg-white/95 + backdrop-blur) panel let
+    // page content behind it show through wherever the blur didn't fully
+    // obscure it, most visibly page headings directly under the menu.
+    // The panel must occlude everything behind it, not blend with it.
+    "absolute top-[calc(100%+0.5rem)] z-50 overflow-hidden rounded-[20px] border border-line bg-white shadow-lift",
+    align === "right" ? "right-0" : "left-0",
+    hasSections ? "grid w-[36rem] grid-cols-2 gap-x-3 gap-y-4 p-3" : wide ? "grid w-[34rem] grid-cols-2 gap-1 p-3" : "w-64 p-3",
+  );
+
+  let linkIndex = 0;
+  const renderLink = (link: NavLeaf) => {
+    const index = linkIndex++;
+    return (
+      <Link
+        key={link.href}
+        ref={(node) => { if (node) registerLinkRef(node, index); }}
+        role="menuitem"
+        href={link.href}
+        onClick={onLinkClick}
+        className="block rounded-xl px-3 py-2.5 transition-colors hover:bg-cloud-50 focus-visible:bg-cloud-50"
+      >
+        <span className="block text-sm font-medium text-ink-900">{link.label}</span>
+        {link.description ? <span className="mt-0.5 block text-xs leading-snug text-ink-500">{link.description}</span> : null}
+      </Link>
+    );
+  };
 
   return (
     <motion.div
@@ -238,25 +287,17 @@ function MegaMenuPanel({
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={motionEnabled ? { opacity: 0, scale: 0.95 } : undefined}
       transition={motionEnabled ? { type: "spring", ...springs.snappy } : { duration: 0 }}
-      style={{ transformOrigin: "top left" }}
-      className={cn(
-        "absolute top-[calc(100%+0.5rem)] left-0 z-50 overflow-hidden rounded-[20px] border border-line bg-white/95 p-3 shadow-soft backdrop-blur-xl",
-        wide ? "grid w-[34rem] grid-cols-2 gap-1" : "w-64",
-      )}
+      style={{ transformOrigin: align === "right" ? "top right" : "top left" }}
+      className={panelClassName}
     >
-      {group.children.map((link, index) => (
-        <Link
-          key={link.href}
-          ref={(node) => { if (node) registerLinkRef(node, index); }}
-          role="menuitem"
-          href={link.href}
-          onClick={onLinkClick}
-          className="block rounded-xl px-3 py-2.5 transition-colors hover:bg-cloud-50 focus-visible:bg-cloud-50"
-        >
-          <span className="block text-sm font-medium text-ink-900">{link.label}</span>
-          {link.description ? <span className="mt-0.5 block text-xs leading-snug text-ink-500">{link.description}</span> : null}
-        </Link>
-      ))}
+      {sections
+        ? [...sections.entries()].map(([section, links]) => (
+            <div key={section} className="flex flex-col gap-1">
+              <p className="px-3 pb-1 font-mono text-[0.625rem] tracking-[0.14em] text-ink-400 uppercase">{section}</p>
+              {links.map(renderLink)}
+            </div>
+          ))
+        : group.children.map(renderLink)}
     </motion.div>
   );
 }
