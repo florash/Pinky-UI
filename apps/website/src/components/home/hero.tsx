@@ -4,9 +4,14 @@ import { FluidTabs, GlowBorder, JellyCard, MagneticButton } from "@pinky-ui/comp
 import { CursorGlow, subscribeToPointer, useMotionEnabled } from "@pinky-ui/primitives";
 import { useEffect, useRef } from "react";
 
-import { ArrowRight } from "@/components/site/icons";
+import { CodeBlock } from "@/components/site/code-block";
+import { ArrowRight, GitHubMark } from "@/components/site/icons";
 import { Container } from "@/components/site/layout";
 import { MagneticLink } from "@/components/site/magnetic-link";
+import { SITE } from "@/lib/site";
+
+const CLONE_COMMAND = `git clone https://github.com/florash/Pinky-UI.git
+cd Pinky-UI && npm install && npm run dev`;
 
 export function Hero() {
   return (
@@ -21,32 +26,38 @@ export function Hero() {
               Pinky UI
               <span className="h-px flex-1 bg-line" />
               v0.1
+              <span className="normal-case text-ink-400">Source available · npm coming soon</span>
             </p>
 
             {/*
-              The tagline carries the page, not the product name — the name is
-              in the header, the logo and the eyebrow above. What a first-time
-              visitor should remember is what the library does.
+              Developer-tool ordering: say what it is, then hand over code
+              that runs, then let tone follow. The tagline still carries the
+              page, not the product name — the name is in the header, the
+              logo and the eyebrow above.
             */}
             <h1 className="mt-6 max-w-xl text-[clamp(2.5rem,4.4vw,4rem)] leading-[0.96] tracking-[-0.055em] text-balance-tight">
-              UI that likes
+              A React library
               <br />
-              to move.
+              for interactive motion.
             </h1>
 
-            {/*
-              One sentence and one door. GitHub already sits in the header and
-              closes the page, so the hero does not need a second CTA competing
-              with the live surfaces beside it.
-            */}
             <p className="mt-5 max-w-sm text-base leading-relaxed text-ink-700">
-              An open-source React interaction system — real UI, already moving, ready to touch.
+              75 building blocks — 12 motion primitives, 35 components, 28 layouts. Every one has
+              a live preview and an import path.
             </p>
 
-            <div className="mt-7">
-              <MagneticLink href="/explore" size="lg">
-                Explore
+            <div className="mt-6">
+              <CodeBlock code={CLONE_COMMAND} label="shell" language="bash" className="max-w-sm" />
+            </div>
+
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <MagneticLink href="/components" size="lg">
+                Browse Components
                 <ArrowRight className="size-4" />
+              </MagneticLink>
+              <MagneticLink href={SITE.github} variant="soft" size="lg" external>
+                <GitHubMark className="size-4" />
+                View on GitHub
               </MagneticLink>
             </div>
           </div>
@@ -146,24 +157,15 @@ function HeroStage() {
           <p className="font-mono text-[0.6875rem] tracking-[0.16em] text-ink-500 uppercase">
             Jelly Card
           </p>
+          <p className="mt-2 font-mono text-xs text-ink-500">elasticity 0.4 · intensity 0.2</p>
           <p className="mt-4 font-display text-2xl leading-tight font-semibold tracking-tight">
             Move across
             <br />
             this card.
           </p>
           <p className="mt-3 text-sm leading-relaxed text-ink-700">
-            The surface leans toward you, drifts a little, and settles on a spring.
+            Elastic lean, drift and settle — with squash and stretch on press.
           </p>
-          <div className="mt-7 flex items-center gap-3">
-            <span
-              aria-hidden
-              className="size-8 rounded-pill"
-              style={{
-                background: "linear-gradient(140deg, var(--color-blush-200), var(--color-cloud-200))",
-              }}
-            />
-            <span className="font-mono text-xs text-ink-500">elasticity 0.4 · intensity 0.2</span>
-          </div>
         </JellyCard>
 
         {/* Pointer-only, so it earns nothing on a touch screen and only makes

@@ -6,7 +6,9 @@ Website: https://pinkyui.com
 
 ![Pinky UI hero preview](docs/hero.gif)
 
-**An open-source React interaction and UI system for modern interfaces.**
+**A React library for interactive motion.**
+
+> ⚠️ Source available — the `@pinky-ui/*` packages are not yet published to npm. Clone and run locally, or copy source directly.
 
 Pinky UI is an open-source collection of expressive React components, product systems and motion primitives built for interfaces that feel responsive, tactile and alive.
 
@@ -31,9 +33,10 @@ React · TypeScript · Tailwind CSS · Motion · Accessible · Open Source
 
 ## Get started
 
-Pinky UI is currently developed from source; the `@pinky-ui/*` packages have publish-like build
-metadata and packed artifacts, but are not published npm packages yet. After npm publication,
-the package READMEs will show the normal registry installation commands.
+### Try it locally
+
+This runs the demo website — the interaction wall, docs and playground — on your machine. It
+does not install any components into your own project; see "Use in your project" below for that.
 
 ```bash
 git clone https://github.com/florash/Pinky-UI.git
@@ -46,6 +49,13 @@ Open http://localhost:3000 for the interaction wall or /docs for the usage guide
 
 For a production build, set `NEXT_PUBLIC_SITE_URL` to the public `http` or `https` origin so
 canonical URLs, Open Graph metadata, sitemap and robots output point at the deployed site.
+
+### Use in your project
+
+The `@pinky-ui/*` packages have publish-like build metadata and packed artifacts, but are not
+published to npm yet — `npm install @pinky-ui/...` doesn't work today. Until then, copy the
+source you need directly from `packages/*` into your own project. Once the packages are
+published, this section will show the normal registry installation commands.
 
 ## Styling
 
@@ -138,13 +148,10 @@ dependency list is `motion`, `next`, `react` and `react-dom`.
 
 ## Skills
 
-Pinky UI ships **agent-readable interaction Skills**: **283 canonical Markdown recipes across
-284 public Skill routes** in `packages/skills`. One route is an intentional legacy alias kept
+Pinky UI ships **agent-readable interaction Skills**: **355 canonical Markdown recipes across
+356 public Skill routes** in `packages/skills`. One route is an intentional legacy alias kept
 for compatibility. The recipes cover individual items and system-level guidance on interaction
 density, reduced motion, landing-page motion, choosing a card, and composition.
-
-Five primitives (`spring`, `parallax`, `press-spring`, `cursor`, `glow`) do not
-have skills yet. They are public API, not internals.
 
 The website renders those files directly, so there is no second copy to fall out
 of date.
