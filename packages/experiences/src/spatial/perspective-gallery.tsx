@@ -21,7 +21,19 @@ export type PerspectiveGalleryProps = {
   label?: string;
 };
 
-/** A keyboard-selectable gallery with small, readable z-depth differences. */
+/**
+ * A keyboard-selectable gallery with small, readable z-depth differences.
+ *
+ * Cards are absolutely positioned and self-centered (top-1/2 left-1/2 +
+ * a translate(-50%, -50%) baked into the animated x/y), the same technique
+ * SpatialCarousel uses — not flex-flowed. A flex row only centers itself as
+ * a whole; whichever item happened to be "active" just sat wherever normal
+ * flex flow put it, which was nowhere near center once the row's natural
+ * width exceeded its container (the common case — this is a gallery, not a
+ * one-screen-wide row). Callers must give this a height via `className`
+ * (e.g. min-h-[...]) since absolutely positioned children no longer
+ * contribute one.
+ */
 export function PerspectiveGallery({
   items,
   activeId,
@@ -63,7 +75,7 @@ export function PerspectiveGallery({
         else if (event.key === "Home") move(event, "first");
         else if (event.key === "End") move(event, "last");
       }}
-      className={cn("flex items-center justify-center gap-3 overflow-hidden py-8", className)}
+      className={cn("relative overflow-hidden py-8", className)}
       style={{ perspective: flat ? undefined : perspective }}
     >
       {items.map((item, index) => {
@@ -83,12 +95,12 @@ export function PerspectiveGallery({
             aria-label={item.label}
             tabIndex={active ? 0 : -1}
             onClick={() => setSelected(item.id)}
-            className="shrink-0 overflow-hidden rounded-[22px] text-left"
+            className="absolute top-1/2 left-1/2 overflow-hidden rounded-[22px] text-left"
             initial={false}
             animate={
               flat
-                ? { x: offset * 34, scale: active ? 1 : 0.94, opacity: Math.abs(offset) > 1 ? 0.35 : 1, rotateY: 0, z: 0 }
-                : { x: offset * 72, scale: 1 - Math.min(Math.abs(offset) * 0.07, 0.2), opacity: Math.abs(offset) > 2 ? 0.25 : 1, rotateY: offset * -5, z: Math.abs(offset) * -80 }
+                ? { x: `calc(-50% + ${offset * 76}%)`, y: "-50%", scale: active ? 1 : 0.94, opacity: Math.abs(offset) > 1 ? 0.35 : 1, rotateY: 0, z: 0 }
+                : { x: `calc(-50% + ${offset * 64}%)`, y: "-50%", scale: 1 - Math.min(Math.abs(offset) * 0.07, 0.2), opacity: Math.abs(offset) > 2 ? 0.25 : 1, rotateY: offset * -5, z: Math.abs(offset) * -80 }
             }
             transition={{ type: "spring", stiffness: 210, damping: 30, mass: 1 }}
             style={{ zIndex: items.length - Math.abs(offset) }}

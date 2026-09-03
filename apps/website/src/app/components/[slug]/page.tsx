@@ -99,7 +99,12 @@ export default async function ComponentDetailPage({ params }: PageProps) {
         </div>
 
         <div className="mt-20 grid gap-16 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-12">
-            <div className="flex flex-col gap-16">
+            {/* min-w-0: a grid item's default min-width is "auto" (its
+                content's intrinsic width) — wide children below (code
+                blocks, tables) were pushing this column past the viewport
+                on mobile, clipped invisibly by an ancestor's overflow-hidden
+                instead of wrapping/scrolling within their own bounds. */}
+            <div className="flex min-w-0 flex-col gap-16">
               {entry.presets.length > 0 ? (
                 <Block title="Presets" id="presets">
                   <div className="grid gap-3 sm:grid-cols-2">
