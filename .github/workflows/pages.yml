@@ -32,22 +32,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # packages/cli/src/index.ts statically imports a generated,
-      # gitignored ./manifest.json — build:cli-manifest writes it, reading
-      # from packages/registry/dist, which build:packages produces. Without
-      # these first, `next build`'s typecheck (which pulls every package's
-      # .ts/.tsx in, cli included) fails with "Cannot find module
-      # './manifest.json'". verify-release.mjs already does this ordering
-      # for the CI release-gates job; this deploy workflow needs the same
-      # fix independently since it calls `npm run build` directly rather
-      # than going through verify:release.
-      - name: Build package manifests
-        run: |
-          npm run build:packages
-          npm run build:cli-manifest
-
+      # scripts/build-static-site.mjs runs build:packages -> build:cli-manifest
+      # -> the static export build, in that order. Skipping the first two
+      # fails typecheck with "Cannot find module './manifest.json'" since
+      # packages/cli/src/index.ts statically imports that generated,
+      # gitignored file. scripts/verify-release.mjs's assertStaticExportBuild()
+      # runs this exact same script for the CI release-gates job.
       - name: Build static website
-        run: npm run build
+        run: npm run build:static-site
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

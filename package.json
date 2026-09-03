@@ -34,6 +34,7 @@
     "build:packages": "node scripts/build-packages.mjs",
     "build:cli-manifest": "node scripts/build-cli-manifest.mjs",
     "build:cli": "npm run build:packages && npm run build:cli-manifest && node scripts/build-cli.mjs",
+    "build:static-site": "node scripts/build-static-site.mjs",
     "verify:metadata": "node scripts/verify-metadata.mjs",
     "verify:orphans": "node scripts/check-orphans.mjs",
     "verify:nested-anchors": "node scripts/check-nested-anchors.mjs",
