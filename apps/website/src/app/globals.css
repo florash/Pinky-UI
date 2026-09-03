@@ -28,7 +28,10 @@
 
   --color-ink-900: #252933;
   --color-ink-700: #505865;
-  --color-ink-500: #7b8492;
+  /* Darkened from #7b8492 (2026-09) — that value failed WCAG AA (3.0-3.8:1
+     depending on background tint) everywhere it's used for small mono
+     labels sitewide. This clears 4.5:1 even against the pinkest blush tint. */
+  --color-ink-500: #5c636e;
 
   --color-line: rgba(70, 90, 115, 0.1);
   --color-line-strong: rgba(70, 90, 115, 0.18);
@@ -146,6 +149,21 @@
   --pinky-accent-soft: var(--color-cloud-100);
   --pinky-halo-a: rgba(244, 199, 215, 0.28);
   --pinky-halo-b: rgba(200, 228, 247, 0.75);
+}
+
+/*
+ * The shared grid for catalogue-style card walls (the Components gallery,
+ * Explore's browse grid) — not the homepage's editorial sections
+ * (Featured/Signature Interactions), which are deliberately asymmetric and
+ * opt out of this system on purpose. A 12-column track, one fixed gap, and
+ * three card-height tiers so a catalogue page reads as one grid instead of
+ * each card negotiating its own spacing and proportions.
+ */
+:root {
+  --pinky-grid-gap: 1.5rem; /* 24px, every catalogue grid's gap — not overridden locally */
+  --pinky-card-h-sm: 10rem; /* 160px */
+  --pinky-card-h-md: 15rem; /* 240px */
+  --pinky-card-h-lg: 22.5rem; /* 360px */
 }
 
 @layer base {

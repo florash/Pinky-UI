@@ -110,6 +110,14 @@ export function GooeyMenu({
             className="pointer-events-none absolute inset-0"
             style={goo ? { filter: "blur(4px) contrast(8)" } : undefined}
           >
+            {/*
+              width stays a real animated property, not scaleX: these items
+              have different label widths, so the indicator must resize to
+              genuinely different pixel widths per target, not just travel.
+              scaleX on a rounded-pill would stretch the corners elliptically
+              instead of keeping them circular — a visible shape distortion,
+              not an equivalent substitution. x already uses transform.
+            */}
             <motion.span
               className="absolute top-1.5 bottom-1.5 left-0 rounded-pill bg-ink-900"
               animate={{ x: slot.left, width: slot.width }}

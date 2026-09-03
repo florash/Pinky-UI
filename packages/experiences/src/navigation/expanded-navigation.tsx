@@ -487,6 +487,11 @@ export function EdgeRailNavigation({
   const motionEnabled = useMotionEnabled();
 
   return (
+    // width is a real layout-occupying dimension here, not a visual overlay:
+    // this rail sits in normal flow next to page content (it isn't absolute/
+    // fixed), so expanding it must actually reserve more space, not just
+    // paint wider — a transform: scaleX would stretch the rail's own labels
+    // and icons without moving anything beside it.
     <motion.nav
       aria-label={ariaLabel}
       animate={{ width: expanded ? 208 : 60 }}
@@ -678,6 +683,11 @@ export function CompressingScrollNavigation({
   }, [compactAfter, controlledCompressed]);
 
   return (
+    // height is real layout occupancy: this header sits in normal flow at
+    // the top of a page, so compressing it must actually shrink the space it
+    // reserves — content below needs to move up, which a scaleY transform
+    // (which leaves the layout box at its original size) would not do, on
+    // top of stretching the header's own children vertically.
     <motion.header aria-label={ariaLabel} animate={{ height: compressed ? 68 : 112 }} transition={motionEnabled ? { type: "spring", stiffness: 300, damping: 32 } : { duration: 0 }} className={cn("w-full overflow-hidden rounded-[24px] border border-line bg-white/85 shadow-soft", className)}>
       <div className="flex h-full items-center justify-between gap-4 px-5">
         <motion.div animate={{ scale: compressed ? 0.88 : 1, originX: 0 }} className="min-w-0"><p className="font-display text-xl font-semibold tracking-tight text-ink-900">{title}</p><p className={cn("mt-1 truncate font-mono text-[0.6rem] tracking-[0.14em] text-ink-500 uppercase transition-opacity motion-reduce:transition-none", compressed ? "opacity-0" : "opacity-100")}>A considered header, still present</p></motion.div>

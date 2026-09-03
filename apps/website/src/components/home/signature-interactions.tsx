@@ -38,6 +38,13 @@ export function SignatureInteractions() {
         <p className="font-mono text-[0.6875rem] tracking-[0.18em] text-ink-500 uppercase">
           Signature interactions
         </p>
+        <h2 className="mt-4 max-w-2xl text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.06] tracking-[-0.03em] text-balance-tight">
+          Nine pieces, each moving differently.
+        </h2>
+        <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-700 sm:text-lg">
+          Browsing, spatial separation, media, editing, feedback, context, mobile search and
+          command — live instances, not screenshots. The complete catalogue is in Explore.
+        </p>
 
         {/*
           Masonry keeps the editorial asymmetry without coupling the left and

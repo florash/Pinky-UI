@@ -2,7 +2,7 @@
 
 import { useMotionEnabled, usePressSpring } from "@pinky-ui/primitives";
 import { motion } from "motion/react";
-import { forwardRef, useState, type ButtonHTMLAttributes, type PointerEvent as RPE, type ReactNode } from "react";
+import { forwardRef, useEffect, useRef, useState, type ButtonHTMLAttributes, type PointerEvent as RPE, type ReactNode } from "react";
 
 import { cn } from "../../utils/cn";
 import { DISABLED, FOCUS_RING } from "../tactile/internal";
@@ -30,9 +30,33 @@ export const SheenButton = forwardRef<HTMLButtonElement, SheenButtonProps>(funct
   const motionEnabled = useMotionEnabled();
   const press = usePressSpring({ scale: 1, travel: 2, disabled });
 
+  // Measured so the sheen travels the button's actual width via a single
+  // `transform: translateX`, instead of animating `left` as a percentage —
+  // `left`/`right`/`width`/`height` all force a layout recompute every
+  // frame, where `transform` runs on the compositor. The starting -30% stays
+  // a static offset (left-[-30%] below); only the additional travel is
+  // animated, landing the sheen's left edge at exactly the same -30% / 115%
+  // of the button's width the original percentage animation produced.
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const [travel, setTravel] = useState(0);
+
+  useEffect(() => {
+    const node = buttonRef.current;
+    if (!node) return;
+    const measure = () => setTravel(node.offsetWidth * 1.45);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <motion.button
-      ref={ref}
+      ref={(node) => {
+        buttonRef.current = node;
+        if (typeof ref === "function") ref(node);
+        else if (ref) ref.current = node;
+      }}
       type={type}
       disabled={disabled}
       style={{ y: press.y }}
@@ -52,10 +76,10 @@ export const SheenButton = forwardRef<HTMLButtonElement, SheenButtonProps>(funct
       <motion.span
         aria-hidden
         key={pass}
-        className="absolute inset-y-0 w-16 skew-x-[-18deg]"
+        className="absolute inset-y-0 left-[-30%] w-16 skew-x-[-18deg]"
         style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,.34), transparent)" }}
-        initial={{ left: "-30%" }}
-        animate={motionEnabled && pass > 0 ? { left: "115%" } : { left: "-30%" }}
+        initial={{ x: 0 }}
+        animate={motionEnabled && pass > 0 ? { x: travel } : { x: 0 }}
         transition={motionEnabled ? { duration: 0.72, ease: [0.22, 1, 0.36, 1] } : { duration: 0 }}
       />
       <span className="relative z-10">{children}</span>

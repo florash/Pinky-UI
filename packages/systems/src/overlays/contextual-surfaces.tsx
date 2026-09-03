@@ -150,7 +150,9 @@ export function AnchoredInspector({ items = DEFAULT_INSPECTOR_ITEMS, className }
   const active = items.find((item) => item.id === activeId);
   const inspectorId = useId();
   return <div className={cn("grid gap-3 sm:grid-cols-[minmax(0,1fr)_15rem]", className)}>
-    <div role="list" aria-label="Inspectable surfaces" className="grid gap-2">
+    {/* role="group", not "list": these are toggle buttons (aria-pressed),
+        and "list" requires listitem children, which buttons aren't. */}
+    <div role="group" aria-label="Inspectable surfaces" className="grid gap-2">
       {items.map((item) => <button key={item.id} type="button" aria-pressed={item.id === activeId} aria-expanded={item.id === activeId} aria-controls={inspectorId} onClick={() => setActiveId(item.id)} className={cn("flex items-center justify-between gap-3 rounded-xl border px-3 py-3 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-900/25", item.id === activeId ? "border-ink-900 bg-blush-50" : "border-line bg-white hover:bg-cloud-50")}><span className="min-w-0"><span className="block truncate font-medium">{item.label}</span>{item.meta ? <span className="mt-0.5 block truncate text-xs text-ink-500">{item.meta}</span> : null}</span><span aria-hidden className="text-ink-400">↗</span></button>)}
     </div>
     {active ? <aside id={inspectorId} aria-label={`${active.label} inspector`} className="rounded-xl border border-ink-900/10 bg-ink-900 p-4 text-milk"><p className="font-mono text-[0.62rem] tracking-[0.16em] text-white/55 uppercase">Inspector</p><h3 className="mt-3 text-base font-semibold">{active.label}</h3><p className="mt-1 text-xs text-white/65">{active.description ?? "Context stays next to the selected source."}</p><div className="mt-4 rounded-lg bg-white/10 px-3 py-2 text-sm"><span className="text-white/55">State</span><strong className="ml-2">{active.value ?? "Ready"}</strong></div></aside> : null}
