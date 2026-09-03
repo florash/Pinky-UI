@@ -127,7 +127,14 @@ export function SignatureInteractions() {
               fits the real available width at every breakpoint instead.
             */}
             <div className="grid grid-cols-2 gap-4 rounded-[20px] bg-cloud-50 p-4">
-              <MobileSignatureMini label="Morphing nav"><MorphingBottomNavigation /></MobileSignatureMini>
+              {/*
+                MorphingBottomNavigation's active item grows to min-w-[6.5rem],
+                so its natural row (~248px for 4 items) doesn't fit this
+                tile's ~144px column — without the scale it overflowed the
+                tile by 16px on each side, clipped by the wrapper below but
+                still cutting the first item's icon off.
+              */}
+              <MobileSignatureMini label="Morphing nav"><div className="origin-center scale-[0.55]"><MorphingBottomNavigation /></div></MobileSignatureMini>
               <MobileSignatureMini label="Bottom search"><BottomSearchSheet /></MobileSignatureMini>
               <MobileSignatureMini label="Detent sheet"><DetentSheet /></MobileSignatureMini>
               <MobileSignatureMini label="Swipe actions"><SwipeActions /></MobileSignatureMini>

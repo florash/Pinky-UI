@@ -174,8 +174,13 @@ function NavigationSection() {
         </DemoFrame>
 
         <DemoFrame id="floating-island-nav" label="Floating Island Nav" description="The same selection language in a Pinky-specific elevated island.">
-          <div className="grid min-h-52 place-items-center rounded-2xl bg-blush-50 p-5">
+          <div className="grid min-h-52 min-w-0 place-items-center rounded-2xl bg-blush-50 p-5">
+            {/* min-w-0: a grid item's default min-width is "auto" — this
+                nav's own tab list needed to shrink and scroll internally
+                (which it already does), not force this whole island wider
+                than the demo card on mobile. */}
             <FloatingIslandNav
+              className="min-w-0"
               fixed={false}
               items={navItems}
               activeId={active}
@@ -493,8 +498,12 @@ function ExperienceSection({ id, eyebrow, title, children }: { id: string; eyebr
 }
 
 function DemoFrame({ id, label, description, className = "", children }: { id: string; label: string; description: string; className?: string; children: ReactNode }) {
+  // min-w-0: DemoFrame is always a grid item (grid gap-6 lg:grid-cols-2), and
+  // a grid item's default min-width is "auto" — several of the live demos
+  // inside don't shrink on their own, which pushed the whole card past the
+  // viewport on mobile instead of wrapping/scrolling within its own bounds.
   return (
-    <article id={id} className={`scroll-mt-24 rounded-[28px] border border-line bg-white/72 p-4 shadow-soft sm:p-6 ${className}`}>
+    <article id={id} className={`min-w-0 scroll-mt-24 rounded-[28px] border border-line bg-white/72 p-4 shadow-soft sm:p-6 ${className}`}>
       <div className="mb-5">
         <h3 className="text-xl">{label}</h3>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-700">{description}</p>
