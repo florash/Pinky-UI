@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFile as execFileCallback, spawn } from "node:child_process";
 import { promisify } from "node:util";
+import { buildStaticSite } from "./build-static-site.mjs";
 
 const execFile = promisify(execFileCallback);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -576,10 +577,10 @@ async function verifyExternalConsumer(infos, tarballs, tempRoot) {
  * failure — it happened this way once already: the opengraph-image route
  * built fine under `next build` but broke `output: "export"` outright
  * (missing `dynamic = "force-static""`), and nothing here would have
- * noticed short of reproducing .github/workflows/pages.yml's exact command.
- * This does that: same env vars as the real deploy (falling back to the
- * current ones so this keeps working through the pinkyui.com migration,
- * whenever pages.yml's env block changes).
+ * noticed short of reproducing .github/workflows/pages.yml's exact build.
+ * buildStaticSite() (scripts/build-static-site.mjs) is that exact build —
+ * pages.yml's deploy job calls the same function via `npm run
+ * build:static-site`, so this and the real deploy can't drift apart.
  *
  * The CNAME half of this is intentionally conditional on public/CNAME
  * existing, not just "run once the domain migrates": merging a CNAME file
@@ -590,15 +591,25 @@ async function verifyExternalConsumer(infos, tarballs, tempRoot) {
  * independent of whether DNS actually resolves there yet) — so the file
  * and the switch to a root basePath both land together, atomically, in the
  * dedicated migration change, not silently through this gate.
+ *
+ * This CNAME check itself stays here rather than moving into
+ * build-static-site.mjs: it's a release-gate assertion (does the artifact
+ * this repo is about to ship have the right domain marker in it?), not part
+ * of producing the build. build-static-site.mjs only knows how to build the
+ * site the same way everywhere; verifying the result is release-verification's
+ * job, same as every other assertX() in this file.
  */
 async function assertStaticExportBuild() {
-  const env = {
-    ...RELEASE_ENV,
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://pinkyui.com",
-    NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH?.trim() || "",
-    NEXT_PUBLIC_STATIC_EXPORT: "true",
-  };
-  await run(npmCommand, ["run", "build"], { env });
+  // RELEASE_ENV always sets NEXT_PUBLIC_SITE_URL (falling back to
+  // pinky-ui.example.test, not pinkyui.com, when unset) for the rest of the
+  // release run's `npm run build` steps. buildStaticSite()'s own default of
+  // https://pinkyui.com — the value pages.yml's deploy job actually uses —
+  // only kicks in when the var is genuinely absent, so that fallback has to
+  // come from raw process.env here, not from RELEASE_ENV's already-defaulted
+  // copy, or CI would silently build against the wrong site URL.
+  const env = { ...RELEASE_ENV };
+  if (!process.env.NEXT_PUBLIC_SITE_URL?.trim()) delete env.NEXT_PUBLIC_SITE_URL;
+  await buildStaticSite({ env });
   console.log("[release] static export build: PASS");
 
   const publicCnamePath = path.join(root, "apps/website/public/CNAME");
